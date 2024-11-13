@@ -4,6 +4,7 @@ import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 
 import { TRPCReactProvider } from "~/trpc/react";
+import CanvasBackground from "./_components/BackgroundEffect";
 
 export const metadata: Metadata = {
   title: "Huy's Digital Garden",
@@ -18,6 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
       <body>
+        <CanvasBackground />
         <TRPCReactProvider>{children}</TRPCReactProvider>
       </body>
     </html>
