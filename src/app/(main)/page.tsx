@@ -17,9 +17,9 @@ function NavLink({ link, text }: navLinkProp) {
       <Link
         href={link}
         target="_blank"
-        className="group flex items-center justify-between text-sm md:text-base"
+        className="group flex items-center justify-between"
       >
-        <span className="font-medium">{text}</span>
+        <span className="md:text-medium text-base">{text}</span>
         <Image
           src="/arrow.svg"
           alt="arrow"
@@ -48,7 +48,7 @@ export default function Home() {
           >
             <div className="space-y-6">
               <div className="flex items-center gap-3">
-                <h1 className="text-xl font-bold md:text-2xl">
+                <h1 className="text-2xl font-bold md:text-3xl">
                   Huy&apos;s Digital Garden
                 </h1>
                 <Image
@@ -56,17 +56,17 @@ export default function Home() {
                   alt="white daisy"
                   width={32}
                   height={32}
-                  className="h-6 w-6 md:h-8 md:w-8"
+                  className="h-10 w-10 md:h-10 md:w-10"
                 />
               </div>
-              <div className="space-y-3 text-sm md:text-base">
+              <div className="space-y-3 text-base">
                 <p className="tracking-wide">
                   Welcome to my little garden on the Internet, where I grow my
                   passion for software. As a new graduate, I&apos;m drawn to
                   creating tools that allow us to bloom rather than limit how we
                   express ourselves.
                 </p>
-                <p className="font-medium tracking-wide text-gray-600">
+                <p className="font-base tracking-wide text-gray-600">
                   Currently seeking to plant my roots with a team that shares my
                   vision of thoughtful software.
                 </p>
@@ -80,7 +80,7 @@ export default function Home() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.3 }}
               >
-                <h2 className="mb-2 text-lg font-semibold md:text-xl">Me</h2>
+                <h2 className="mb-2 text-xl font-bold md:text-2xl">Me</h2>
                 <nav className="space-y-1">
                   <NavLink
                     link="https://drive.google.com/file/d/14qQBXFCt9eyaV1efOz1oKi_WFg_Bx6UE/view?usp=drive_link"
@@ -116,10 +116,10 @@ export default function Home() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.3 }}
               >
-                <h2 className="mb-2 text-lg font-semibold md:text-xl">
+                <h2 className="mb-2 text-xl font-bold md:text-2xl">
                   My Garden
                 </h2>
-                <p className="text-sm md:text-base">Coming soon</p>
+                <p className="md:text-medium text-base">Coming soon</p>
               </motion.div>
             </div>
           </motion.div>
