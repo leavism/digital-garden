@@ -2,13 +2,28 @@
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 interface navLinkProp {
   link: string;
   text: string;
 }
 
-function NavLink({ link, text }: navLinkProp) {
+function NavLink({ link, text, delay = 0 }: navLinkProp & { delay?: number }) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768); // 768px is Tailwind's md breakpoint
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
+    // Cleanup
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   return (
     <motion.div
       whileHover={{ x: 4 }}
@@ -17,15 +32,38 @@ function NavLink({ link, text }: navLinkProp) {
       <Link
         href={link}
         target="_blank"
-        className="group flex items-center justify-between"
+        className="group flex items-center justify-between rounded-sm px-1 py-0.5 underline decoration-gray-300 decoration-1 underline-offset-4"
       >
-        <span className="md:text-medium text-base">{text}</span>
+        <motion.span
+          animate={isMobile ? "bounce" : "none"}
+          variants={{
+            bounce: {
+              y: [0, -4, 0],
+              x: [0, 1, -1, 1, 0],
+              rotate: [0, 2, -2, 2, 0],
+              transition: {
+                repeat: Infinity,
+                repeatDelay: 4,
+                delay: delay,
+                duration: 0.4,
+              },
+            },
+            none: {
+              y: 0,
+              x: 0,
+              rotate: 0,
+            },
+          }}
+          className="md:text-medium text-base"
+        >
+          {text}
+        </motion.span>
         <Image
           src="/arrow.svg"
           alt="arrow"
           width={12}
           height={12}
-          className="opacity-30 transition-opacity group-hover:opacity-100"
+          className="opacity-50"
         />
       </Link>
     </motion.div>
@@ -34,11 +72,9 @@ function NavLink({ link, text }: navLinkProp) {
 
 export default function Home() {
   return (
-    <main className="relative flex min-h-screen flex-col items-center justify-center">
-      <div className="relative w-full max-w-[600px] px-6">
-        <div className="absolute -inset-48">
-          <div className="h-full w-full bg-radial-at-center from-white via-white/90 to-transparent" />
-        </div>
+    <main className="relative flex min-h-screen flex-col items-center justify-center p-6">
+      <div className="relative w-full max-w-[600px] rounded bg-white/90 py-8 backdrop-blur-[2px] md:p-8">
+        {" "}
         <div className="relative z-10">
           <motion.div
             className="space-y-8 md:space-y-12"
@@ -85,12 +121,18 @@ export default function Home() {
                   <NavLink
                     link="https://drive.google.com/file/d/14qQBXFCt9eyaV1efOz1oKi_WFg_Bx6UE/view?usp=drive_link"
                     text="Resume"
+                    delay={1}
                   />
-                  <NavLink link="https://github.com/leavism" text="GitHub" />
+                  <NavLink
+                    link="https://github.com/leavism"
+                    text="GitHub"
+                    delay={1.5}
+                  />
                   <NavLink
                     link="https://www.linkedin.com/in/leavism/"
                     text="LinkedIn"
-                  ></NavLink>
+                    delay={2.0}
+                  />
                 </nav>
               </motion.div>
 
