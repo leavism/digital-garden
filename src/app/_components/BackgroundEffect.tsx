@@ -12,9 +12,12 @@ const CONFIG = {
   letterChangeInterval: 100,
   fadeDelay: 5000,
   fadeSpeed: 0.05,
-  particleCreationThreshold: 0.5,
+  particleCreationThreshold: 0.8,
   changesBeforeAsterisk: 10,
   fontSize: 14,
+  wanderSpeed: 2, // How fast the autonomous point moves
+  wanderRadius: 300, // How far it wanders from its current position
+  wanderInterval: 10, // How often to update the wander position (ms)
 } as const;
 
 interface Particle {
@@ -27,6 +30,14 @@ interface Particle {
   lastChangeTime: number;
   isAsterisk: boolean;
   asteriskStartTime: number | null;
+}
+
+// Add an autonomous point that wanders
+interface WanderPoint {
+  x: number;
+  y: number;
+  targetX: number;
+  targetY: number;
 }
 
 interface MousePosition {
@@ -109,15 +120,56 @@ export default function CanvasBackground() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    // Initialize wandering point
+    const wanderPoint = {
+      x: canvas.width / 2,
+      y: canvas.height / 2,
+      targetX: canvas.width / 2,
+      targetY: canvas.height / 2,
+    };
+
+    // Function to update wander target
+    const updateWanderTarget = () => {
+      wanderPoint.targetX = Math.min(
+        Math.max(wanderPoint.x + random.nextSpread(CONFIG.wanderRadius), 0),
+        canvas.width,
+      );
+      wanderPoint.targetY = Math.min(
+        Math.max(wanderPoint.y + random.nextSpread(CONFIG.wanderRadius), 0),
+        canvas.height,
+      );
+    };
+
+    // Move the wandering point
+    const moveWanderPoint = () => {
+      const dx = wanderPoint.targetX - wanderPoint.x;
+      const dy = wanderPoint.targetY - wanderPoint.y;
+
+      wanderPoint.x += dx * CONFIG.wanderSpeed * 0.01;
+      wanderPoint.y += dy * CONFIG.wanderSpeed * 0.01;
+
+      // Create particles at the wander point
+      if (Math.random() > CONFIG.particleCreationThreshold) {
+        particles.current.push(
+          createParticle({
+            x: wanderPoint.x,
+            y: wanderPoint.y,
+          }),
+        );
+      }
+    };
+
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     };
+    const wanderInterval = setInterval(updateWanderTarget, 1000);
+    const moveInterval = setInterval(moveWanderPoint, CONFIG.wanderInterval);
 
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Create new particles only when mouse is moving
+      // Create particles from both mouse and wander point
       if (
         isMouseMoving.current &&
         Math.random() > CONFIG.particleCreationThreshold
@@ -174,6 +226,8 @@ export default function CanvasBackground() {
       if (mouseTimeout.current) {
         clearTimeout(mouseTimeout.current);
       }
+      clearInterval(wanderInterval);
+      clearInterval(moveInterval);
     };
   }, []);
 
