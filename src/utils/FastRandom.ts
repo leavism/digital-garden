@@ -1,5 +1,5 @@
 /**
- * A relative faster (to Math.random) pseudo-random number generator implementation
+ * A relatively faster (to Math.random) pseudo-random number generator implementation
  * Uses a custom algo with 4 state variables for generating random numbers.
  * Not cryptographically secure, just good for simulations for my background effect.
  */
