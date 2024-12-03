@@ -13,11 +13,11 @@ const CONFIG = {
   fadeDelay: 5000,
   fadeSpeed: 0.05,
   particleCreationThreshold: 0.8,
-  changesBeforeAsterisk: 10,
+  changesBeforeAsterisk: 7,
   fontSize: 14,
-  wanderSpeed: 2, // How fast the autonomous point moves
-  wanderRadius: 300, // How far it wanders from its current position
-  wanderInterval: 10, // How often to update the wander position (ms)
+  wanderSpeed: 2,
+  wanderRadius: 500,
+  wanderInterval: 10,
 } as const;
 
 interface Particle {
@@ -32,7 +32,6 @@ interface Particle {
   asteriskStartTime: number | null;
 }
 
-// Add an autonomous point that wanders
 interface WanderPoint {
   x: number;
   y: number;
@@ -44,6 +43,13 @@ interface MousePosition {
   x: number;
   y: number;
 }
+
+const getRandomCanvasPosition = (width: number, height: number) => {
+  return {
+    x: random.nextInt(width),
+    y: random.nextInt(height),
+  };
+};
 
 const createParticle = (mousePos: MousePosition): Particle => {
   return {
@@ -65,7 +71,6 @@ const updateParticle = (
   currentTime: number,
   ctx: CanvasRenderingContext2D,
 ): boolean => {
-  // Handle letter phase
   if (!particle.isAsterisk) {
     const shouldChangeLetter =
       currentTime - particle.lastChangeTime > CONFIG.letterChangeInterval;
@@ -75,7 +80,6 @@ const updateParticle = (
       particle.letterChanges++;
       particle.lastChangeTime = currentTime;
 
-      // Transform to asterisk if enough changes
       if (particle.letterChanges >= CONFIG.changesBeforeAsterisk) {
         particle.character = "*";
         particle.isAsterisk = true;
@@ -87,12 +91,10 @@ const updateParticle = (
     return true;
   }
 
-  // Handle asterisk phase
   const asteriskAge = particle.asteriskStartTime
     ? currentTime - particle.asteriskStartTime
     : 0;
 
-  // Start fading after delay
   if (asteriskAge > CONFIG.fadeDelay) {
     particle.alpha = Math.max(0, particle.alpha - CONFIG.fadeSpeed);
     if (particle.alpha <= 0) return false;
@@ -112,6 +114,7 @@ export default function CanvasBackground() {
   const isMouseMoving = useRef(false);
   const animationFrameId = useRef<number>();
   const mouseTimeout = useRef<NodeJS.Timeout>();
+  const wanderPointRef = useRef<WanderPoint>();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -120,56 +123,75 @@ export default function CanvasBackground() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // Initialize wandering point
-    const wanderPoint = {
-      x: canvas.width / 2,
-      y: canvas.height / 2,
-      targetX: canvas.width / 2,
-      targetY: canvas.height / 2,
-    };
+    // Initialize canvas size first
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 
-    // Function to update wander target
-    const updateWanderTarget = () => {
-      wanderPoint.targetX = Math.min(
-        Math.max(wanderPoint.x + random.nextSpread(CONFIG.wanderRadius), 0),
-        canvas.width,
-      );
-      wanderPoint.targetY = Math.min(
-        Math.max(wanderPoint.y + random.nextSpread(CONFIG.wanderRadius), 0),
-        canvas.height,
-      );
-    };
-
-    // Move the wandering point
-    const moveWanderPoint = () => {
-      const dx = wanderPoint.targetX - wanderPoint.x;
-      const dy = wanderPoint.targetY - wanderPoint.y;
-
-      wanderPoint.x += dx * CONFIG.wanderSpeed * 0.01;
-      wanderPoint.y += dy * CONFIG.wanderSpeed * 0.01;
-
-      // Create particles at the wander point
-      if (Math.random() > CONFIG.particleCreationThreshold) {
-        particles.current.push(
-          createParticle({
-            x: wanderPoint.x,
-            y: wanderPoint.y,
-          }),
-        );
-      }
+    wanderPointRef.current = {
+      x: random.next() * window.innerWidth,
+      y: random.next() * window.innerHeight,
+      targetX: random.next() * window.innerWidth,
+      targetY: random.next() * window.innerHeight,
     };
 
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+
+      // Initialize or update wander point position on resize
+      if (!wanderPointRef.current) {
+        const randomStart = getRandomCanvasPosition(
+          canvas.width,
+          canvas.height,
+        );
+        wanderPointRef.current = {
+          x: randomStart.x,
+          y: randomStart.y,
+          targetX: randomStart.x,
+          targetY: randomStart.y,
+        };
+      }
     };
-    const wanderInterval = setInterval(updateWanderTarget, 1000);
-    const moveInterval = setInterval(moveWanderPoint, CONFIG.wanderInterval);
+
+    const updateWanderTarget = () => {
+      if (!wanderPointRef.current) return;
+      wanderPointRef.current.targetX = Math.min(
+        Math.max(
+          wanderPointRef.current.x + random.nextSpread(CONFIG.wanderRadius),
+          0,
+        ),
+        canvas.width,
+      );
+      wanderPointRef.current.targetY = Math.min(
+        Math.max(
+          wanderPointRef.current.y + random.nextSpread(CONFIG.wanderRadius),
+          0,
+        ),
+        canvas.height,
+      );
+    };
+
+    const moveWanderPoint = () => {
+      if (!wanderPointRef.current) return;
+      const dx = wanderPointRef.current.targetX - wanderPointRef.current.x;
+      const dy = wanderPointRef.current.targetY - wanderPointRef.current.y;
+
+      wanderPointRef.current.x += dx * CONFIG.wanderSpeed * 0.01;
+      wanderPointRef.current.y += dy * CONFIG.wanderSpeed * 0.01;
+
+      if (Math.random() > CONFIG.particleCreationThreshold) {
+        particles.current.push(
+          createParticle({
+            x: wanderPointRef.current.x,
+            y: wanderPointRef.current.y,
+          }),
+        );
+      }
+    };
 
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Create particles from both mouse and wander point
       if (
         isMouseMoving.current &&
         Math.random() > CONFIG.particleCreationThreshold
@@ -181,7 +203,6 @@ export default function CanvasBackground() {
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
 
-      // Update and render particles
       particles.current = particles.current.filter((particle) => {
         const keepParticle = updateParticle(particle, performance.now(), ctx);
         if (keepParticle) {
@@ -210,13 +231,15 @@ export default function CanvasBackground() {
       }, CONFIG.letterChangeInterval);
     };
 
-    // Initialize
     resizeCanvas();
+
+    const wanderInterval = setInterval(updateWanderTarget, 1000);
+    const moveInterval = setInterval(moveWanderPoint, CONFIG.wanderInterval);
+
     window.addEventListener("resize", resizeCanvas);
     window.addEventListener("mousemove", handleMouseMove);
     animate();
 
-    // Cleanup
     return () => {
       window.removeEventListener("resize", resizeCanvas);
       window.removeEventListener("mousemove", handleMouseMove);
