@@ -52,6 +52,18 @@ export class FastRandom {
   nextSpread(spread: number): number {
     return (this.next() - 0.5) * spread;
   }
+
+  /**
+   * Picks a random element from an array using {@link nextInt}.
+   * @param array An array of possible element to be chosen randomly
+   * @returns An element from the {@link array}.
+   */
+  pick<T>(array: T[]): T {
+    if (array.length === 0) {
+      throw new Error("Cannot pick from an empty array");
+    }
+    return array[this.nextInt(array.length)] as T;
+  }
 }
 
 // Singleton instance for conventient global use
