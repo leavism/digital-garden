@@ -1,50 +1,57 @@
-"use client";
+import { motion } from "framer-motion";
+import Link from "next/link";
 
-import { useState } from "react";
+interface BlogPost {
+  slug: string;
+  title: string;
+  description: string;
+  date: string;
+  status: "seedling" | "growing" | "bloomed"; // Plant growth stages
+  category: string;
+  readingTime: string;
+}
 
-import { api } from "~/trpc/react";
+const StatusIcon = ({ status }: { status: BlogPost["status"] }) => {
+  const icons = {
+    seedling: "🌱",
+    growing: "🌿",
+    evergreen: "🌲",
+  };
+  return <span>{icons[status]}</span>;
+};
 
-export function LatestPost() {
-  const [latestPost] = api.sample.getLatest.useSuspenseQuery();
-
-  const utils = api.useUtils();
-  const [name, setName] = useState("");
-  const createPost = api.sample.create.useMutation({
-    onSuccess: async () => {
-      await utils.sample.invalidate();
-      setName("");
-    },
-  });
-
+export function BlogPost({
+  slug,
+  title,
+  description,
+  date,
+  status,
+  category,
+  readingTime,
+}: BlogPost) {
   return (
-    <div className="w-full max-w-xs">
-      {latestPost ? (
-        <p className="truncate">Your most recent post: {latestPost.name}</p>
-      ) : (
-        <p>You have no posts yet.</p>
-      )}
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          createPost.mutate({ name });
-        }}
-        className="flex flex-col gap-2"
-      >
-        <input
-          type="text"
-          placeholder="Title"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="w-full rounded-full px-4 py-2 text-black"
-        />
-        <button
-          type="submit"
-          className="rounded-full bg-white/10 px-10 py-3 font-semibold transition hover:bg-white/20"
-          disabled={createPost.isPending}
-        >
-          {createPost.isPending ? "Submitting..." : "Submit"}
-        </button>
-      </form>
-    </div>
+    <article
+      key={title}
+      className="group relative rounded-lg border border-gray-100 p-5 transition-all hover:border-gray-200"
+    >
+      <div className="mb-2 flex items-center justify-between">
+        <time className="text-xs text-gray-500">{date}</time>
+        <StatusIcon status={status} />
+      </div>
+      <h2 className="mb-3 text-xl font-medium">{title}</h2>
+      <p className="mb-3 text-sm text-gray-600">{description}</p>
+      <div className="flex items-center justify-between">
+        <span className="text-xs text-gray-500">{category}</span>
+        <Link href={`/blog/${slug}`}>
+          <motion.span
+            className="text-sm text-gray-600"
+            whileHover={{ x: 5 }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
+            Read more →
+          </motion.span>
+        </Link>
+      </div>
+    </article>
   );
 }
