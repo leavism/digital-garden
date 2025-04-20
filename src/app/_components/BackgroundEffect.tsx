@@ -4,210 +4,151 @@ import { Playfair_Display } from "next/font/google";
 import { useEffect, useRef } from "react";
 const playfair = Playfair_Display({ subsets: ["latin"] });
 
-// Configuration constants
 const CONFIG = {
+	// Visual appearance
 	characters: "huysdigitalgarden".split(""),
 	colors: ["#FFC502", "#A8B331", "#D9D9D9"],
+	fontSize: 16,
+
+	// Particle behavior
 	particleSpread: 200,
-	letterChangeInterval: 100,
-	fadeDelay: 5000,
-	fadeSpeed: 0.05,
 	particleCreationThreshold: 0.8,
-	changesBeforeAsterisk: 10,
-	fontSize: 14,
-	wanderSpeed: 2, // How fast the autonomous point moves
-	wanderRadius: 300, // How far it wanders from its current position
-	wanderInterval: 10, // How often to update the wander position (ms)
+	letterChangeInterval: 10, // How many frames between letter changes
+	changesBeforeAsterisk: 10, // How many changes before becoming an asterisk
+	fadeDelay: 700, // Frames to wait before fading
+	fadeSpeed: 0.05, // How quickly to fade out
+
+	// Wander behavior
+	wanderSpeed: 0.25, // How quickly to move toward target (0-1)
+	wanderRadius: 300, // How far to randomly wander
 } as const;
 
 interface Particle {
 	x: number;
 	y: number;
-	character: string;
+	char: string;
 	color: string;
 	alpha: number;
-	letterChanges: number;
-	lastChangeTime: number;
+	age: number;
 	isAsterisk: boolean;
-	asteriskStartTime: number | null;
+	letterChanges: number;
 }
-
-// Add an autonomous point that wanders
-interface WanderPoint {
-	x: number;
-	y: number;
-	targetX: number;
-	targetY: number;
-}
-
-interface MousePosition {
-	x: number;
-	y: number;
-}
-
-const createParticle = (mousePos: MousePosition): Particle => {
-	return {
-		x: mousePos.x + random.nextSpread(CONFIG.particleSpread),
-		y: mousePos.y + random.nextSpread(CONFIG.particleSpread),
-		character:
-			CONFIG.characters[random.nextInt(CONFIG.characters.length)] ?? "h",
-		color: CONFIG.colors[random.nextInt(CONFIG.colors.length)] ?? "#FFC502",
-		alpha: 1,
-		letterChanges: 0,
-		lastChangeTime: performance.now(),
-		isAsterisk: false,
-		asteriskStartTime: null,
-	};
-};
-
-const updateParticle = (
-	particle: Particle,
-	currentTime: number,
-	ctx: CanvasRenderingContext2D,
-): boolean => {
-	// Handle letter phase
-	if (!particle.isAsterisk) {
-		const shouldChangeLetter =
-			currentTime - particle.lastChangeTime > CONFIG.letterChangeInterval;
-		if (shouldChangeLetter) {
-			particle.character =
-				CONFIG.characters[random.nextInt(CONFIG.characters.length)] ?? "h";
-			particle.letterChanges++;
-			particle.lastChangeTime = currentTime;
-
-			// Transform to asterisk if enough changes
-			if (particle.letterChanges >= CONFIG.changesBeforeAsterisk) {
-				particle.character = "*";
-				particle.isAsterisk = true;
-				particle.asteriskStartTime = currentTime;
-			}
-		}
-
-		ctx.fillStyle = `rgba(0, 0, 0, ${particle.alpha})`;
-		return true;
-	}
-
-	// Handle asterisk phase
-	const asteriskAge = particle.asteriskStartTime
-		? currentTime - particle.asteriskStartTime
-		: 0;
-
-	// Start fading after delay
-	if (asteriskAge > CONFIG.fadeDelay) {
-		particle.alpha = Math.max(0, particle.alpha - CONFIG.fadeSpeed);
-		if (particle.alpha <= 0) return false;
-	}
-
-	ctx.fillStyle = `${particle.color}${Math.floor(particle.alpha * 255)
-		.toString(16)
-		.padStart(2, "0")}`;
-
-	return true;
-};
 
 export default function CanvasBackground() {
-	const canvasRef = useRef<HTMLCanvasElement>(null);
-	const particles = useRef<Particle[]>([]);
-	const mousePos = useRef<MousePosition>({ x: 0, y: 0 });
-	const isMouseMoving = useRef(false);
-	const animationFrameId = useRef<number>();
-	const mouseTimeout = useRef<NodeJS.Timeout>();
+	const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-	useEffect(() => {
+	useEffect((): (() => void) => {
 		const canvas = canvasRef.current;
-		if (!canvas) return;
+		if (!canvas) return () => {};
 
 		const ctx = canvas.getContext("2d");
-		if (!ctx) return;
+		if (!ctx) return () => {};
 
-		// Initialize wandering point
-		const wanderPoint: WanderPoint = {
-			x: canvas.width / 2,
-			y: canvas.height / 2,
-			targetX: canvas.width / 2,
-			targetY: canvas.height / 2,
-		};
+		const particles: Particle[] = [];
+		let mouseX = 0;
+		let mouseY = 0;
+		let wanderX = window.innerWidth / 2;
+		let wanderY = window.innerHeight / 2;
 
-		// Function to update wander target
-		const updateWanderTarget = () => {
-			wanderPoint.targetX = Math.min(
-				Math.max(wanderPoint.x + random.nextSpread(CONFIG.wanderRadius), 0),
-				canvas.width,
-			);
-			wanderPoint.targetY = Math.min(
-				Math.max(wanderPoint.y + random.nextSpread(CONFIG.wanderRadius), 0),
-				canvas.height,
-			);
-		};
-
-		// Move the wandering point
-		const moveWanderPoint = () => {
-			const dx = wanderPoint.targetX - wanderPoint.x;
-			const dy = wanderPoint.targetY - wanderPoint.y;
-
-			wanderPoint.x += dx * CONFIG.wanderSpeed * 0.01;
-			wanderPoint.y += dy * CONFIG.wanderSpeed * 0.01;
-
-			// Create particles at the wander point
-			if (Math.random() > CONFIG.particleCreationThreshold) {
-				particles.current.push(
-					createParticle({
-						x: wanderPoint.x,
-						y: wanderPoint.y,
-					}),
-				);
-			}
-		};
-
-		const resizeCanvas = () => {
+		// Resize handler
+		const resizeCanvas = (): void => {
+			if (!canvas) return;
 			canvas.width = window.innerWidth;
 			canvas.height = window.innerHeight;
 		};
-		const wanderInterval = setInterval(updateWanderTarget, 1000);
-		const moveInterval = setInterval(moveWanderPoint, CONFIG.wanderInterval);
 
-		const animate = () => {
-			ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-			// Create particles from both mouse and wander point
-			if (
-				isMouseMoving.current &&
-				Math.random() > CONFIG.particleCreationThreshold
-			) {
-				particles.current.push(createParticle(mousePos.current));
+		// Track mouse movement
+		const handleMouseMove = (e: MouseEvent): void => {
+			mouseX = e.clientX;
+			mouseY = e.clientY;
+			// Create particles on mouse move
+			if (random.next() > CONFIG.particleCreationThreshold) {
+				createParticle(mouseX, mouseY);
 			}
+		};
+
+		const createParticle = (x: number, y: number): void => {
+			particles.push({
+				x: x + random.nextSpread(CONFIG.particleSpread),
+				y: y + random.nextSpread(CONFIG.particleSpread),
+				char: CONFIG.characters[random.nextInt(CONFIG.characters.length)] ?? "",
+				color: CONFIG.colors[random.nextInt(CONFIG.colors.length)] ?? "",
+				alpha: 1,
+				age: 0,
+				isAsterisk: false,
+				letterChanges: 0,
+			});
+		};
+
+		// Update wander point
+		const updateWanderPoint = (): void => {
+			// Create new random target coordinate to move point towards
+			const targetX = wanderX + random.nextSpread(CONFIG.wanderRadius);
+			const targetY = wanderY + random.nextSpread(CONFIG.wanderRadius);
+
+			// Move toward target at configurable speed
+			wanderX += (targetX - wanderX) * CONFIG.wanderSpeed;
+			wanderY += (targetY - wanderY) * CONFIG.wanderSpeed;
+
+			// Ensure wander point stays on screen
+			wanderX = Math.max(0, Math.min(canvas.width, wanderX));
+			wanderY = Math.max(0, Math.min(canvas.height, wanderY));
+
+			// Create particles at wander point
+			if (random.next() > CONFIG.particleCreationThreshold) {
+				createParticle(wanderX, wanderY);
+			}
+		};
+
+		// Animation loop
+		const animate = (): void => {
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			updateWanderPoint();
 
 			ctx.font = `${CONFIG.fontSize}px ${playfair.style.fontFamily}`;
 			ctx.textAlign = "center";
 			ctx.textBaseline = "middle";
 
 			// Update and render particles
-			particles.current = particles.current.filter((particle) => {
-				const keepParticle = updateParticle(particle, performance.now(), ctx);
-				if (keepParticle) {
-					ctx.fillText(particle.character, particle.x, particle.y);
+			for (let i = particles.length - 1; i >= 0; i--) {
+				const p = particles[i];
+				if (!p) continue;
+				p.age++;
+
+				// Change to asterisk after enough letter changes
+				if (p.letterChanges >= CONFIG.changesBeforeAsterisk && !p.isAsterisk) {
+					p.char = "*";
+					p.isAsterisk = true;
 				}
-				return keepParticle;
-			});
 
-			animationFrameId.current = requestAnimationFrame(animate);
-		};
+				// Start fading after becoming an asterisk
+				if (p.isAsterisk) {
+					if (p.age > CONFIG.fadeDelay) {
+						p.alpha -= CONFIG.fadeSpeed;
+					}
+					ctx.fillStyle = `${p.color}${Math.floor(p.alpha * 255)
+						.toString(16)
+						.padStart(2, "0")}`;
+				} else {
+					ctx.fillStyle = `rgba(0, 0, 0, ${p.alpha})`;
+					// Change letter based on interval
+					if (p.age % CONFIG.letterChangeInterval === 0) {
+						p.char =
+							CONFIG.characters[random.nextInt(CONFIG.characters.length)] ?? "";
+						p.letterChanges++;
+					}
+				}
 
-		const handleMouseMove = (e: MouseEvent) => {
-			mousePos.current = {
-				x: e.clientX,
-				y: e.clientY,
-			};
+				// Remove faded particles
+				if (p.alpha <= 0) {
+					particles.splice(i, 1);
+					continue;
+				}
 
-			isMouseMoving.current = true;
-
-			if (mouseTimeout.current) {
-				clearTimeout(mouseTimeout.current);
+				ctx.fillText(p.char, p.x, p.y);
 			}
 
-			mouseTimeout.current = setTimeout(() => {
-				isMouseMoving.current = false;
-			}, CONFIG.letterChangeInterval);
+			requestAnimationFrame(animate);
 		};
 
 		// Initialize
@@ -220,14 +161,6 @@ export default function CanvasBackground() {
 		return () => {
 			window.removeEventListener("resize", resizeCanvas);
 			window.removeEventListener("mousemove", handleMouseMove);
-			if (animationFrameId.current) {
-				cancelAnimationFrame(animationFrameId.current);
-			}
-			if (mouseTimeout.current) {
-				clearTimeout(mouseTimeout.current);
-			}
-			clearInterval(wanderInterval);
-			clearInterval(moveInterval);
 		};
 	}, []);
 
