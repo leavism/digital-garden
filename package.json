@@ -4,6 +4,7 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
+		"auth:generate": "npx @better-auth/cli generate --config src/server/auth/auth.ts --output src/server/db/schema/auth.ts && echo '\nYou may have to make changes to the generated schema before pushing to the database.'",
 		"build": "next build",
 		"check": "biome check .",
 		"check:unsafe": "biome check --write --unsafe .",
@@ -15,7 +16,10 @@
 	},
 	"dependencies": {
 		"@t3-oss/env-nextjs": "^0.12.0",
+		"better-auth": "^1.2.7",
+		"drizzle-orm": "^0.42.0",
 		"framer-motion": "^12.7.4",
+		"mysql2": "^3.14.0",
 		"next": "^15.2.3",
 		"react": "^19.0.0",
 		"react-dom": "^19.0.0",
@@ -27,6 +31,7 @@
 		"@types/node": "^20.14.10",
 		"@types/react": "^19.0.0",
 		"@types/react-dom": "^19.0.0",
+		"drizzle-kit": "^0.31.0",
 		"postcss": "^8.5.3",
 		"tailwindcss": "^4.0.15",
 		"typescript": "^5.8.2"
