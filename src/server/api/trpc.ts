@@ -8,6 +8,8 @@ import { ZodError } from "zod";
  * Generates the "internals" for a tRPC context. The API handler and RSC clients
  * each wrap this and provides the required context. This is what allows access
  * to the database, session, etc. when processing requests.
+ *
+ * @see https://trpc.io/docs/server/context
  */
 export const createTRPCContext = async (opts: { headers: Headers }) => {
 	const session = await auth.api.getSession({

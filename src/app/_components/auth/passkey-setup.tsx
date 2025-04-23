@@ -30,11 +30,18 @@ export function PasskeySetup() {
 		setError(null);
 
 		try {
-			await authClient.passkey.addPasskey({ name: data.name });
+			void (await authClient.passkey.addPasskey(
+				{
+					name: data.name,
+				},
+				{
+					onSuccess: () => {
+						router.push("/");
+					},
+				},
+			));
 
 			// After successful passkey registration, redirect to home page
-			router.refresh();
-			router.push("/");
 		} catch (error) {
 			console.error("Passkey registration error:", error);
 			setError("Failed to register passkey. Please try again.");

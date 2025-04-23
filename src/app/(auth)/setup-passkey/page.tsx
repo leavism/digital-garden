@@ -1,8 +1,8 @@
 // src/app/(auth)/setup-passkey/page.tsx
 import { PasskeySetup } from "@/app/_components/auth/passkey-setup";
 import { getServerSession } from "@/server/auth";
-import { redirect } from "next/navigation";
 import { api } from "@/trpc/server";
+import { redirect } from "next/navigation";
 
 export default async function SetupPasskeyPage() {
 	const session = await getServerSession();
