@@ -1,3 +1,9 @@
+/**
+ * Better Auth Server-Side Configuration
+ *
+ * This file configures the server-side implementation of Better Auth.
+ */
+
 import { env } from "@/env";
 import { db } from "@/server/db";
 import * as schema from "@/server/db/schema/auth";
@@ -52,7 +58,7 @@ export const getServerSession = cache(
 /**
  * Type definition for auth sessions.
  *
- * Uses Better-Auth's `$Infer` property to infer the type.
+ * Uses Better Auth's `$Infer` property to infer the type.
  *
  * @see https://www.better-auth.com/docs/concepts/typescript#inferring-types
  */
