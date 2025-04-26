@@ -1,3 +1,14 @@
+/**
+ * tRPC API Router Root
+ *
+ * This file serves as the main entry point to all tRPC routes in the application.
+ * This file should only contain router composition and exports. Actual API
+ * implementation logic should be defined in their individual router files.
+ *
+ * When adding new functionality to the API:
+ * 1. Create a new router file in @/server/api/routers/ or add to an existing one
+ * 2. Import and add the router to the appRouter in this file
+ */
 import { userRouter } from "@/server/api/routers/user";
 import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
 

@@ -1,10 +1,23 @@
+/**
+ * Query Client Configuration
+ *
+ * This file configures the TanStack Query client used by tRPC for managing server state.
+ *
+ * @module @/trpc/query-client
+ */
+
 import {
 	QueryClient,
 	defaultShouldDehydrateQuery,
 } from "@tanstack/react-query";
 import SuperJSON from "superjson";
 
-export const createQueryClient = () =>
+/**
+ * Creates a configured TanStack Query client to use with tRPC.
+ *
+ * Uses SuperJSON for serialization/deserialization.
+ */
+export const createQueryClient = (): QueryClient =>
 	new QueryClient({
 		defaultOptions: {
 			queries: {

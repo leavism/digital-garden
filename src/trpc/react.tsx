@@ -1,3 +1,12 @@
+/**
+ * tRPC React Integration
+ *
+ * This file providesr the client-side tRPC setup for React components.
+ * It enables type-safe client-server communication in React components.
+ *
+ * @module @trpc/react
+ */
+
 "use client";
 
 import { type QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -10,6 +19,12 @@ import SuperJSON from "superjson";
 import type { AppRouter } from "@/server/api/root";
 import { createQueryClient } from "./query-client";
 
+/**
+ * Implements singleton pattern for the query client.
+ *
+ * Creates a new client for the server-side rendering, but reuses the same client
+ * on the client-side for the entire application lifetime.
+ */
 let clientQueryClientSingleton: QueryClient | undefined = undefined;
 const getQueryClient = () => {
 	if (typeof window === "undefined") {
@@ -22,6 +37,11 @@ const getQueryClient = () => {
 	return clientQueryClientSingleton;
 };
 
+/**
+ * tRPC React hook factory for creating hooks to call procedures.
+ *
+ * Use this to make type-safe API calls.
+ */
 export const api = createTRPCReact<AppRouter>();
 
 /**
@@ -38,6 +58,10 @@ export type RouterInputs = inferRouterInputs<AppRouter>;
  */
 export type RouterOutputs = inferRouterOutputs<AppRouter>;
 
+/**
+ * Provider component that initializes the tRPC React client and wraps
+ * the application to provide tRPC functionality to all components.
+ */
 export function TRPCReactProvider(props: { children: React.ReactNode }) {
 	const queryClient = getQueryClient();
 
@@ -71,8 +95,13 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
 	);
 }
 
+/**
+ * Helper function to determine base URL for API requests.
+ */
 function getBaseUrl() {
 	if (typeof window !== "undefined") return window.location.origin;
+	// Since this is a Next.js project, there's a high chance it'll be deployed
+	// on Vercel at some point. Not saying it'll be permanently on Vercel though.
 	if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
 	return `http://localhost:${process.env.PORT ?? 3000}`;
 }

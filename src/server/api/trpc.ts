@@ -1,3 +1,19 @@
+/**
+ * tRPC Server Configuration
+ *
+ * Configures the tRPC server-side implementation and exports. Do not define
+ * routes here as this is purely for tRPC configuration such as:
+ *
+ * 1. Creating core tRPC builders and utilities:
+ *  - Context creation function that connects to the database and session
+ *  - Router creation function for defining API endpoints
+ *  - Procedure builders for defining endpoint handlers
+ *
+ * 2. Type utilities
+ *  - createCallerFactory for server-side tRPC calls
+ *
+ * @module @/server/api/trpc
+ */
 import { auth } from "@/server/auth";
 import { db } from "@/server/db";
 import { TRPCError, initTRPC } from "@trpc/server";
@@ -46,6 +62,21 @@ const trpcBuilder = initTRPC.context<typeof createTRPCContext>().create({
  * Create server-side caller.
  *
  * @see https://trpc.io/docs/server/server-side-calls
+ *
+ * @example
+ * // In an API route or Server Component:
+ * import { createCaller } from "@/server/api/root";
+ * import { createTRPCContext } from "@/server/api/trpc";
+ *
+ * // Create a context with appropriate headers/session
+ * const context = await createTRPCContext({ headers: new Headers() });
+ *
+ * // Create a caller with that context
+ * const caller = createCaller(context);
+ *
+ * // Now you can call any procedure directly:
+ * const hasPasskey = await caller.user.hasPasskey();
+ * const userProfile = await caller.user.getUserProfile();
  */
 export const createCallerFactory = trpcBuilder.createCallerFactory;
 

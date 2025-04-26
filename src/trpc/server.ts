@@ -1,3 +1,10 @@
+/**
+ * tRPC Server Integration
+ *
+ * This file provides server-side tRPC utilities for React Server Components.
+ *
+ * @module @/trpc/server
+ */
 import "server-only";
 
 import { createHydrationHelpers } from "@trpc/react-query/rsc";
@@ -21,9 +28,22 @@ const createContext = cache(async () => {
 	});
 });
 
+/**
+ * Cached query client factory to ensure consistent query client
+ * usage across multiple tRPC calls in RSC.
+ */
 const getQueryClient = cache(createQueryClient);
+
+/**
+ * tRPC caller instance for direct procedure calls in RSC.
+ */
 const caller = createCaller(createContext);
 
+/**
+ * Exported utilities for React Server Components:
+ * - api: The tRPC instance for calling procedures
+ * - HydrateClient: Component to hydrate client state
+ */
 export const { trpc: api, HydrateClient } = createHydrationHelpers<AppRouter>(
 	caller,
 	getQueryClient,
