@@ -1,8 +1,11 @@
 "use client";
 import { random } from "@/utils/FastRandom";
-import { Playfair_Display } from "next/font/google";
+import Playfair_Display from "next/font/local";
 import { useEffect, useRef } from "react";
-const playfair = Playfair_Display({ subsets: ["latin"] });
+
+const playfair = Playfair_Display({
+	src: "./../../../public/fonts/PlayfairDisplay-VariableFont_wght.ttf",
+});
 
 const CONFIG = {
 	// Visual appearance
@@ -102,7 +105,8 @@ export default function CanvasBackground() {
 
 		// Animation loop
 		const animate = (): void => {
-			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			ctx.fillStyle = "#FFFFFF";
+			ctx.fillRect(0, 0, canvas.width, canvas.height);
 			updateWanderPoint();
 
 			ctx.font = `${CONFIG.fontSize}px ${playfair.style.fontFamily}`;
@@ -167,7 +171,7 @@ export default function CanvasBackground() {
 	return (
 		<canvas
 			ref={canvasRef}
-			className="-z-10 pointer-events-none fixed inset-0"
+			className="-z-10 pointer-events-none hidden md:block fixed inset-0"
 		/>
 	);
 }

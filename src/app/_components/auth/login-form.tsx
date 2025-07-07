@@ -1,29 +1,37 @@
 "use client";
+
+import { Button } from "@/app/_components/ui/button";
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardFooter,
+	CardHeader,
+	CardTitle,
+} from "@/app/_components/ui/card";
 import { authClient } from "@/server/auth/client";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export function LoginForm() {
+	const [isHovering, setIsHovering] = useState(false);
 	const [isPending, setIsPending] = useState(false);
 	const router = useRouter();
 
 	const handlePasskeyLogin = async () => {
 		setIsPending(true);
-
 		try {
-			void (await authClient.signIn.passkey({
+			await authClient.signIn.passkey({
 				fetchOptions: {
 					onSuccess: () => {
-						// Passkey authentication is client-side and so is the useRouter.push()
-						// function. Call refresh() to re-render server components with the
-						// new auth session.
 						router.push("/");
 						router.refresh();
 					},
 				},
-			}));
+			});
 		} catch (error) {
-			console.error("Login error:", error);
+			console.error("Passkey login error", error);
 		} finally {
 			setIsPending(false);
 		}
@@ -31,65 +39,115 @@ export function LoginForm() {
 
 	const handleDiscordLogin = async () => {
 		setIsPending(true);
-
 		try {
 			await authClient.signIn.social({ provider: "discord" });
-			// The redirect happens automatically via better-auth
+			// redirect is done by BetterAuth
 		} catch (error) {
-			console.error("Discord login error:", error);
+			console.error("Discord login error", error);
+		} finally {
 			setIsPending(false);
 		}
 	};
 
 	return (
-		<div className="mx-auto max-w-md space-y-6 p-8">
-			<div className="space-y-2 text-center">
-				<h1 className="font-bold text-3xl">Welcome Back</h1>
-				<p className="text-gray-500">Sign in to continue</p>
-			</div>
-			<div className="space-y-4">
-				<button
-					type="button"
-					className="w-full rounded-md bg-blue-600 p-2 text-white hover:bg-blue-700 disabled:bg-blue-300"
-					onClick={handlePasskeyLogin}
-					disabled={isPending}
-				>
-					{isPending ? "Authenticating..." : "Sign in with Passkey"}
-				</button>
-
-				<div className="relative">
-					<div className="absolute inset-0 flex items-center">
-						<div className="w-full border-gray-300 border-t" />
-					</div>
-					<div className="relative flex justify-center text-sm">
-						<span className="bg-white px-2 text-gray-500">Or</span>
-					</div>
-				</div>
-
-				<button
-					type="button"
-					className="flex w-full items-center justify-center gap-2 rounded-md bg-[#5865F2] p-2 text-white hover:bg-[#4752C4] disabled:bg-[#9AA0F2]"
-					onClick={handleDiscordLogin}
-					disabled={isPending}
-				>
-					{isPending ? (
-						"Connecting..."
-					) : (
-						<>
+		<div className="w-full max-w-md px-4">
+			<div className="relative">
+				<Card className="border-none">
+					<CardHeader className="space-y-1 text-center">
+						<div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-50">
+							<Image
+								src="/white-daisy.svg"
+								alt="white daisy"
+								width={32}
+								height={32}
+								className="h-10 w-10 md:h-10 md:w-10"
+							/>
+						</div>
+						<CardTitle className="font-bold text-3xl">Welcome back</CardTitle>
+						<CardDescription className="font-medium text-lg">
+							Sign in to tend to your digital garden
+						</CardDescription>
+					</CardHeader>
+					<CardContent className="space-y-4">
+						<Button
+							className="w-full font-sans"
+							variant="default"
+							disabled={isPending}
+							onClick={handlePasskeyLogin}
+						>
 							<svg
-								width="20"
-								height="20"
-								fill="currentColor"
+								xmlns="http://www.w3.org/2000/svg"
+								width="24"
+								height="24"
 								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								strokeWidth="2"
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								className="mr-2 h-4 w-4"
 								role="img"
-								aria-label="Discord logo"
+								aria-label="logo"
 							>
-								<path d="M19.54 0c1.356 0 2.46 1.104 2.46 2.472v21.528l-2.58-2.28-1.452-1.344-1.536-1.428.636 2.22h-13.608c-1.356 0-2.46-1.104-2.46-2.472v-16.224c0-1.368 1.104-2.472 2.46-2.472h16.08zm-4.632 15.672c2.652-.084 3.672-1.824 3.672-1.824 0-3.864-1.728-6.996-1.728-6.996-1.728-1.296-3.372-1.26-3.372-1.26l-.168.192c2.04.624 2.988 1.524 2.988 1.524-1.248-.684-2.472-1.02-3.612-1.152-.864-.096-1.692-.072-2.424.024l-.204.024c-.42.036-1.44.192-2.724.756-.444.204-.708.348-.708.348s.996-.948 3.156-1.572l-.12-.144s-1.644-.036-3.372 1.26c0 0-1.728 3.132-1.728 6.996 0 0 1.008 1.74 3.66 1.824 0 0 .444-.54.804-.996-1.524-.456-2.1-1.416-2.1-1.416l.336.204.048.036.047.027.014.006.047.027c.3.168.6.3.876.408.492.192 1.08.384 1.764.516.9.168 1.956.228 3.108.012.564-.096 1.14-.264 1.74-.516.42-.156.888-.384 1.38-.708 0 0-.6.984-2.172 1.428.36.456.792.972.792.972zm-5.58-5.604c-.684 0-1.224.6-1.224 1.332 0 .732.552 1.332 1.224 1.332.684 0 1.224-.6 1.224-1.332.012-.732-.54-1.332-1.224-1.332zm4.38 0c-.684 0-1.224.6-1.224 1.332 0 .732.552 1.332 1.224 1.332.684 0 1.224-.6 1.224-1.332 0-.732-.54-1.332-1.224-1.332z" />
+								<rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+								<path d="M7 11V7a5 5 0 0 1 10 0v4" />
 							</svg>
-							Continue with Discord
-						</>
-					)}
-				</button>
+							{isPending ? "Authenticating" : "Sign in with Passkey"}
+						</Button>
+
+						<Button
+							className="w-full bg-[#5865F2] hover:bg-[#4752c4] font-sans"
+							variant="default"
+							disabled={isPending}
+							onClick={handleDiscordLogin}
+						>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								width="24"
+								height="24"
+								viewBox="0 0 127.14 96.36"
+								className="mr-2 h-5 w-5"
+								fill="#ffffff"
+								role="img"
+								aria-label="logo"
+							>
+								<path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z" />
+							</svg>
+							{isPending ? "Authenticating" : "Sign in with Discord"}
+						</Button>
+					</CardContent>
+					<CardFooter>
+						<p
+							className="w-full text-center bg-white text-gray-400"
+							onMouseEnter={() => setIsHovering(true)}
+							onMouseLeave={() => setIsHovering(false)}
+						>
+							{isHovering
+								? "This garden is private. Only the gardener may enter."
+								: "Nurture your thoughts and watch them bloom."}
+						</p>
+					</CardFooter>
+				</Card>
+
+				{/* Decorative daisies */}
+				<div className="-bottom-4 -left-4 absolute h-12 w-12 rotate-12">
+					<Image
+						src="/white-daisy.svg"
+						alt="white daisy"
+						width={32}
+						height={32}
+						className="h-10 w-10 md:h-10 md:w-10"
+					/>
+				</div>
+				<div className="-right-2 -top-2 -rotate-12 absolute h-10 w-10">
+					<Image
+						src="/white-daisy.svg"
+						alt="white daisy"
+						width={32}
+						height={32}
+						className="h-10 w-10 md:h-10 md:w-10"
+					/>
+				</div>
 			</div>
 		</div>
 	);

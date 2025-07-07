@@ -1,4 +1,3 @@
-// src/app/layout.tsx
 import "@/styles/globals.css";
 
 import type { Metadata } from "next";
@@ -24,14 +23,14 @@ export default async function RootLayout({
 		<html lang="en" className="font-serif">
 			<body>
 				<CanvasBackground />
-				<header className="fixed top-0 right-0 left-0 z-50 bg-white/80 backdrop-blur-sm">
-					<div className="container mx-auto flex items-center justify-between p-4">
-						<a href="/" className="font-bold text-xl">
-							Digital Garden
-						</a>
-						<UserNav session={session} />
-					</div>
-				</header>
+				{/* <header className="fixed top-0 right-0 left-0 z-50 bg-white/80 backdrop-blur-sm"> */}
+				{/* 	<div className="container mx-auto flex items-center justify-between p-4"> */}
+				{/* 		<a href="/" className="font-bold text-xl"> */}
+				{/* 			Digital Garden */}
+				{/* 		</a> */}
+				{/* 		<UserNav session={session} /> */}
+				{/* 	</div> */}
+				{/* </header> */}
 				<TRPCReactProvider>{children}</TRPCReactProvider>
 			</body>
 		</html>
