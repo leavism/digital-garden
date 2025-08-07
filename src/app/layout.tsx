@@ -2,7 +2,6 @@ import "@/styles/globals.css";
 
 import type { Metadata } from "next";
 
-import CanvasBackground from "@/app/_components/BackgroundEffect";
 import { UserNav } from "@/app/_components/user-nav";
 import { getServerSession } from "@/server/auth";
 import { TRPCReactProvider } from "@/trpc/react";
@@ -22,7 +21,6 @@ export default async function RootLayout({
 	return (
 		<html lang="en" className="font-serif">
 			<body>
-				<CanvasBackground />
 				{/* <header className="fixed top-0 right-0 left-0 z-50 bg-white/80 backdrop-blur-sm"> */}
 				{/* 	<div className="container mx-auto flex items-center justify-between p-4"> */}
 				{/* 		<a href="/" className="font-bold text-xl"> */}

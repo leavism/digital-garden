@@ -3,77 +3,58 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import CanvasBackground from "@/app/_components/BackgroundEffect";
+
+// Plant icon components
+const FlowerIcon = ({ className = "" }) => (
+	<Image
+		src="/flower-white.svg"
+		alt="white daisy"
+		width={32}
+		height={32}
+		className="h-5 w-5 md:h-5 md:w-5"
+	/>
+);
 
 interface navLinkProp {
 	link: string;
 	text: string;
+	icon: React.ReactNode;
 }
 
-function NavLink({ link, text, delay = 0 }: navLinkProp & { delay?: number }) {
-	const [isMobile, setIsMobile] = useState(false);
-
-	useEffect(() => {
-		const checkMobile = () => {
-			setIsMobile(window.innerWidth < 768); // 768px is Tailwind's md breakpoint
-		};
-
-		checkMobile();
-		window.addEventListener("resize", checkMobile);
-
-		// Cleanup
-		return () => window.removeEventListener("resize", checkMobile);
-	}, []);
-
+function NavLink({
+	link,
+	text,
+	// icon,
+	delay = 0,
+}: navLinkProp & { delay?: number }) {
 	return (
 		<motion.div
-			whileHover={{ x: 4 }}
-			transition={{ type: "spring", stiffness: 300 }}
+			whileHover={{ scale: 1.02 }}
+			whileTap={{ scale: 0.98 }}
+			transition={{ type: "spring", stiffness: 300, delay: delay }}
 		>
 			<Link
 				href={link}
 				target="_blank"
-				className="group flex items-center gap-1 rounded-sm px-1 py-0.5 underline decoration-1 decoration-gray-300 underline-offset-4"
+				className="group flex items-center gap-3 rounded-lg border-2 border-dashed border-gray-200 bg-white px-4 py-2 duration-200 hover:border-[#A8B331]"
 			>
-				<motion.span
-					animate={isMobile ? "bounce" : "none"}
-					variants={{
-						bounce: {
-							y: [0, -4, 0],
-							x: [0, 1, -1, 1, 0],
-							rotate: [0, 2, -2, 2, 0],
-							transition: {
-								repeat: Number.POSITIVE_INFINITY,
-								repeatDelay: 4,
-								delay: delay,
-								duration: 0.4,
-							},
-						},
-						none: {
-							y: 0,
-							x: 0,
-							rotate: 0,
-						},
-					}}
-					className="text-base md:text-medium"
-				>
+				{/* <div className="text-gray-400 transition-colors duration-200 group-hover:text-[#777E21]"> */}
+				{/* 	{icon} */}
+				{/* </div> */}
+				<span className="text-base font-medium text-gray-800 group-hover:text-[#777E21]">
 					{text}
-				</motion.span>
-        <Image
-          src="/arrow.svg"
-          alt="arrow"
-          width={12}
-          height={12}
-          className="opacity-50"
-        />
+				</span>
 			</Link>
 		</motion.div>
 	);
 }
-
 export default function Home() {
 	return (
 		<main className="relative flex min-h-screen flex-col items-center justify-center p-2">
-			<div className="relative mx-auto max-w-[600px] rounded-xl md:border-2 md:border-dashed border-gray-200 bg-white p-4 transition-colors hover:border-gray-300 md:p-10">
+			<CanvasBackground />
+
+			<div className="relative mx-auto max-w-[700px] rounded-xl md:border-2 md:border-dashed border-gray-200 bg-white p-4 transition-colors hover:border-gray-300 md:p-10">
 				<motion.div
 					className="space-y-8 md:space-y-12"
 					initial={{ opacity: 0, y: 20 }}
@@ -82,9 +63,7 @@ export default function Home() {
 				>
 					<div className="space-y-6">
 						<div className="flex items-center gap-3">
-							<h1 className="font-bold text-3xl">
-								Huy&apos;s Digital Garden
-							</h1>
+							<h1 className="font-bold text-3xl">Huy&apos;s Digital Garden</h1>
 							<Image
 								src="/white-daisy.svg"
 								alt="white daisy"
@@ -105,27 +84,30 @@ export default function Home() {
 
 					<div className="flex flex-col gap-6 md:flex-row md:gap-10">
 						<motion.div
-							className="flex-1"
+							className="flex-1 space-y-4"
 							initial={{ opacity: 0, x: -20 }}
 							animate={{ opacity: 1, x: 0 }}
 							transition={{ delay: 0.3 }}
 						>
-							<h2 className="mb-2 font-bold text-2xl ">Me</h2>
-							<nav className="space-y-1 text-xl font-medium">
+							<h2 className="mb-4 font-bold text-2xl">Me</h2>
+							<nav className="space-y-3">
 								<NavLink
 									link="https://drive.google.com/file/d/14qQBXFCt9eyaV1efOz1oKi_WFg_Bx6UE/view?usp=drive_link"
 									text="Resume"
 									delay={1}
+									icon={<FlowerIcon />}
 								/>
 								<NavLink
 									link="https://github.com/leavism"
 									text="GitHub"
 									delay={1.5}
+									icon={<FlowerIcon />}
 								/>
 								<NavLink
 									link="https://www.linkedin.com/in/leavism/"
 									text="LinkedIn"
 									delay={2.0}
+									icon={<FlowerIcon />}
 								/>
 							</nav>
 						</motion.div>
@@ -152,8 +134,24 @@ export default function Home() {
 							animate={{ opacity: 1, x: 0 }}
 							transition={{ delay: 0.3 }}
 						>
-							<h2 className="mb-2 font-bold text-2xl ">My Garden</h2>
-							<p className="text-base md:text-medium">Coming soon</p>
+							<h2 className="mb-4 font-bold text-2xl">My Garden</h2>
+							<div className="rounded-lg border border-dashed border-gray-300 bg-gray-50 p-6 text-center">
+								<div className="mb-4 flex justify-center">
+									<Image
+										src="/sapling.svg"
+										alt="white daisy"
+										width={30}
+										height={30}
+										className="h-8 w-8 opacity-70"
+									/>
+								</div>
+								<p className="font-medium text-lg text-gray-600">
+									Seeds are being planted...
+								</p>
+								<p className="mt-1 text-gray-500 text-sm">
+									Check back soon to see what grows
+								</p>
+							</div>
 						</motion.div>
 					</div>
 				</motion.div>
