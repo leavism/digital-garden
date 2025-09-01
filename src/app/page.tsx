@@ -54,16 +54,16 @@ export default function Home() {
 		<main className="relative flex min-h-screen flex-col items-center justify-center p-2">
 			<CanvasBackground />
 
-			<div className="relative mx-auto max-w-[700px] rounded-xl md:border-2 md:border-dashed border-gray-200 bg-white p-4 transition-colors hover:border-gray-300 md:p-10">
-				<motion.div
-					className="space-y-8 md:space-y-12"
-					initial={{ opacity: 0, y: 20 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{ duration: 1 }}
-				>
-					<div className="space-y-6">
+			<motion.div
+				initial={{ opacity: 0, y: 20 }}
+				animate={{ opacity: 1, y: 0 }}
+				transition={{ duration: 1 }}
+				className="relative mx-auto max-w-[700px] rounded-xl md:border-2 md:border-dashed border-gray-200 bg-white p-4 transition-colors hover:border-gray-300 md:p-10"
+			>
+				<motion.div className="space-y-6 md:space-y-8">
+					<div className="space-y-4">
 						<div className="flex items-center gap-3">
-							<h1 className="font-bold text-3xl">Huy&apos;s Digital Garden</h1>
+							<h1 className="mt-0 text-3xl">Huy&apos;s Digital Garden</h1>
 							<Image
 								src="/white-daisy.svg"
 								alt="white daisy"
@@ -72,8 +72,8 @@ export default function Home() {
 								className="h-10 w-10 md:h-10 md:w-10"
 							/>
 						</div>
-						<div className="space-y-3">
-							<p className="font-medium text-lg tracking-wide">
+						<div>
+							<p>
 								Welcome to my little garden on the Internet, where I grow my
 								passion for software. As a new graduate, I&apos;m drawn to
 								creating tools that allow us to bloom rather than limit how we
@@ -87,9 +87,9 @@ export default function Home() {
 							className="flex-1 space-y-4"
 							initial={{ opacity: 0, x: -20 }}
 							animate={{ opacity: 1, x: 0 }}
-							transition={{ delay: 0.3 }}
+							transition={{ duration: 0.4, delay: 0.3 }}
 						>
-							<h2 className="mb-4 font-bold text-2xl">Me</h2>
+							<h2>Me</h2>
 							<nav className="space-y-3">
 								<NavLink
 									link="https://drive.google.com/file/d/14qQBXFCt9eyaV1efOz1oKi_WFg_Bx6UE/view?usp=drive_link"
@@ -132,9 +132,9 @@ export default function Home() {
 							className="flex-1"
 							initial={{ opacity: 0, x: 20 }}
 							animate={{ opacity: 1, x: 0 }}
-							transition={{ delay: 0.3 }}
+							transition={{ duration: 0.4, delay: 0.3 }}
 						>
-							<h2 className="mb-4 font-bold text-2xl">My Garden</h2>
+							<h2 className=" font-bold mt-0">My Garden</h2>
 							<div className="rounded-lg border border-dashed border-gray-300 bg-gray-50 p-6 text-center">
 								<div className="mb-4 flex justify-center">
 									<Image
@@ -145,17 +145,15 @@ export default function Home() {
 										className="h-8 w-8 opacity-70"
 									/>
 								</div>
-								<p className="font-medium text-lg text-gray-600">
-									Seeds are being planted...
-								</p>
-								<p className="mt-1 text-gray-500 text-sm">
-									Check back soon to see what grows
+								<p className="text-gray-600">Seeds are being planted...</p>
+								<p className="mt-1 text-gray-500 text-base">
+									Check back to see what grows
 								</p>
 							</div>
 						</motion.div>
 					</div>
 				</motion.div>
-			</div>
+			</motion.div>
 		</main>
 	);
 }

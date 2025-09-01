@@ -30,14 +30,7 @@ export default function BlogPostPage() {
 							className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
 						>
 							<span>←</span>
-							<span>All thoughts</span>
-						</Link>
-						<Link
-							href="/"
-							className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
-						>
-							<span>🏠</span>
-							<span>Garden</span>
+							<span>All Entries</span>
 						</Link>
 					</div>
 				</motion.nav>
@@ -50,18 +43,9 @@ export default function BlogPostPage() {
 					className="prose prose-lg max-w-none"
 				>
 					{/* Header */}
-					<header className="mb-12 not-prose">
-						<div className="mb-6 flex items-center justify-center gap-3">
-							<h1 className="font-bold text-4xl leading-tight text-center">
-								{blogPost.title}
-							</h1>
-							<Image
-								src="/white-daisy.svg"
-								alt="white daisy"
-								width={32}
-								height={32}
-								className="h-8 w-8"
-							/>
+					<header className="mb-12">
+						<div className="mb-2 flex items-center justify-center gap-3">
+							<h1 className="text-center">{blogPost.title}</h1>
 						</div>
 
 						{/* Meta information - removed read time */}
@@ -74,21 +58,17 @@ export default function BlogPostPage() {
 								})}
 							</time>
 						</div>
-
-						{/* Removed tags section */}
 					</header>
 					{/* Content */}
 					<div className="border-t border-gray-200 pt-12">
-						<p className="text-xl leading-relaxed text-gray-700 mb-8">
+						<p className=" text-gray-700 ">
 							When I first started thinking about building my own corner of the
 							internet, I kept coming back to the metaphor of a garden. Unlike a
 							polished portfolio or a formal blog, a digital garden is meant to
 							be a living, breathing space where ideas can grow organically.
 						</p>
 
-						<h2 className="font-bold text-2xl mb-4 mt-12">
-							The Philosophy Behind Digital Gardens
-						</h2>
+						<h2>The Philosophy Behind Digital Gardens</h2>
 
 						<p>
 							Traditional blogs follow a chronological structure—newest posts at
@@ -105,23 +85,21 @@ export default function BlogPostPage() {
 							tending to these digital plants.
 						</p>
 
-						<blockquote className="border-l-4 border-gray-300 pl-6 italic text-gray-700 my-8">
+						<blockquote>
 							"A garden is a grand teacher. It teaches patience and careful
 							watchfulness; it teaches industry and thrift; above all it teaches
 							entire trust."
-							<footer className="mt-2 text-sm text-gray-600">
-								— Gertrude Jekyll
-							</footer>
+							<footer>— Gertrude Jekyll</footer>
 						</blockquote>
 
-						<h2 className="font-bold text-2xl mb-4 mt-12">Technical Choices</h2>
+						<h2>Choices</h2>
 
 						<p>
 							Building this garden required some thoughtful technology choices.
 							I opted for a stack that prioritizes simplicity and growth:
 						</p>
 
-						<ul className="space-y-2">
+						<ul>
 							<li>
 								<strong>Next.js</strong> for the foundation—reliable and
 								familiar
@@ -147,16 +125,14 @@ export default function BlogPostPage() {
 							organic, hand-drawn quality of a gardener's sketch.
 						</p>
 
-						<h2 className="font-bold text-2xl mb-4 mt-12">
-							What Makes This Different
-						</h2>
+						<h2>What Makes This Different</h2>
 
 						<p>
 							Unlike traditional blogs focused on polished, final thoughts, this
 							garden celebrates the process of thinking itself. You might find:
 						</p>
 
-						<ul className="space-y-2">
+						<ul>
 							<li>Half-formed ideas that are still growing</li>
 							<li>Connections between seemingly unrelated concepts</li>
 							<li>Updates to older thoughts as they evolve</li>
@@ -169,7 +145,7 @@ export default function BlogPostPage() {
 							process of discovery and growth.
 						</p>
 
-						<h2 className="font-bold text-2xl mb-4 mt-12">Tending to Growth</h2>
+						<h2>Tending to Growth</h2>
 
 						<p>
 							Like any garden, this space requires regular tending. I plan to

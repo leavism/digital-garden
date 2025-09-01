@@ -207,12 +207,12 @@ function BlogPostRow({
 		>
 			<Link href={`/blog/${post.slug}`}>
 				<div className="flex items-center justify-between py-1 px-1 transition-all hover:translate-x-1 group">
-					<h3 className="font-medium text-gray-600 group-hover:text-gray-800 group-hover:underline transition-all">
+					<h3 className="text-lg text-gray-600 group-hover:text-gray-800 group-hover:underline transition-all">
 						{post.title}
 					</h3>
 					<time
 						dateTime={post.date}
-						className="text-base text-gray-400 tracking-wide flex-shrink-0 ml-4 hover:text-gray-600"
+						className="text-lg text-gray-400 tracking-wide flex-shrink-0 ml-4 group-hover:text-gray-600 group"
 					>
 						{new Date(post.date).toLocaleDateString("en-US", {
 							month: "long",
@@ -252,7 +252,7 @@ export default function BlogPage() {
 							<span className="group-hover:-translate-x-1 transition-transform">
 								←
 							</span>
-							<span>Back to garden</span>
+							<span>Back home</span>
 						</Link>
 					</div>
 
@@ -285,18 +285,18 @@ export default function BlogPage() {
 						</div>
 
 						<div>
-							<h1 className="font-bold text-5xl mb-4 text-gray-900">
-								Garden Journal
+							<h1 className="font-bold text-5xl mb-4 mt-0 text-gray-900">
+								My Journal
 							</h1>
-							<p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-								A living collection of thoughts, discoveries, and reflections.
-								Watch ideas grow from seedlings to full bloom.
+							<p className="text-xl text-gray-600 max-w-xl mx-auto leading-relaxed">
+								A collection of my thoughts, discoveries, and reflections. I
+								promise the garden puns end here.
 							</p>
 						</div>
 
 						{/* Pagination controls */}
 						{totalPages > 1 && (
-							<div className="flex items-center justify-center gap-4 pt-2">
+							<div className="flex items-center justify-center gap-4 pt-2 text-lg">
 								{/* Previous button */}
 								<button
 									onClick={() => setCurrentPage(currentPage - 1)}
@@ -307,7 +307,7 @@ export default function BlogPage() {
 								</button>
 
 								{/* Page indicator */}
-								<span className="text-sm text-gray-500">
+								<span className="text-gray-500">
 									Page {currentPage} of {totalPages}
 								</span>
 
@@ -330,7 +330,7 @@ export default function BlogPage() {
 					animate={{ opacity: 1 }}
 					transition={{ delay: 0.2 }}
 				>
-					<div className="border-dashed border-gray-200 rounded-xl px-6">
+					<div className="border-dashed border-gray-200 rounded-xl md:px-6">
 						{currentPosts.map((post, index) => (
 							<BlogPostRow key={post.id} post={post} index={index} />
 						))}
