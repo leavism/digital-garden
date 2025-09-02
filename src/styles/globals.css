@@ -7,6 +7,7 @@
 	--font-serif: "Playfair Display", serif;
 	--font-sans: "Geist", ui-sans-serif, system-ui, sans-serif,
 		"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+	--color-link-primary: #18619d;
 }
 
 @theme inline {
@@ -50,7 +51,11 @@
 /* https://tailwindcss.com/docs/adding-custom-styles#adding-base-styles */
 @layer base {
 	p {
-		@apply text-xl leading-relaxed;
+		@apply text-xl;
+	}
+
+	a {
+		@apply text-link-primary no-underline hover:underline transition-colors;
 	}
 
 	h1 {
@@ -67,6 +72,14 @@
 
 	li {
 		@apply text-xl;
+	}
+
+	sup a {
+		@apply pl-0.5 font-semibold tracking-wide hover:underline;
+	}
+
+	#footnotes a {
+		@apply text-base text-black;
 	}
 
 	blockquote {

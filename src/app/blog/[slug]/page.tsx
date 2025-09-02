@@ -27,9 +27,11 @@ export default function BlogPostPage() {
 					<div className="flex items-center justify-between">
 						<Link
 							href="/blog"
-							className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+							className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors group"
 						>
-							<span>←</span>
+							<span className="group-hover:-translate-x-1 transition-transform">
+								←
+							</span>
 							<span>All Entries</span>
 						</Link>
 					</div>
@@ -48,7 +50,7 @@ export default function BlogPostPage() {
 							<h1 className="text-center">{blogPost.title}</h1>
 						</div>
 
-						{/* Meta information - removed read time */}
+						{/* Meta information */}
 						<div className="flex flex-wrap items-center justify-center gap-4 text-gray-600">
 							<time dateTime={blogPost.date}>
 								{new Date(blogPost.date).toLocaleDateString("en-US", {
@@ -59,16 +61,19 @@ export default function BlogPostPage() {
 							</time>
 						</div>
 					</header>
+
 					{/* Content */}
-					<div className="border-t border-gray-200 pt-12">
-						<p className=" text-gray-700 ">
+					<div className="border-t border-gray-200 pt-12 space-y-8">
+						<p>
 							When I first started thinking about building my own corner of the
 							internet, I kept coming back to the metaphor of a garden. Unlike a
 							polished portfolio or a formal blog, a digital garden is meant to
 							be a living, breathing space where ideas can grow organically.
 						</p>
 
-						<h2>The Philosophy Behind Digital Gardens</h2>
+						<h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">
+							The Philosophy Behind Digital Gardens
+						</h2>
 
 						<p>
 							Traditional blogs follow a chronological structure—newest posts at
@@ -77,7 +82,111 @@ export default function BlogPostPage() {
 							directions. A digital garden embraces this organic growth.
 						</p>
 
-						<p>
+						{/* Callout Examples */}
+						{/* Pro Tip Callout */}
+						<div
+							className="mt-6 p-6 rounded-lg border-2 border-dashed"
+							style={{
+								backgroundColor: "#e6eef2",
+								borderColor: "#445f75",
+							}}
+						>
+							<div className="flex items-center gap-3 mb-3">
+								<svg
+									className="w-6 h-6"
+									style={{ color: "#445f75" }}
+									fill="currentColor"
+									viewBox="0 0 20 20"
+								>
+									<path
+										fillRule="evenodd"
+										d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+										clipRule="evenodd"
+									/>
+								</svg>
+								<h3
+									className="font-semibold text-lg"
+									style={{ color: "#445f75" }}
+								>
+									Pro Tip
+								</h3>
+							</div>
+							<p className="leading-relaxed" style={{ color: "#445f75" }}>
+								Start small with your digital garden. Plant one idea at a time
+								and let it grow naturally.
+							</p>
+						</div>
+
+						{/* Warning Callout */}
+						<div
+							className="mt-6 p-6 rounded-lg border-2 border-dashed"
+							style={{
+								backgroundColor: "#fcf2f2",
+								borderColor: "#a3766a",
+							}}
+						>
+							<div className="flex items-center gap-3 mb-3">
+								<svg
+									className="w-6 h-6"
+									style={{ color: "#a3766a" }}
+									fill="currentColor"
+									viewBox="0 0 20 20"
+								>
+									<path
+										fillRule="evenodd"
+										d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+										clipRule="evenodd"
+									/>
+								</svg>
+								<h3
+									className="font-semibold text-lg"
+									style={{ color: "#a3766a" }}
+								>
+									Important Note
+								</h3>
+							</div>
+							<p className="leading-relaxed" style={{ color: "#916559" }}>
+								Don't over-animate! Subtle movements are more effective than
+								flashy transitions.
+							</p>
+						</div>
+
+						{/* Success Callout */}
+						<div
+							className="mt-6 p-6 rounded-lg border-2 border-dashed"
+							style={{
+								// backgroundColor: "#fcfcf8",
+								// borderColor: "#e8ddb5",
+								backgroundColor: "#f5fcf2",
+								borderColor: "#b2c9ab",
+							}}
+						>
+							<div className="flex items-center gap-3 mb-3">
+								<svg
+									className="w-6 h-6"
+									style={{ color: "#7d8f78" }}
+									fill="currentColor"
+									viewBox="0 0 20 20"
+								>
+									<path
+										fillRule="evenodd"
+										d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+										clipRule="evenodd"
+									/>
+								</svg>
+								<h3
+									className="font-semibold text-lg"
+									style={{ color: "#7d8f78" }}
+								>
+									Success!
+								</h3>
+							</div>
+							<p className="leading-relaxed" style={{ color: "#7d8f78" }}>
+								The garden is now live and growing. Each post is a new seed
+								planted in this digital soil.
+							</p>
+						</div>
+						<p className="text-gray-700">
 							I wanted a space where I could plant seeds of ideas and watch them
 							grow over time. Some thoughts might remain as small seedlings,
 							while others could bloom into fully formed concepts. The beauty
@@ -85,129 +194,251 @@ export default function BlogPostPage() {
 							tending to these digital plants.
 						</p>
 
-						<blockquote>
+						<h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">
+							Technical Implementation
+						</h2>
+
+						<p className="text-gray-700">
+							Building this garden required some thoughtful technical decisions.
+							I chose Next.js for its flexibility and used{" "}
+							<code className="bg-gray-100 text-gray-800 px-1 py-2 rounded text-base font-mono">
+								framer-motion
+							</code>{" "}
+							for subtle animations that bring the interface to life.
+						</p>
+
+						{/* Code Block Example */}
+						<div className="bg-gray-50 border border-gray-200 rounded-lg p-4 my-6 overflow-x-auto">
+							<pre className="text-sm text-gray-800 font-mono leading-relaxed">
+								{`// Creating smooth page transitions
+export default function BlogPost() {
+  return (
+    <motion.article
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+    >
+      {/* Content goes here */}
+    </motion.article>
+  );
+}`}
+							</pre>
+						</div>
+
+						<p>
+							The key was finding the right balance between functionality and
+							aesthetics. Every animation serves a purpose—guiding the eye,
+							providing feedback, or simply adding a touch of delight to the
+							experience
+							<sup>
+								<a id="footnote-ref-1" href="#footnote-1">
+									[1]
+								</a>
+							</sup>
+							.
+						</p>
+
+						<h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">
+							Performance Metrics
+						</h2>
+
+						<p>
+							Here's how the garden performs across different metrics. These
+							numbers reflect the importance of keeping things simple and
+							focused
+							<sup>
+								<a id="footnote-ref-2" href="#footnote-2">
+									[2]
+								</a>
+							</sup>
+							:
+						</p>
+
+						{/* Table Example */}
+						<div className="overflow-x-auto my-6">
+							<table className="min-w-full border border-gray-200 rounded-lg">
+								<thead className="bg-gray-50">
+									<tr>
+										<th className="px-4 py-3 text-left text-sm font-medium text-gray-600 border-b border-gray-200">
+											Metric
+										</th>
+										<th className="px-4 py-3 text-left text-sm font-medium text-gray-600 border-b border-gray-200">
+											Desktop
+										</th>
+										<th className="px-4 py-3 text-left text-sm font-medium text-gray-600 border-b border-gray-200">
+											Mobile
+										</th>
+										<th className="px-4 py-3 text-left text-sm font-medium text-gray-600 border-b border-gray-200">
+											Status
+										</th>
+									</tr>
+								</thead>
+								<tbody className="divide-y divide-gray-200">
+									<tr className="hover:bg-gray-50">
+										<td className="px-4 py-3 text-sm text-gray-700">
+											First Contentful Paint
+										</td>
+										<td className="px-4 py-3 text-sm text-gray-700">1.2s</td>
+										<td className="px-4 py-3 text-sm text-gray-700">1.8s</td>
+										<td className="px-4 py-3">
+											<span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+												Good
+											</span>
+										</td>
+									</tr>
+									<tr className="hover:bg-gray-50">
+										<td className="px-4 py-3 text-sm text-gray-700">
+											Largest Contentful Paint
+										</td>
+										<td className="px-4 py-3 text-sm text-gray-700">2.1s</td>
+										<td className="px-4 py-3 text-sm text-gray-700">2.7s</td>
+										<td className="px-4 py-3">
+											<span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+												Good
+											</span>
+										</td>
+									</tr>
+									<tr className="hover:bg-gray-50">
+										<td className="px-4 py-3 text-sm text-gray-700">
+											Cumulative Layout Shift
+										</td>
+										<td className="px-4 py-3 text-sm text-gray-700">0.05</td>
+										<td className="px-4 py-3 text-sm text-gray-700">0.08</td>
+										<td className="px-4 py-3">
+											<span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+												Needs work
+											</span>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+
+						<p>
+							As you can see, there's always room for improvement. The mobile
+							experience, in particular, could benefit from some optimization
+							work.
+						</p>
+
+						<h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">
+							Useful Resources
+						</h2>
+
+						<p>Here are some resources that helped me along the way:</p>
+
+						<ul className="space-y-2 my-4">
+							<li>
+								<a href="https://maggieappleton.com/garden-history">
+									The History of Digital Gardens
+								</a>{" "}
+								- A comprehensive look at the concept
+							</li>
+							<li>
+								<a href="https://nextjs.org/docs">Next.js Documentation</a> -
+								Everything you need to know about the framework
+							</li>
+							<li className="text-gray-700">
+								<a
+									href="https://www.framer.com/motion/"
+									target="_blank"
+									rel="noopener noreferrer"
+								>
+									Framer Motion{" "}
+									<svg
+										className="inline w-3 h-3 ml-1"
+										fill="currentColor"
+										viewBox="0 0 20 20"
+									>
+										<path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"></path>
+										<path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-1a1 1 0 10-2 0v1H5V7h1a1 1 0 000-2H5z"></path>
+									</svg>
+								</a>{" "}
+								- Animation library for React
+							</li>
+						</ul>
+
+						<blockquote className="border-l-4 border-gray-200 pl-4 italic text-gray-600 my-8">
 							"A garden is a grand teacher. It teaches patience and careful
 							watchfulness; it teaches industry and thrift; above all it teaches
 							entire trust."
-							<footer>— Gertrude Jekyll</footer>
+							<footer className="text-sm text-gray-500 mt-2 not-italic">
+								— Gertrude Jekyll
+							</footer>
 						</blockquote>
 
-						<h2>Choices</h2>
+						<h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">
+							What's Next?
+						</h2>
 
 						<p>
-							Building this garden required some thoughtful technology choices.
-							I opted for a stack that prioritizes simplicity and growth:
-						</p>
-
-						<ul>
-							<li>
-								<strong>Next.js</strong> for the foundation—reliable and
-								familiar
-							</li>
-							<li>
-								<strong>Tailwind CSS</strong> for styling—utility-first and
-								flexible
-							</li>
-							<li>
-								<strong>Framer Motion</strong> for subtle animations—bringing
-								life to static content
-							</li>
-							<li>
-								<strong>TypeScript</strong> for type safety—because gardens need
-								structure
-							</li>
-						</ul>
-
-						<p>
-							The design itself draws inspiration from actual gardens. The white
-							daisy motif represents growth, new beginnings, and the simple
-							beauty found in everyday moments. The dashed borders suggest the
-							organic, hand-drawn quality of a gardener's sketch.
-						</p>
-
-						<h2>What Makes This Different</h2>
-
-						<p>
-							Unlike traditional blogs focused on polished, final thoughts, this
-							garden celebrates the process of thinking itself. You might find:
-						</p>
-
-						<ul>
-							<li>Half-formed ideas that are still growing</li>
-							<li>Connections between seemingly unrelated concepts</li>
-							<li>Updates to older thoughts as they evolve</li>
-							<li>Experiments and failures alongside successes</li>
-						</ul>
-
-						<p>
-							This approach removes the pressure of having everything figured
-							out before sharing. Instead, it invites readers to join in the
-							process of discovery and growth.
-						</p>
-
-						<h2>Tending to Growth</h2>
-
-						<p>
-							Like any garden, this space requires regular tending. I plan to
-							revisit older posts, adding new insights and connections as they
-							emerge. Some thoughts might get pruned, others might be
-							transplanted to new contexts, and hopefully, many will flourish
-							beyond their original form.
+							The garden is just getting started. I plan to add more interactive
+							elements, improve the search functionality, and maybe even add a
+							way for visitors to leave their own seeds of thoughts. The key is
+							to keep it simple and let it grow organically.
 						</p>
 
 						<p>
-							The goal isn't to build an impressive monument to my thinking, but
-							rather to create a nurturing environment where ideas—both mine and
-							those sparked by conversation with visitors—can take root and
-							grow.
+							If you're thinking about starting your own digital garden, I
+							encourage you to begin today. Plant that first seed—it doesn't
+							have to be perfect. Gardens are meant to evolve, and so should
+							your digital space.
 						</p>
 
-						<div className="mt-16 p-6 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200">
-							<div className="flex items-center gap-3 mb-3">
-								<Image
-									src="/white-daisy.svg"
-									alt="white daisy"
-									width={24}
-									height={24}
-									className="h-6 w-6"
-								/>
-								<h3 className="font-semibold text-lg">A growing thought</h3>
+						{/* Footnotes */}
+						<div id="footnotes" className="mt-12 pt-6 border-t border-gray-200">
+							<h3 className="text-lg font-medium mb-4">Notes</h3>
+							<div className="space-y-4 text-base">
+								<div id="footnote-1">
+									<a href="#footnote-ref-1">
+										<span className="font-medium min-w-[1.5rem] pr-6">1.</span>
+										<span>
+											Animation should enhance the user experience, not distract
+											from it. I learned this the hard way after initially
+											over-animating everything.
+										</span>
+									</a>
+								</div>
+								<div id="footnote-2">
+									<a href="#footnote-ref-2">
+										<span className="font-medium min-w-[1.5rem] pr-6">2.</span>
+										<span>
+											These metrics were measured using Lighthouse on a M1
+											MacBook Pro and iPhone 13. Your mileage may vary depending
+											on network conditions and device performance.
+										</span>
+									</a>
+								</div>
 							</div>
-							<p className="text-gray-700 leading-relaxed">
-								This post itself will likely evolve as I learn more about
-								maintaining this digital garden. Check back occasionally—you
-								might find new insights have bloomed since your last visit.
-							</p>
 						</div>
+
+						{/* Footer */}
+						<motion.footer
+							initial={{ opacity: 0 }}
+							animate={{ opacity: 1 }}
+							transition={{ delay: 0.8 }}
+							className="mt-12 border-t border-gray-200 pt-8"
+						>
+							<div className="flex items-center justify-center">
+								<button
+									onClick={scrollToTop}
+									className="flex items-center gap-2 text-gray-500 hover:text-gray-700 transition-colors cursor-pointer group"
+									aria-label="Back to top"
+								>
+									<Image
+										src="/white-daisy.svg"
+										alt="white daisy"
+										width={20}
+										height={20}
+										className="h-5 w-5 opacity-50 group-hover:opacity-70 transition-opacity"
+									/>
+									<span className="text-base group-hover:underline">
+										Thanks for reading, I can take you back to the top
+									</span>
+								</button>
+							</div>
+						</motion.footer>
 					</div>
 				</motion.article>
-
-				{/* Footer with back to top button */}
-				<motion.footer
-					initial={{ opacity: 0 }}
-					animate={{ opacity: 1 }}
-					transition={{ delay: 0.8 }}
-					className="mt-16 border-t border-gray-200 pt-8"
-				>
-					<div className="flex items-center justify-center">
-						<button
-							onClick={scrollToTop}
-							className="flex items-center gap-2 text-gray-500 hover:text-gray-700 transition-colors cursor-pointer group"
-							aria-label="Back to top"
-						>
-							<Image
-								src="/white-daisy.svg"
-								alt="white daisy"
-								width={20}
-								height={20}
-								className="h-5 w-5 opacity-50 group-hover:opacity-70 transition-opacity"
-							/>
-							<span className="text-base group-hover:underline">
-								Thanks for reading, I can take you back to the top
-							</span>
-						</button>
-					</div>
-				</motion.footer>
 			</div>
 		</main>
 	);
