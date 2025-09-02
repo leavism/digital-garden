@@ -25,7 +25,7 @@ interface navLinkProp {
 function NavLink({
 	link,
 	text,
-	// icon,
+	icon,
 	delay = 0,
 }: navLinkProp & { delay?: number }) {
 	return (
@@ -39,9 +39,9 @@ function NavLink({
 				target="_blank"
 				className="group flex items-center gap-3 rounded-lg border-2 border-dashed border-gray-200 bg-white px-4 py-2 duration-200 hover:border-[#A8B331]"
 			>
-				{/* <div className="text-gray-400 transition-colors duration-200 group-hover:text-[#777E21]"> */}
-				{/* 	{icon} */}
-				{/* </div> */}
+				<div className="text-gray-400 transition-colors duration-200 group-hover:text-[#777E21]">
+					{icon}
+				</div>
 				<span className="text-base font-medium text-gray-800 group-hover:text-[#777E21]">
 					{text}
 				</span>

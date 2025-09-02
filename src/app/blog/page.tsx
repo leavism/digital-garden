@@ -299,6 +299,7 @@ export default function BlogPage() {
 							<div className="flex items-center justify-center gap-4 pt-2 text-lg">
 								{/* Previous button */}
 								<button
+									type="button"
 									onClick={() => setCurrentPage(currentPage - 1)}
 									disabled={currentPage === 1}
 									className="text-gray-400 hover:text-gray-600 transition-colors disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:text-gray-400"
@@ -313,6 +314,7 @@ export default function BlogPage() {
 
 								{/* Next button */}
 								<button
+									type="button"
 									onClick={() => setCurrentPage(currentPage + 1)}
 									disabled={currentPage === totalPages}
 									className="text-gray-400 hover:text-gray-600 transition-colors disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:text-gray-400"
@@ -345,7 +347,7 @@ export default function BlogPage() {
 					className="mt-12 text-center space-y-3"
 				>
 					<div className="inline-flex items-center gap-3 text-gray-500">
-						<div className="h-px w-12 bg-gray-300"></div>
+						<div className="h-px w-12 bg-gray-300" />
 						<div className="flex items-center gap-2">
 							<Image
 								src="/white-daisy.svg"
@@ -358,7 +360,7 @@ export default function BlogPage() {
 								{allBlogPosts.length} entries tended with care
 							</span>
 						</div>
-						<div className="h-px w-12 bg-gray-300"></div>
+						<div className="h-px w-12 bg-gray-300" />
 					</div>
 				</motion.div>
 			</div>
