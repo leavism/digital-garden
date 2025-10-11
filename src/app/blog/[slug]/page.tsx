@@ -2,6 +2,8 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { Info, AlertTriangle, CheckCircle } from "lucide-react";
+import { Callout } from "@/app/_components/Callout";
 
 // Sample blog post data
 const blogPost = {
@@ -63,7 +65,7 @@ export default function BlogPostPage() {
 					</header>
 
 					{/* Content */}
-					<div className="border-t border-gray-200 pt-12 space-y-8">
+					<div className="border-t border-gray-200 pt-12">
 						<p>
 							When I first started thinking about building my own corner of the
 							internet, I kept coming back to the metaphor of a garden. Unlike a
@@ -71,9 +73,7 @@ export default function BlogPostPage() {
 							be a living, breathing space where ideas can grow organically.
 						</p>
 
-						<h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">
-							The Philosophy Behind Digital Gardens
-						</h2>
+						<h2>The Philosophy Behind Digital Gardens</h2>
 
 						<p>
 							Traditional blogs follow a chronological structure—newest posts at
@@ -83,109 +83,26 @@ export default function BlogPostPage() {
 						</p>
 
 						{/* Callout Examples */}
-						{/* Pro Tip Callout */}
-						<div
-							className="mt-6 p-6 rounded-lg border-2 border-dashed"
-							style={{
-								backgroundColor: "#e6eef2",
-								borderColor: "#445f75",
-							}}
-						>
-							<div className="flex items-center gap-3 mb-3">
-								<svg
-									className="w-6 h-6"
-									style={{ color: "#445f75" }}
-									fill="currentColor"
-									viewBox="0 0 20 20"
-								>
-									<path
-										fillRule="evenodd"
-										d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-										clipRule="evenodd"
-									/>
-								</svg>
-								<h3
-									className="font-semibold text-lg"
-									style={{ color: "#445f75" }}
-								>
-									Pro Tip
-								</h3>
-							</div>
-							<p className="leading-relaxed" style={{ color: "#445f75" }}>
+						<Callout variant="info" title="Pro Tip">
+							<p>
 								Start small with your digital garden. Plant one idea at a time
 								and let it grow naturally.
 							</p>
-						</div>
+						</Callout>
 
-						{/* Warning Callout */}
-						<div
-							className="mt-6 p-6 rounded-lg border-2 border-dashed"
-							style={{
-								backgroundColor: "#fcf2f2",
-								borderColor: "#a3766a",
-							}}
-						>
-							<div className="flex items-center gap-3 mb-3">
-								<svg
-									className="w-6 h-6"
-									style={{ color: "#a3766a" }}
-									fill="currentColor"
-									viewBox="0 0 20 20"
-								>
-									<path
-										fillRule="evenodd"
-										d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-										clipRule="evenodd"
-									/>
-								</svg>
-								<h3
-									className="font-semibold text-lg"
-									style={{ color: "#a3766a" }}
-								>
-									Important Note
-								</h3>
-							</div>
-							<p className="leading-relaxed" style={{ color: "#916559" }}>
+						<Callout variant="warning" title="Important Note">
+							<p>
 								Don't over-animate! Subtle movements are more effective than
 								flashy transitions.
 							</p>
-						</div>
+						</Callout>
 
-						{/* Success Callout */}
-						<div
-							className="mt-6 p-6 rounded-lg border-2 border-dashed"
-							style={{
-								// backgroundColor: "#fcfcf8",
-								// borderColor: "#e8ddb5",
-								backgroundColor: "#f5fcf2",
-								borderColor: "#b2c9ab",
-							}}
-						>
-							<div className="flex items-center gap-3 mb-3">
-								<svg
-									className="w-6 h-6"
-									style={{ color: "#7d8f78" }}
-									fill="currentColor"
-									viewBox="0 0 20 20"
-								>
-									<path
-										fillRule="evenodd"
-										d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-										clipRule="evenodd"
-									/>
-								</svg>
-								<h3
-									className="font-semibold text-lg"
-									style={{ color: "#7d8f78" }}
-								>
-									Success!
-								</h3>
-							</div>
-							<p className="leading-relaxed" style={{ color: "#7d8f78" }}>
+						<Callout variant="success" title="Success!">
+							<p>
 								The garden is now live and growing. Each post is a new seed
 								planted in this digital soil.
 							</p>
-						</div>
+						</Callout>
 						<p className="text-gray-700">
 							I wanted a space where I could plant seeds of ideas and watch them
 							grow over time. Some thoughts might remain as small seedlings,
@@ -194,9 +111,7 @@ export default function BlogPostPage() {
 							tending to these digital plants.
 						</p>
 
-						<h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">
-							Technical Implementation
-						</h2>
+						<h2>Technical Implementation</h2>
 
 						<p className="text-gray-700">
 							Building this garden required some thoughtful technical decisions.
@@ -238,9 +153,7 @@ export default function BlogPost() {
 							.
 						</p>
 
-						<h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">
-							Performance Metrics
-						</h2>
+						<h2>Performance Metrics</h2>
 
 						<p>
 							Here's how the garden performs across different metrics. These
@@ -320,13 +233,11 @@ export default function BlogPost() {
 							work.
 						</p>
 
-						<h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">
-							Useful Resources
-						</h2>
+						<h2>Useful Resources</h2>
 
 						<p>Here are some resources that helped me along the way:</p>
 
-						<ul className="space-y-2 my-2">
+						<ul>
 							<li>
 								<a href="https://maggieappleton.com/garden-history">
 									The History of Digital Gardens
@@ -337,38 +248,20 @@ export default function BlogPost() {
 								<a href="https://nextjs.org/docs">Next.js Documentation</a> -
 								Everything you need to know about the framework
 							</li>
-							<li className="text-gray-700">
-								<a
-									href="https://www.framer.com/motion/"
-									target="_blank"
-									rel="noopener noreferrer"
-								>
-									Framer Motion{" "}
-									<svg
-										className="inline w-3 h-3 ml-1"
-										fill="currentColor"
-										viewBox="0 0 20 20"
-									>
-										<path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"></path>
-										<path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-1a1 1 0 10-2 0v1H5V7h1a1 1 0 000-2H5z"></path>
-									</svg>
-								</a>{" "}
-								- Animation library for React
+							<li>
+								<a href="https://www.framer.com/motion/">Framer Motion </a> -
+								Animation library for React
 							</li>
 						</ul>
 
-						<blockquote className="border-l-4 border-gray-200 pl-4 italic text-gray-600 my-8">
-							"A garden is a grand teacher. It teaches patience and careful
+						<blockquote>
+							A garden is a grand teacher. It teaches patience and careful
 							watchfulness; it teaches industry and thrift; above all it teaches
-							entire trust."
-							<footer className="text-sm text-gray-500 mt-2 not-italic">
-								— Gertrude Jekyll
-							</footer>
+							entire trust.
+							<footer>— Gertrude Jekyll</footer>
 						</blockquote>
 
-						<h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">
-							What's Next?
-						</h2>
+						<h2>What's Next?</h2>
 
 						<p>
 							The garden is just getting started. I plan to add more interactive

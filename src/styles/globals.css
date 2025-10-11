@@ -8,6 +8,14 @@
 	--font-sans: "Geist", ui-sans-serif, system-ui, sans-serif,
 		"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 	--color-link-primary: #18619d;
+	--color-callout-warning-bg: oklch(0.9689 0.0108 17.34);
+	--color-callout-warning-main: oklch(0.6077 0.0599 35.48);
+
+	--color-callout-info-bg: oklch(0.9442 0.0101 228.89);
+	--color-callout-info-main: oklch(0.473 0.0481 243.61);
+
+	--color-callout-success-bg: oklch(0.9583 0.0279 142.5);
+	--color-callout-success-main: oklch(0.6196 0.0778 149.57);
 }
 
 @theme inline {
@@ -128,7 +136,7 @@
 	}
 
 	p {
-		@apply text-xl;
+		@apply text-xl mb-3;
 	}
 
 	a {
@@ -160,11 +168,11 @@
 	}
 
 	blockquote {
-		@apply border-l-4 border-gray-300 pl-6 italic text-gray-700 my-8 text-lg;
+		@apply border-l-4 border-gray-300 pl-6 text-gray-700 my-8 text-lg;
 	}
 
 	blockquote footer {
-		@apply mt-2 text-lg text-gray-600;
+		@apply mt-2 text-base text-gray-600;
 	}
 
 	strong {
