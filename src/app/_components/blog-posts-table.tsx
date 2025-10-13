@@ -8,7 +8,6 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/app/_components/ui/card";
-import { Badge } from "@/app/_components/ui/badge";
 import {
 	Tooltip,
 	TooltipContent,
@@ -45,7 +44,10 @@ import {
 	Search,
 	ChevronLeft,
 	ChevronRight,
+	CheckCircle,
+	Circle,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 type BlogPost = {
 	id: string;
@@ -128,22 +130,10 @@ const mockPosts: BlogPost[] = [
 	},
 ];
 
-const statusConfig = {
-	published: {
-		label: "Published",
-		variant: "default" as const,
-		className: "bg-green-600 hover:bg-green-700",
-	},
-	draft: {
-		label: "Draft",
-		variant: "secondary" as const,
-		className: "bg-yellow-600 hover:bg-yellow-700",
-	},
-};
-
 const POSTS_PER_PAGE = 5;
 
 export function BlogPostsTable() {
+	const router = useRouter();
 	const [filter, setFilter] = useState<"all" | "published" | "draft">("all");
 	const [searchQuery, setSearchQuery] = useState("");
 	const [sortBy, setSortBy] = useState<
@@ -155,8 +145,7 @@ export function BlogPostsTable() {
 	const [currentPage, setCurrentPage] = useState(1);
 
 	const handleEdit = (postId: string) => {
-		console.log("Edit post:", postId);
-		// Edit functionality will be implemented later
+		router.push(`/admin/edit/${postId}`);
 	};
 
 	const handleDelete = (postId: string) => {
@@ -301,129 +290,137 @@ export function BlogPostsTable() {
 						</Select>
 					</div>
 
-					<div className="overflow-x-auto">
-						<table className="w-full table-fixed min-w-[600px]">
-							<thead>
-								<tr className="border-b">
-									<th className="pb-3 text-left font-semibold w-[400px]">
-										Title
-									</th>
-									<th className="pb-3 text-left font-semibold w-[120px]">
-										Status
-									</th>
-									<th className="pb-3 text-right font-semibold w-[140px]">
-										Actions
-									</th>
-								</tr>
-							</thead>
-							<tbody>
-								{paginatedPosts.map((post) => (
-									<tr key={post.id} className="border-b last:border-0">
-										<td className="py-4 pr-4 w-[400px]">
-											<HoverCard>
-												<HoverCardTrigger asChild>
-													<span className="font-medium block truncate cursor-pointer hover:text-primary transition-colors">
-														{post.title}
-													</span>
-												</HoverCardTrigger>
-												<HoverCardContent className="w-96" side="right">
-													<div className="space-y-3">
-														<h4 className="font-semibold text-base leading-tight">
+					<div className="min-h-[400px] flex flex-col">
+						<div className="overflow-x-auto flex-1">
+							<table className="w-full table-fixed min-w-[600px]">
+								<thead>
+									<tr className="border-b">
+										<th className="pb-3 text-left font-semibold w-[450px]">
+											Title
+										</th>
+										<th className="pb-3 text-right font-semibold w-[180px]">
+											Actions
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									{paginatedPosts.map((post) => (
+										<tr key={post.id} className="border-b last:border-0">
+											<td className="py-4 pr-4 w-[450px]">
+												<HoverCard>
+													<HoverCardTrigger asChild>
+														<span className="font-medium block truncate cursor-pointer hover:text-primary transition-colors">
 															{post.title}
-														</h4>
-														<p className="text-sm text-muted-foreground leading-relaxed line-clamp-4">
-															{post.content}
-														</p>
-														<div className="space-y-1 pt-2 border-t">
-															<p className="text-xs text-muted-foreground">
-																<span className="font-semibold">
-																	Last Updated:
-																</span>{" "}
-																{new Date(post.lastUpdated).toLocaleDateString(
-																	"en-US",
-																	{
-																		month: "long",
-																		day: "numeric",
-																		year: "numeric",
-																	},
-																)}
+														</span>
+													</HoverCardTrigger>
+													<HoverCardContent className="w-96" side="right">
+														<div className="space-y-3">
+															<h4 className="font-semibold text-base leading-tight">
+																{post.title}
+															</h4>
+															<p className="text-sm text-muted-foreground leading-relaxed line-clamp-4">
+																{post.content}
 															</p>
-															{post.publishedDate && (
+															<div className="space-y-1 pt-2 border-t">
 																<p className="text-xs text-muted-foreground">
 																	<span className="font-semibold">
-																		Published:
+																		Last Updated:
 																	</span>{" "}
 																	{new Date(
-																		post.publishedDate,
+																		post.lastUpdated,
 																	).toLocaleDateString("en-US", {
 																		month: "long",
 																		day: "numeric",
 																		year: "numeric",
 																	})}
 																</p>
-															)}
+																{post.publishedDate && (
+																	<p className="text-xs text-muted-foreground">
+																		<span className="font-semibold">
+																			Published:
+																		</span>{" "}
+																		{new Date(
+																			post.publishedDate,
+																		).toLocaleDateString("en-US", {
+																			month: "long",
+																			day: "numeric",
+																			year: "numeric",
+																		})}
+																	</p>
+																)}
+															</div>
 														</div>
+													</HoverCardContent>
+												</HoverCard>
+											</td>
+											<td className="py-4 text-right w-[180px]">
+												<TooltipProvider>
+													<div className="flex gap-2 justify-end">
+														<Tooltip>
+															<TooltipTrigger asChild>
+																<Button
+																	variant="outline"
+																	size="icon"
+																	onClick={() => handleStatusToggle(post.id)}
+																	className={
+																		post.status === "published"
+																			? "text-green-600 hover:text-green-700 hover:bg-green-50"
+																			: "text-yellow-600 hover:text-yellow-700 hover:bg-yellow-50"
+																	}
+																>
+																	{post.status === "published" ? (
+																		<CheckCircle className="h-4 w-4" />
+																	) : (
+																		<Circle className="h-4 w-4" />
+																	)}
+																</Button>
+															</TooltipTrigger>
+															<TooltipContent>
+																<p>
+																	{post.status === "published"
+																		? "Published"
+																		: "Draft"}{" "}
+																	- Click to toggle
+																</p>
+															</TooltipContent>
+														</Tooltip>
+														<Tooltip>
+															<TooltipTrigger asChild>
+																<Button
+																	variant="outline"
+																	size="icon"
+																	onClick={() => handleEdit(post.id)}
+																>
+																	<Pencil className="h-4 w-4" />
+																</Button>
+															</TooltipTrigger>
+															<TooltipContent>
+																<p>Edit</p>
+															</TooltipContent>
+														</Tooltip>
+														<Tooltip>
+															<TooltipTrigger asChild>
+																<Button
+																	variant="outline"
+																	size="icon"
+																	onClick={() => handleDelete(post.id)}
+																	className="hover:bg-destructive hover:text-destructive-foreground"
+																>
+																	<Trash2 className="h-4 w-4" />
+																</Button>
+															</TooltipTrigger>
+															<TooltipContent>
+																<p>Delete</p>
+															</TooltipContent>
+														</Tooltip>
 													</div>
-												</HoverCardContent>
-											</HoverCard>
-										</td>
-										<td className="py-4 pr-4 w-[120px]">
-											<TooltipProvider>
-												<Tooltip>
-													<TooltipTrigger asChild>
-														<Badge
-															variant={statusConfig[post.status].variant}
-															className={`${statusConfig[post.status].className} cursor-pointer`}
-															onClick={() => handleStatusToggle(post.id)}
-														>
-															{statusConfig[post.status].label}
-														</Badge>
-													</TooltipTrigger>
-													<TooltipContent>
-														<p>Click to toggle status</p>
-													</TooltipContent>
-												</Tooltip>
-											</TooltipProvider>
-										</td>
-										<td className="py-4 text-right w-[140px]">
-											<TooltipProvider>
-												<div className="flex gap-2 justify-end">
-													<Tooltip>
-														<TooltipTrigger asChild>
-															<Button
-																variant="outline"
-																size="icon"
-																onClick={() => handleEdit(post.id)}
-															>
-																<Pencil className="h-4 w-4" />
-															</Button>
-														</TooltipTrigger>
-														<TooltipContent>
-															<p>Edit</p>
-														</TooltipContent>
-													</Tooltip>
-													<Tooltip>
-														<TooltipTrigger asChild>
-															<Button
-																variant="outline"
-																size="icon"
-																onClick={() => handleDelete(post.id)}
-																className="hover:bg-destructive hover:text-destructive-foreground"
-															>
-																<Trash2 className="h-4 w-4" />
-															</Button>
-														</TooltipTrigger>
-														<TooltipContent>
-															<p>Delete</p>
-														</TooltipContent>
-													</Tooltip>
-												</div>
-											</TooltipProvider>
-										</td>
-									</tr>
-								))}
-							</tbody>
-						</table>
+												</TooltipProvider>
+											</td>
+										</tr>
+									))}
+								</tbody>
+							</table>
+						</div>
 					</div>
 
 					{totalPages > 1 && (

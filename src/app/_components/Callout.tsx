@@ -1,9 +1,4 @@
-import {
-	Info,
-	AlertTriangle,
-	CheckCircle,
-	type LucideIcon,
-} from "lucide-react";
+import { Info, AlertTriangle, CheckCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface CalloutProps {

@@ -139,6 +139,10 @@
 		@apply text-xl mb-3;
 	}
 
+	TooltipContent p {
+		@apply text-base mb-0;
+	}
+
 	a {
 		@apply text-link-primary no-underline hover:underline transition-colors;
 	}
