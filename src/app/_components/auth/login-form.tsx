@@ -25,7 +25,7 @@ export function LoginForm() {
 			await authClient.signIn.passkey({
 				fetchOptions: {
 					onSuccess: () => {
-						router.push("/");
+						router.push("/admin");
 						router.refresh();
 					},
 				},
@@ -40,8 +40,10 @@ export function LoginForm() {
 	const handleDiscordLogin = async () => {
 		setIsPending(true);
 		try {
-			await authClient.signIn.social({ provider: "discord" });
-			// redirect is done by BetterAuth
+			await authClient.signIn.social({
+				provider: "discord",
+				callbackURL: "/admin", //url to redirect to on success
+			});
 		} catch (error) {
 			console.error("Discord login error", error);
 		} finally {

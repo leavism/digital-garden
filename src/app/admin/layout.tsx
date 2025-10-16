@@ -16,15 +16,21 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/app/_components/ui/tooltip";
+import { getServerSession } from "@/server/auth";
+import { redirect } from "next/navigation";
 
-export default function AdminLayout({
+export default async function AdminLayout({
 	children,
 }: {
 	children: React.ReactNode;
 }) {
+	const session = await getServerSession();
+	if (!session) {
+		redirect("/login");
+	}
 	return (
 		<SidebarProvider defaultOpen={true}>
-			<AdminSidebar />
+			<AdminSidebar user={session!.user} />
 			<SidebarInset>
 				<header className="flex h-12 shrink-0 items-center gap-2 border-b px-4">
 					<TooltipProvider>

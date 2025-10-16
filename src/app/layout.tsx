@@ -2,8 +2,6 @@ import "@/styles/globals.css";
 
 import type { Metadata } from "next";
 
-import { UserNav } from "@/app/_components/user-nav";
-import { getServerSession } from "@/server/auth";
 import { TRPCReactProvider } from "@/trpc/react";
 
 export const metadata: Metadata = {
@@ -16,8 +14,6 @@ export const metadata: Metadata = {
 export default async function RootLayout({
 	children,
 }: Readonly<{ children: React.ReactNode }>) {
-	const session = await getServerSession();
-
 	return (
 		<html lang="en" className="font-serif">
 			<body>

@@ -1,7 +1,6 @@
 "use client";
-
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { LayoutDashboard, FileText, Settings, LogOut } from "lucide-react";
 import {
 	Sidebar,
@@ -15,7 +14,11 @@ import {
 	SidebarGroupLabel,
 	SidebarGroupContent,
 } from "@/app/_components/ui/sidebar";
-import { Avatar, AvatarFallback, AvatarImage } from "@/app/_components/ui/avatar";
+import {
+	Avatar,
+	AvatarFallback,
+	AvatarImage,
+} from "@/app/_components/ui/avatar";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -23,6 +26,8 @@ import {
 	DropdownMenuTrigger,
 } from "@/app/_components/ui/dropdown-menu";
 import { ChevronUp } from "lucide-react";
+import { authClient } from "@/server/auth/client";
+import type { Session, User } from "better-auth";
 
 const navigation = [
 	{
@@ -42,20 +47,17 @@ const navigation = [
 	},
 ];
 
-// Mock user data - replace with actual auth data
-const user = {
-	name: "John Doe",
-	email: "john@example.com",
-	avatar: "/placeholder-user.jpg",
-	initials: "JD",
-};
-
-export function AdminSidebar() {
+export function AdminSidebar({ user }: { user: User }) {
 	const pathname = usePathname();
+	const router = useRouter();
 
-	const handleLogout = () => {
-		// TODO: Implement logout logic
-		console.log("Logout clicked");
+	const handleSignOut = async () => {
+		try {
+			await authClient.signOut();
+			router.refresh();
+		} catch (error) {
+			console.error("Sign out error:", error);
+		}
 	};
 
 	return (
@@ -70,12 +72,9 @@ export function AdminSidebar() {
 									className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
 								>
 									<Avatar className="size-8 rounded-lg">
-										<AvatarImage
-											src={user.avatar || "/placeholder.svg"}
-											alt={user.name}
-										/>
+										<AvatarImage src={user.image || "/"} alt={user.name} />
 										<AvatarFallback className="rounded-lg">
-											{user.initials}
+											{`${user.name[0]}${user.name[1]}` || "FC"}
 										</AvatarFallback>
 									</Avatar>
 									<div className="grid flex-1 text-left text-sm leading-tight">
@@ -91,7 +90,7 @@ export function AdminSidebar() {
 								align="end"
 								sideOffset={4}
 							>
-								<DropdownMenuItem onClick={handleLogout}>
+								<DropdownMenuItem onClick={handleSignOut}>
 									<LogOut className="mr-2 size-4" />
 									Logout
 								</DropdownMenuItem>
