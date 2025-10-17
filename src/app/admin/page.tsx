@@ -13,7 +13,7 @@ export default function AdminPage() {
 						Manage your blog posts and their publication status
 					</p>
 				</div>
-				<Link href="/admin/new">
+				<Link href="/admin/create">
 					<Button>
 						<Plus className="mr-2 h-4 w-4" />
 						Create New Post

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/app/_components/ui/button";
 import { Input } from "@/app/_components/ui/input";
@@ -21,60 +21,14 @@ import {
 import { TiptapEditor } from "@/app/_components/editor/tiptap-editor";
 import { ArrowLeft, Save, Eye, FileEdit } from "lucide-react";
 
-type BlogPost = {
-	id: string;
-	title: string;
-	slug: string;
-	status: "published" | "draft";
-	lastUpdated: string;
-	publishedDate?: string;
-	content: string;
-};
-
-// Mock data - in a real app, this would come from an API
-const mockPosts: BlogPost[] = [
-	{
-		id: "1",
-		title: "Getting Started with Next.js 15",
-		slug: "getting-started-with-nextjs-15",
-		status: "published",
-		lastUpdated: "2024-03-15",
-		publishedDate: "2024-03-10",
-		content: "Next.js 15 introduces groundbreaking features...",
-	},
-	{
-		id: "2",
-		title: "The Future of Web Development",
-		slug: "the-future-of-web-development",
-		status: "draft",
-		lastUpdated: "2024-03-14",
-		content: "As we look ahead, web development continues to evolve...",
-	},
-];
-
-export default function EditPostPage() {
-	const params = useParams();
+export default function CreatePostPage() {
 	const router = useRouter();
-	const postId = params.id as string;
 
-	const [post, setPost] = useState<BlogPost | null>(null);
 	const [title, setTitle] = useState("");
 	const [slug, setSlug] = useState("");
 	const [content, setContent] = useState("");
 	const [status, setStatus] = useState<"published" | "draft">("draft");
 	const [isSlugManuallyEdited, setIsSlugManuallyEdited] = useState(false);
-
-	useEffect(() => {
-		// In a real app, fetch the post from an API
-		const foundPost = mockPosts.find((p) => p.id === postId);
-		if (foundPost) {
-			setPost(foundPost);
-			setTitle(foundPost.title);
-			setSlug(foundPost.slug);
-			setContent(foundPost.content);
-			setStatus(foundPost.status);
-		}
-	}, [postId]);
 
 	const generateSlug = (text: string) => {
 		return text
@@ -95,19 +49,11 @@ export default function EditPostPage() {
 		setIsSlugManuallyEdited(true);
 	};
 
-	const handleSaveDraft = () => {
-		console.log("Saving changes:", { title, slug, content, status });
+	const handleSavePost = () => {
+		console.log("Saving post:", { title, slug, content, status });
 		// In a real app, save to API
 		router.push("/admin");
 	};
-
-	if (!post) {
-		return (
-			<div className="flex flex-col gap-6">
-				<p className="text-muted-foreground">Loading...</p>
-			</div>
-		);
-	}
 
 	return (
 		<div className="flex flex-col gap-6">
@@ -129,15 +75,10 @@ export default function EditPostPage() {
 				</TooltipProvider>
 				<div>
 					<h1 className="text-3xl font-bold">
-						Edit Post
+						Create New Post
 					</h1>
 					<p className="text-muted-foreground">
-						Last updated:{" "}
-						{new Date(post.lastUpdated).toLocaleDateString("en-US", {
-							month: "long",
-							day: "numeric",
-							year: "numeric",
-						})}
+						Start writing your new blog post
 					</p>
 				</div>
 			</div>
@@ -196,7 +137,7 @@ export default function EditPostPage() {
 							<TiptapEditor
 								content={content}
 								onChange={setContent}
-								placeholder="Start editing your post content..."
+								placeholder="Start writing your post content..."
 							/>
 						</CardContent>
 					</Card>
@@ -243,41 +184,10 @@ export default function EditPostPage() {
 							</div>
 
 							{/* Save Button */}
-							<Button onClick={handleSaveDraft} className="w-full" size="lg">
+							<Button onClick={handleSavePost} className="w-full" size="lg">
 								<Save className="mr-2 h-4 w-4" />
-								Save Changes
+								{status === "published" ? "Publish Post" : "Save Draft"}
 							</Button>
-						</CardContent>
-					</Card>
-
-					{/* Metadata */}
-					<Card>
-						<CardHeader>
-							<CardTitle>Metadata</CardTitle>
-						</CardHeader>
-						<CardContent className="space-y-3">
-							{post.publishedDate && (
-								<div className="space-y-1">
-									<p className="text-sm font-medium text-muted-foreground">Published Date</p>
-									<p className="text-sm">
-										{new Date(post.publishedDate).toLocaleDateString("en-US", {
-											month: "long",
-											day: "numeric",
-											year: "numeric",
-										})}
-									</p>
-								</div>
-							)}
-							<div className="space-y-1">
-								<p className="text-sm font-medium text-muted-foreground">Last Updated</p>
-								<p className="text-sm">
-									{new Date(post.lastUpdated).toLocaleDateString("en-US", {
-										month: "long",
-										day: "numeric",
-										year: "numeric",
-									})}
-								</p>
-							</div>
 						</CardContent>
 					</Card>
 				</div>
