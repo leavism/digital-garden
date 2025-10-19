@@ -21,6 +21,7 @@ import { ArrowLeft, Eye, FileEdit, Save } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export default function EditPostPage() {
 	const params = useParams();
@@ -33,7 +34,17 @@ export default function EditPostPage() {
 		onSuccess: () => {
 			setHasUnsavedChanges(false);
 			utils.posts.getAllAdmin.invalidate();
-			router.push("/admin");
+			utils.posts.getById.invalidate({ id: postId });
+			toast.success("Post saved successfully!", {
+				id: "save-post",
+				description: "Your changes have been saved and are now live.",
+			});
+		},
+		onError: (error) => {
+			toast.error("Failed to save post", {
+				id: "save-post",
+				description: error.message || "Please try again.",
+			});
 		},
 	});
 
@@ -116,6 +127,10 @@ export default function EditPostPage() {
 
 	const handleSave = () => {
 		if (!post) return;
+
+		toast.loading("Saving post...", {
+			id: "save-post",
+		});
 
 		updateMutation.mutate({
 			id: post.id,
@@ -252,7 +267,18 @@ export default function EditPostPage() {
 												type="button"
 												variant={published ? "default" : "outline"}
 												className="w-full"
-												onClick={() => setPublished(!published)}
+												onClick={() => {
+													const newStatus = !published;
+													setPublished(newStatus);
+													toast.info(
+														newStatus ? "Post marked as published" : "Post marked as draft",
+														{
+															description: newStatus
+																? "Don't forget to save your changes to make it live"
+																: "Post will be hidden from public view when saved"
+														}
+													);
+												}}
 											>
 												{published ? (
 													<>

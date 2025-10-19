@@ -27,7 +27,7 @@ export default function BlogPostPage() {
 					<div className="flex items-center justify-between">
 						<Link
 							href="/blog"
-							className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors group"
+							className="group inline-flex items-center gap-2 text-gray-600 transition-colors hover:text-gray-900"
 						>
 							<span className="group-hover:-translate-x-1 transition-transform">
 								←
@@ -63,7 +63,7 @@ export default function BlogPostPage() {
 					</header>
 
 					{/* Content */}
-					<div className="border-t border-gray-200 pt-12 space-y-8">
+					<div className="space-y-8 border-gray-200 border-t pt-12">
 						<p>
 							When I first started thinking about building my own corner of the
 							internet, I kept coming back to the metaphor of a garden. Unlike a
@@ -71,7 +71,7 @@ export default function BlogPostPage() {
 							be a living, breathing space where ideas can grow organically.
 						</p>
 
-						<h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">
+						<h2 className="mt-8 mb-4 font-bold text-2xl text-gray-900">
 							The Philosophy Behind Digital Gardens
 						</h2>
 
@@ -85,15 +85,15 @@ export default function BlogPostPage() {
 						{/* Callout Examples */}
 						{/* Pro Tip Callout */}
 						<div
-							className="mt-6 p-6 rounded-lg border-2 border-dashed"
+							className="mt-6 rounded-lg border-2 border-dashed p-6"
 							style={{
 								backgroundColor: "#e6eef2",
 								borderColor: "#445f75",
 							}}
 						>
-							<div className="flex items-center gap-3 mb-3">
+							<div className="mb-3 flex items-center gap-3">
 								<svg
-									className="w-6 h-6"
+									className="h-6 w-6"
 									style={{ color: "#445f75" }}
 									fill="currentColor"
 									viewBox="0 0 20 20"
@@ -119,7 +119,7 @@ export default function BlogPostPage() {
 
 						{/* Warning Callout */}
 						<div
-							className="mt-6 p-6 rounded-lg border-2 border-dashed"
+							className="mt-6 rounded-lg border-2 border-dashed p-6"
 							style={{
 								// backgroundColor: "#fefefe",
 								// borderColor: "#b2c9ab",
@@ -127,9 +127,9 @@ export default function BlogPostPage() {
 								borderColor: "#a3766a",
 							}}
 						>
-							<div className="flex items-center gap-3 mb-3">
+							<div className="mb-3 flex items-center gap-3">
 								<svg
-									className="w-6 h-6"
+									className="h-6 w-6"
 									style={{ color: "#a3766a" }}
 									fill="currentColor"
 									viewBox="0 0 20 20"
@@ -155,7 +155,7 @@ export default function BlogPostPage() {
 
 						{/* Success Callout */}
 						<div
-							className="mt-6 p-6 rounded-lg border-2 border-dashed"
+							className="mt-6 rounded-lg border-2 border-dashed p-6"
 							style={{
 								// backgroundColor: "#fcfcf8",
 								// borderColor: "#e8ddb5",
@@ -163,9 +163,9 @@ export default function BlogPostPage() {
 								borderColor: "#b2c9ab",
 							}}
 						>
-							<div className="flex items-center gap-3 mb-3">
+							<div className="mb-3 flex items-center gap-3">
 								<svg
-									className="w-6 h-6"
+									className="h-6 w-6"
 									style={{ color: "#7d8f78" }}
 									fill="currentColor"
 									viewBox="0 0 20 20"
@@ -196,22 +196,22 @@ export default function BlogPostPage() {
 							tending to these digital plants.
 						</p>
 
-						<h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">
+						<h2 className="mt-8 mb-4 font-bold text-2xl text-gray-900">
 							Technical Implementation
 						</h2>
 
 						<p className="text-gray-700">
 							Building this garden required some thoughtful technical decisions.
 							I chose Next.js for its flexibility and used{" "}
-							<code className="bg-gray-100 text-gray-800 px-1 py-2 rounded text-base font-mono">
+							<code className="rounded bg-gray-100 px-1 py-2 font-mono text-base text-gray-800">
 								framer-motion
 							</code>{" "}
 							for subtle animations that bring the interface to life.
 						</p>
 
 						{/* Code Block Example */}
-						<div className="bg-gray-50 border border-gray-200 rounded-lg p-4 my-6 overflow-x-auto">
-							<pre className="text-sm text-gray-800 font-mono leading-relaxed">
+						<div className="my-6 overflow-x-auto rounded-lg border border-gray-200 bg-gray-50 p-4">
+							<pre className="font-mono text-gray-800 text-sm leading-relaxed">
 								{`// Creating smooth page transitions
 export default function BlogPost() {
   return (
@@ -240,7 +240,7 @@ export default function BlogPost() {
 							.
 						</p>
 
-						<h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">
+						<h2 className="mt-8 mb-4 font-bold text-2xl text-gray-900">
 							Performance Metrics
 						</h2>
 
@@ -257,57 +257,57 @@ export default function BlogPost() {
 						</p>
 
 						{/* Table Example */}
-						<div className="overflow-x-auto my-6">
-							<table className="min-w-full border border-gray-200 rounded-lg">
+						<div className="my-6 overflow-x-auto">
+							<table className="min-w-full rounded-lg border border-gray-200">
 								<thead className="bg-gray-50">
 									<tr>
-										<th className="px-4 py-3 text-left text-sm font-medium text-gray-600 border-b border-gray-200">
+										<th className="border-gray-200 border-b px-4 py-3 text-left font-medium text-gray-600 text-sm">
 											Metric
 										</th>
-										<th className="px-4 py-3 text-left text-sm font-medium text-gray-600 border-b border-gray-200">
+										<th className="border-gray-200 border-b px-4 py-3 text-left font-medium text-gray-600 text-sm">
 											Desktop
 										</th>
-										<th className="px-4 py-3 text-left text-sm font-medium text-gray-600 border-b border-gray-200">
+										<th className="border-gray-200 border-b px-4 py-3 text-left font-medium text-gray-600 text-sm">
 											Mobile
 										</th>
-										<th className="px-4 py-3 text-left text-sm font-medium text-gray-600 border-b border-gray-200">
+										<th className="border-gray-200 border-b px-4 py-3 text-left font-medium text-gray-600 text-sm">
 											Status
 										</th>
 									</tr>
 								</thead>
 								<tbody className="divide-y divide-gray-200">
 									<tr className="hover:bg-gray-50">
-										<td className="px-4 py-3 text-sm text-gray-700">
+										<td className="px-4 py-3 text-gray-700 text-sm">
 											First Contentful Paint
 										</td>
-										<td className="px-4 py-3 text-sm text-gray-700">1.2s</td>
-										<td className="px-4 py-3 text-sm text-gray-700">1.8s</td>
+										<td className="px-4 py-3 text-gray-700 text-sm">1.2s</td>
+										<td className="px-4 py-3 text-gray-700 text-sm">1.8s</td>
 										<td className="px-4 py-3">
-											<span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+											<span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 font-medium text-green-800 text-xs">
 												Good
 											</span>
 										</td>
 									</tr>
 									<tr className="hover:bg-gray-50">
-										<td className="px-4 py-3 text-sm text-gray-700">
+										<td className="px-4 py-3 text-gray-700 text-sm">
 											Largest Contentful Paint
 										</td>
-										<td className="px-4 py-3 text-sm text-gray-700">2.1s</td>
-										<td className="px-4 py-3 text-sm text-gray-700">2.7s</td>
+										<td className="px-4 py-3 text-gray-700 text-sm">2.1s</td>
+										<td className="px-4 py-3 text-gray-700 text-sm">2.7s</td>
 										<td className="px-4 py-3">
-											<span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+											<span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 font-medium text-green-800 text-xs">
 												Good
 											</span>
 										</td>
 									</tr>
 									<tr className="hover:bg-gray-50">
-										<td className="px-4 py-3 text-sm text-gray-700">
+										<td className="px-4 py-3 text-gray-700 text-sm">
 											Cumulative Layout Shift
 										</td>
-										<td className="px-4 py-3 text-sm text-gray-700">0.05</td>
-										<td className="px-4 py-3 text-sm text-gray-700">0.08</td>
+										<td className="px-4 py-3 text-gray-700 text-sm">0.05</td>
+										<td className="px-4 py-3 text-gray-700 text-sm">0.08</td>
 										<td className="px-4 py-3">
-											<span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+											<span className="inline-flex items-center rounded-full bg-yellow-100 px-2.5 py-0.5 font-medium text-xs text-yellow-800">
 												Needs work
 											</span>
 										</td>
@@ -322,13 +322,13 @@ export default function BlogPost() {
 							work.
 						</p>
 
-						<h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">
+						<h2 className="mt-8 mb-4 font-bold text-2xl text-gray-900">
 							Useful Resources
 						</h2>
 
 						<p>Here are some resources that helped me along the way:</p>
 
-						<ul className="space-y-2 my-4">
+						<ul className="my-4 space-y-2">
 							<li>
 								<a href="https://maggieappleton.com/garden-history">
 									The History of Digital Gardens
@@ -347,7 +347,7 @@ export default function BlogPost() {
 								>
 									Framer Motion{" "}
 									<svg
-										className="inline w-3 h-3 ml-1"
+										className="ml-1 inline h-3 w-3"
 										fill="currentColor"
 										viewBox="0 0 20 20"
 									>
@@ -359,16 +359,16 @@ export default function BlogPost() {
 							</li>
 						</ul>
 
-						<blockquote className="border-l-4 border-gray-200 pl-4 italic text-gray-600 my-8">
+						<blockquote className="my-8 border-gray-200 border-l-4 pl-4 text-gray-600 italic">
 							"A garden is a grand teacher. It teaches patience and careful
 							watchfulness; it teaches industry and thrift; above all it teaches
 							entire trust."
-							<footer className="text-sm text-gray-500 mt-2 not-italic">
+							<footer className="mt-2 text-gray-500 text-sm not-italic">
 								— Gertrude Jekyll
 							</footer>
 						</blockquote>
 
-						<h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">
+						<h2 className="mt-8 mb-4 font-bold text-2xl text-gray-900">
 							What's Next?
 						</h2>
 
@@ -387,12 +387,12 @@ export default function BlogPost() {
 						</p>
 
 						{/* Footnotes */}
-						<div id="footnotes" className="mt-12 pt-6 border-t border-gray-200">
-							<h3 className="text-lg font-medium mb-4">Notes</h3>
+						<div id="footnotes" className="mt-12 border-gray-200 border-t pt-6">
+							<h3 className="mb-4 font-medium text-lg">Notes</h3>
 							<div className="space-y-4 text-base">
 								<div id="footnote-1">
 									<a href="#footnote-ref-1">
-										<span className="font-medium min-w-[1.5rem] pr-6">1.</span>
+										<span className="min-w-[1.5rem] pr-6 font-medium">1.</span>
 										<span>
 											Animation should enhance the user experience, not distract
 											from it. I learned this the hard way after initially
@@ -402,7 +402,7 @@ export default function BlogPost() {
 								</div>
 								<div id="footnote-2">
 									<a href="#footnote-ref-2">
-										<span className="font-medium min-w-[1.5rem] pr-6">2.</span>
+										<span className="min-w-[1.5rem] pr-6 font-medium">2.</span>
 										<span>
 											These metrics were measured using Lighthouse on a M1
 											MacBook Pro and iPhone 13. Your mileage may vary depending
@@ -418,12 +418,12 @@ export default function BlogPost() {
 							initial={{ opacity: 0 }}
 							animate={{ opacity: 1 }}
 							transition={{ delay: 0.8 }}
-							className="mt-12 border-t border-gray-200 pt-8"
+							className="mt-12 border-gray-200 border-t pt-8"
 						>
 							<div className="flex items-center justify-center">
 								<button
 									onClick={scrollToTop}
-									className="flex items-center gap-2 text-gray-500 hover:text-gray-700 transition-colors cursor-pointer group"
+									className="group flex cursor-pointer items-center gap-2 text-gray-500 transition-colors hover:text-gray-700"
 									aria-label="Back to top"
 								>
 									<Image
@@ -431,7 +431,7 @@ export default function BlogPost() {
 										alt="white daisy"
 										width={20}
 										height={20}
-										className="h-5 w-5 opacity-50 group-hover:opacity-70 transition-opacity"
+										className="h-5 w-5 opacity-50 transition-opacity group-hover:opacity-70"
 									/>
 									<span className="text-base group-hover:underline">
 										Thanks for reading, I can take you back to the top
