@@ -48,87 +48,20 @@ import {
 	Circle,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { api } from "@/trpc/react";
 
 type BlogPost = {
 	id: string;
 	title: string;
-	status: "published" | "draft";
-	lastUpdated: string;
-	publishedDate?: string;
+	published: boolean;
+	publishedAt: Date | null;
+	createdAt: Date;
+	updatedAt: Date;
+	author: {
+		name: string;
+	} | null;
 	content: string;
 };
-
-const mockPosts: BlogPost[] = [
-	{
-		id: "1",
-		title: "Getting Started with Next.js 15",
-		status: "published",
-		lastUpdated: "2024-03-15",
-		publishedDate: "2024-03-10",
-		content:
-			"Next.js 15 introduces groundbreaking features that revolutionize how we build web applications. From improved performance to enhanced developer experience, this release sets a new standard for React frameworks.",
-	},
-	{
-		id: "2",
-		title: "The Future of Web Development",
-		status: "draft",
-		lastUpdated: "2024-03-14",
-		content:
-			"As we look ahead, web development continues to evolve at a rapid pace. New technologies, frameworks, and best practices emerge constantly, shaping how we create digital experiences.",
-	},
-	{
-		id: "3",
-		title: "Building Scalable React Applications",
-		status: "published",
-		lastUpdated: "2024-03-12",
-		publishedDate: "2024-03-08",
-		content:
-			"Scalability is crucial for modern React applications. Learn the patterns and practices that help your application grow from a small project to an enterprise-level solution.",
-	},
-	{
-		id: "5",
-		title: "TypeScript Best Practices",
-		status: "draft",
-		lastUpdated: "2024-03-10",
-		content:
-			"TypeScript has become the de facto standard for building robust JavaScript applications. Discover the best practices that will make your TypeScript code more maintainable and type-safe.",
-	},
-	{
-		id: "6",
-		title: "Optimizing Performance in Modern Web Apps",
-		status: "published",
-		lastUpdated: "2024-03-08",
-		publishedDate: "2024-03-05",
-		content:
-			"Performance optimization is more important than ever. From code splitting to lazy loading, learn the techniques that will make your web applications lightning fast.",
-	},
-	{
-		id: "7",
-		title: "CSS Grid vs Flexbox: When to Use Each",
-		status: "published",
-		lastUpdated: "2024-03-07",
-		publishedDate: "2024-03-03",
-		content:
-			"Understanding the differences between CSS Grid and Flexbox is essential for modern web layouts. Learn when to use each layout system for optimal results.",
-	},
-	{
-		id: "8",
-		title: "Introduction to Server Components",
-		status: "draft",
-		lastUpdated: "2024-03-06",
-		content:
-			"React Server Components represent a paradigm shift in how we think about rendering. Explore the benefits and use cases for this powerful new feature.",
-	},
-	{
-		id: "9",
-		title: "Mastering Tailwind CSS",
-		status: "published",
-		lastUpdated: "2024-03-05",
-		publishedDate: "2024-03-01",
-		content:
-			"Tailwind CSS has transformed how developers approach styling. Learn the advanced techniques that will take your Tailwind skills to the next level.",
-	},
-];
 
 const POSTS_PER_PAGE = 5;
 
@@ -141,8 +74,31 @@ export function BlogPostsTable() {
 	>("date-desc");
 	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 	const [postToDelete, setPostToDelete] = useState<string | null>(null);
-	const [posts, setPosts] = useState<BlogPost[]>(mockPosts);
+	const {
+		data: posts = [],
+		isLoading,
+		refetch,
+	} = api.posts.getAllAdmin.useQuery();
+	const deleteMutation = api.posts.delete.useMutation({
+		onSuccess: () => refetch(),
+	});
+	const updateMutation = api.posts.update.useMutation({
+		onSuccess: () => refetch(),
+	});
 	const [currentPage, setCurrentPage] = useState(1);
+
+	if (isLoading) {
+		return (
+			<Card>
+				<CardHeader>
+					<CardTitle>Blog Posts</CardTitle>
+				</CardHeader>
+				<CardContent className="flex items-center justify-center h-64">
+					<div>Loading posts...</div>
+				</CardContent>
+			</Card>
+		);
+	}
 
 	const handleEdit = (postId: string) => {
 		router.push(`/admin/edit/${postId}`);
@@ -155,35 +111,29 @@ export function BlogPostsTable() {
 
 	const confirmDelete = () => {
 		if (postToDelete) {
-			setPosts(posts.filter((p) => p.id !== postToDelete));
+			deleteMutation.mutate({ id: postToDelete });
 			setPostToDelete(null);
 			setDeleteDialogOpen(false);
 		}
 	};
 
 	const handleStatusToggle = (postId: string) => {
-		setPosts(
-			posts.map((post) => {
-				if (post.id === postId) {
-					const newStatus = post.status === "published" ? "draft" : "published";
-					return {
-						...post,
-						status: newStatus,
-						// Update published date when publishing
-						publishedDate:
-							newStatus === "published" && !post.publishedDate
-								? new Date().toISOString().split("T")[0]
-								: post.publishedDate,
-					};
-				}
-				return post;
-			}),
-		);
+		const post = posts.find((p) => p.id === postId);
+		if (post) {
+			updateMutation.mutate({
+				id: postId,
+				title: post.title,
+				slug: post.slug,
+				content: post.content,
+				published: !post.published,
+			});
+		}
 	};
 
 	const filteredAndSortedPosts = posts
 		.filter((post) => {
-			if (filter !== "all" && post.status !== filter) return false;
+			if (filter === "published" && !post.published) return false;
+			if (filter === "draft" && post.published) return false;
 			if (
 				searchQuery &&
 				!post.title.toLowerCase().includes(searchQuery.toLowerCase())
@@ -195,20 +145,18 @@ export function BlogPostsTable() {
 			switch (sortBy) {
 				case "date-desc":
 					return (
-						new Date(b.lastUpdated).getTime() -
-						new Date(a.lastUpdated).getTime()
+						new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
 					);
 				case "date-asc":
 					return (
-						new Date(a.lastUpdated).getTime() -
-						new Date(b.lastUpdated).getTime()
+						new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime()
 					);
 				case "title-asc":
 					return a.title.localeCompare(b.title);
 				case "title-desc":
 					return b.title.localeCompare(a.title);
 				case "status":
-					return a.status.localeCompare(b.status);
+					return a.published === b.published ? 0 : a.published ? -1 : 1;
 				default:
 					return 0;
 			}
@@ -261,14 +209,14 @@ export function BlogPostsTable() {
 							onClick={() => handleFilterChange("published")}
 							size="sm"
 						>
-							Published ({posts.filter((p) => p.status === "published").length})
+							Published ({posts.filter((p) => p.published).length})
 						</Button>
 						<Button
 							variant={filter === "draft" ? "default" : "outline"}
 							onClick={() => handleFilterChange("draft")}
 							size="sm"
 						>
-							Draft ({posts.filter((p) => p.status === "draft").length})
+							Draft ({posts.filter((p) => !p.published).length})
 						</Button>
 
 						<Separator orientation="vertical" className="h-8 mx-2" />
@@ -326,21 +274,22 @@ export function BlogPostsTable() {
 																	<span className="font-semibold">
 																		Last Updated:
 																	</span>{" "}
-																	{new Date(
-																		post.lastUpdated,
-																	).toLocaleDateString("en-US", {
-																		month: "long",
-																		day: "numeric",
-																		year: "numeric",
-																	})}
+																	{new Date(post.updatedAt).toLocaleDateString(
+																		"en-US",
+																		{
+																			month: "long",
+																			day: "numeric",
+																			year: "numeric",
+																		},
+																	)}
 																</p>
-																{post.publishedDate && (
+																{post.publishedAt && (
 																	<p className="text-xs text-muted-foreground">
 																		<span className="font-semibold">
 																			Published:
 																		</span>{" "}
 																		{new Date(
-																			post.publishedDate,
+																			post.publishedAt,
 																		).toLocaleDateString("en-US", {
 																			month: "long",
 																			day: "numeric",
@@ -363,12 +312,12 @@ export function BlogPostsTable() {
 																	size="icon"
 																	onClick={() => handleStatusToggle(post.id)}
 																	className={
-																		post.status === "published"
+																		post.published
 																			? "text-green-600 hover:text-green-700 hover:bg-green-50"
 																			: "text-yellow-600 hover:text-yellow-700 hover:bg-yellow-50"
 																	}
 																>
-																	{post.status === "published" ? (
+																	{post.published ? (
 																		<CheckCircle className="h-4 w-4" />
 																	) : (
 																		<Circle className="h-4 w-4" />
@@ -377,10 +326,8 @@ export function BlogPostsTable() {
 															</TooltipTrigger>
 															<TooltipContent>
 																<p>
-																	{post.status === "published"
-																		? "Published"
-																		: "Draft"}{" "}
-																	- Click to toggle
+																	{post.published ? "Published" : "Draft"} -
+																	Click to toggle
 																</p>
 															</TooltipContent>
 														</Tooltip>
