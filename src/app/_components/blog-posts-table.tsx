@@ -50,35 +50,23 @@ import {
 import { useRouter } from "next/navigation";
 import { api } from "@/trpc/react";
 
-type BlogPost = {
-	id: string;
-	title: string;
-	published: boolean;
-	publishedAt: Date | null;
-	createdAt: Date;
-	updatedAt: Date;
-	author: {
-		name: string;
-	} | null;
-	content: string;
-};
-
 const POSTS_PER_PAGE = 5;
+
+// TODO: Not the best way to clean up the hover card preview, but
+// good enough for now
+const stripHtml = (html: string) => {
+	return html.replace(/<[^>]*>/g, "");
+};
 
 export function BlogPostsTable() {
 	const router = useRouter();
-	const [filter, setFilter] = useState<"all" | "published" | "draft">("all");
 	const [searchQuery, setSearchQuery] = useState("");
+	const [filter, setFilter] = useState<"all" | "published" | "draft">("all");
 	const [sortBy, setSortBy] = useState<
 		"date-desc" | "date-asc" | "title-asc" | "title-desc" | "status"
 	>("date-desc");
 	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 	const [postToDelete, setPostToDelete] = useState<string | null>(null);
-	const {
-		data: posts = [],
-		isLoading,
-		refetch,
-	} = api.posts.getAllAdmin.useQuery();
 	const deleteMutation = api.posts.delete.useMutation({
 		onSuccess: () => refetch(),
 	});
@@ -86,6 +74,11 @@ export function BlogPostsTable() {
 		onSuccess: () => refetch(),
 	});
 	const [currentPage, setCurrentPage] = useState(1);
+	const {
+		data: posts = [],
+		isLoading,
+		refetch,
+	} = api.posts.getAllAdmin.useQuery();
 
 	if (isLoading) {
 		return (
@@ -219,7 +212,7 @@ export function BlogPostsTable() {
 							Draft ({posts.filter((p) => !p.published).length})
 						</Button>
 
-						<Separator orientation="vertical" className="h-8 mx-2" />
+						<Separator orientation="vertical" />
 
 						<Select
 							value={sortBy}
@@ -267,7 +260,7 @@ export function BlogPostsTable() {
 																{post.title}
 															</h4>
 															<p className="text-sm text-muted-foreground leading-relaxed line-clamp-4">
-																{post.content}
+																{stripHtml(post.content)}
 															</p>
 															<div className="space-y-1 pt-2 border-t">
 																<p className="text-xs text-muted-foreground">

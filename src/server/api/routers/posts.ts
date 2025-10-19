@@ -82,6 +82,7 @@ export const postsRouter = createTRPCRouter({
 		)
 		.mutation(({ ctx, input }) => {
 			const postId = crypto.randomUUID();
+			const now = new Date();
 
 			return ctx.db.insert(posts).values({
 				id: postId,
@@ -89,6 +90,7 @@ export const postsRouter = createTRPCRouter({
 				slug: input.slug,
 				content: input.content,
 				published: input.published,
+				publishedAt: input.published ? now : null,
 				authorId: ctx.session.user.id,
 			});
 		}),
@@ -102,7 +104,20 @@ export const postsRouter = createTRPCRouter({
 				published: z.boolean(),
 			}),
 		)
-		.mutation(({ ctx, input }) => {
+		.mutation(async ({ ctx, input }) => {
+			const now = new Date();
+
+			// Get the current post to check if it was previously published
+			const currentPost = await ctx.db
+				.select({ published: posts.published, publishedAt: posts.publishedAt })
+				.from(posts)
+				.where(eq(posts.id, input.id))
+				.then((rows) => rows[0]);
+
+			// If post is being published for the first time, set publishedAt
+			// If it was already published before, keep the original publishedAt
+			const isFirstTimePublish = input.published && !currentPost?.published && !currentPost?.publishedAt;
+
 			return ctx.db
 				.update(posts)
 				.set({
@@ -110,6 +125,7 @@ export const postsRouter = createTRPCRouter({
 					slug: input.slug,
 					content: input.content,
 					published: input.published,
+					...(isFirstTimePublish && { publishedAt: now }),
 				})
 				.where(eq(posts.id, input.id));
 		}),
