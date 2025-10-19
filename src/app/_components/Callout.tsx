@@ -41,7 +41,7 @@ export function Callout({
 	return (
 		<div
 			className={cn(
-				"my-6 rounded-lg border-2 border-dashed p-6",
+				"not-prose my-6 rounded-lg border-2 border-dashed p-6",
 				config.bgColor,
 				config.borderColor,
 				className,

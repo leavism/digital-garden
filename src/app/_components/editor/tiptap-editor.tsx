@@ -1,5 +1,6 @@
 "use client";
 
+import { Code } from "@tiptap/extension-code";
 import { Color } from "@tiptap/extension-color";
 import { Highlight } from "@tiptap/extension-highlight";
 import { Image } from "@tiptap/extension-image";
@@ -9,13 +10,21 @@ import { TaskList } from "@tiptap/extension-task-list";
 import { TextAlign } from "@tiptap/extension-text-align";
 import { TextStyle } from "@tiptap/extension-text-style";
 import { Underline } from "@tiptap/extension-underline";
+import { Callout } from "./extensions/callout";
 import type { Editor } from "@tiptap/react";
 import { EditorContent, useEditor, useEditorState } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import React, { useCallback } from "react";
 
 const extensions = [
-	StarterKit,
+	StarterKit.configure({
+		code: false, // Disable the default code extension
+	}),
+	Code.configure({
+		HTMLAttributes: {
+			class: "bg-gray-100 text-gray-800 px-1 py-0.5 rounded text-base font-mono",
+		},
+	}),
 	TextStyle,
 	Color,
 	Highlight.configure({
@@ -40,6 +49,7 @@ const extensions = [
 	TaskItem.configure({
 		nested: true,
 	}),
+	Callout,
 ];
 
 function MenuBar({ editor }: { editor: Editor }) {
@@ -77,6 +87,10 @@ function MenuBar({ editor }: { editor: Editor }) {
 				isAlignCenter: ctx.editor.isActive({ textAlign: "center" }) ?? false,
 				isAlignRight: ctx.editor.isActive({ textAlign: "right" }) ?? false,
 				isAlignJustify: ctx.editor.isActive({ textAlign: "justify" }) ?? false,
+				isCallout: ctx.editor.isActive("callout") ?? false,
+				isCalloutInfo: ctx.editor.isActive("callout", { variant: "info" }) ?? false,
+				isCalloutWarning: ctx.editor.isActive("callout", { variant: "warning" }) ?? false,
+				isCalloutSuccess: ctx.editor.isActive("callout", { variant: "success" }) ?? false,
 				canUndo: ctx.editor.can().chain().undo().run() ?? false,
 				canRedo: ctx.editor.can().chain().redo().run() ?? false,
 			};
@@ -107,6 +121,17 @@ function MenuBar({ editor }: { editor: Editor }) {
 
 		if (url) {
 			editor.chain().focus().setImage({ src: url }).run();
+		}
+	}, [editor]);
+
+	const toggleCallout = useCallback((variant: 'info' | 'warning' | 'success') => {
+		const title = window.prompt(`${variant.charAt(0).toUpperCase() + variant.slice(1)} callout title:`,
+			variant === 'info' ? 'Note' :
+			variant === 'warning' ? 'Warning' :
+			'Success');
+
+		if (title !== null) {
+			editor.chain().focus().toggleCallout({ variant, title }).run();
 		}
 	}, [editor]);
 
@@ -378,6 +403,45 @@ function MenuBar({ editor }: { editor: Editor }) {
 					className="rounded border px-3 py-1 text-sm hover:bg-accent"
 				>
 					HR
+				</button>
+			</div>
+
+			<div className="w-px bg-border" />
+
+			{/* Callouts */}
+			<div className="flex gap-1">
+				<button
+					type="button"
+					onClick={() => toggleCallout('info')}
+					className={`rounded border px-3 py-1 text-sm hover:bg-accent ${
+						editorState.isCalloutInfo
+							? "bg-primary text-primary-foreground hover:bg-primary"
+							: ""
+					}`}
+				>
+					ℹ️ Info
+				</button>
+				<button
+					type="button"
+					onClick={() => toggleCallout('warning')}
+					className={`rounded border px-3 py-1 text-sm hover:bg-accent ${
+						editorState.isCalloutWarning
+							? "bg-primary text-primary-foreground hover:bg-primary"
+							: ""
+					}`}
+				>
+					⚠️ Warning
+				</button>
+				<button
+					type="button"
+					onClick={() => toggleCallout('success')}
+					className={`rounded border px-3 py-1 text-sm hover:bg-accent ${
+						editorState.isCalloutSuccess
+							? "bg-primary text-primary-foreground hover:bg-primary"
+							: ""
+					}`}
+				>
+					✅ Success
 				</button>
 			</div>
 
