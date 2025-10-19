@@ -1,33 +1,5 @@
 "use client";
 
-import { useState } from "react";
-import { Button } from "@/app/_components/ui/button";
-import {
-	Card,
-	CardContent,
-	CardHeader,
-	CardTitle,
-} from "@/app/_components/ui/card";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
-} from "@/app/_components/ui/tooltip";
-import { Input } from "@/app/_components/ui/input";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/app/_components/ui/select";
-import { Separator } from "@/app/_components/ui/separator";
-import {
-	HoverCard,
-	HoverCardContent,
-	HoverCardTrigger,
-} from "@/app/_components/ui/hover-card";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -38,17 +10,45 @@ import {
 	AlertDialogHeader,
 	AlertDialogTitle,
 } from "@/app/_components/ui/alert-dialog";
+import { Button } from "@/app/_components/ui/button";
 import {
-	Pencil,
-	Trash2,
-	Search,
+	Card,
+	CardContent,
+	CardHeader,
+	CardTitle,
+} from "@/app/_components/ui/card";
+import {
+	HoverCard,
+	HoverCardContent,
+	HoverCardTrigger,
+} from "@/app/_components/ui/hover-card";
+import { Input } from "@/app/_components/ui/input";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/app/_components/ui/select";
+import { Separator } from "@/app/_components/ui/separator";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from "@/app/_components/ui/tooltip";
+import { api } from "@/trpc/react";
+import {
+	CheckCircle,
 	ChevronLeft,
 	ChevronRight,
-	CheckCircle,
 	Circle,
+	Pencil,
+	Search,
+	Trash2,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { api } from "@/trpc/react";
+import { useState } from "react";
 
 const POSTS_PER_PAGE = 5;
 
@@ -86,7 +86,7 @@ export function BlogPostsTable() {
 				<CardHeader>
 					<CardTitle>Blog Posts</CardTitle>
 				</CardHeader>
-				<CardContent className="flex items-center justify-center h-64">
+				<CardContent className="flex h-64 items-center justify-center">
 					<div>Loading posts...</div>
 				</CardContent>
 			</Card>
@@ -178,8 +178,8 @@ export function BlogPostsTable() {
 				</CardHeader>
 				<CardContent>
 					<div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-						<div className="relative flex-1 max-w-sm">
-							<Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+						<div className="relative max-w-sm flex-1">
+							<Search className="-translate-y-1/2 absolute top-1/2 left-3 h-4 w-4 text-muted-foreground" />
 							<Input
 								placeholder="Search posts..."
 								value={searchQuery}
@@ -231,15 +231,15 @@ export function BlogPostsTable() {
 						</Select>
 					</div>
 
-					<div className="min-h-[400px] flex flex-col">
-						<div className="overflow-x-auto flex-1">
-							<table className="w-full table-fixed min-w-[600px]">
+					<div className="flex min-h-[400px] flex-col">
+						<div className="flex-1 overflow-x-auto">
+							<table className="w-full min-w-[600px] table-fixed">
 								<thead>
 									<tr className="border-b">
-										<th className="pb-3 text-left font-semibold w-[450px]">
+										<th className="w-[450px] pb-3 text-left font-semibold">
 											Title
 										</th>
-										<th className="pb-3 text-right font-semibold w-[180px]">
+										<th className="w-[180px] pb-3 text-right font-semibold">
 											Actions
 										</th>
 									</tr>
@@ -247,10 +247,10 @@ export function BlogPostsTable() {
 								<tbody>
 									{paginatedPosts.map((post) => (
 										<tr key={post.id} className="border-b last:border-0">
-											<td className="py-4 pr-4 w-[450px]">
+											<td className="w-[450px] py-4 pr-4">
 												<HoverCard>
 													<HoverCardTrigger asChild>
-														<span className="font-medium block truncate cursor-pointer hover:text-primary transition-colors">
+														<span className="block cursor-pointer truncate font-medium transition-colors hover:text-primary">
 															{post.title}
 														</span>
 													</HoverCardTrigger>
@@ -259,11 +259,11 @@ export function BlogPostsTable() {
 															<h4 className="font-semibold text-base leading-tight">
 																{post.title}
 															</h4>
-															<p className="text-sm text-muted-foreground leading-relaxed line-clamp-4">
+															<p className="line-clamp-4 text-muted-foreground text-sm leading-relaxed">
 																{stripHtml(post.content)}
 															</p>
-															<div className="space-y-1 pt-2 border-t">
-																<p className="text-xs text-muted-foreground">
+															<div className="space-y-1 border-t pt-2">
+																<p className="text-muted-foreground text-xs">
 																	<span className="font-semibold">
 																		Last Updated:
 																	</span>{" "}
@@ -277,7 +277,7 @@ export function BlogPostsTable() {
 																	)}
 																</p>
 																{post.publishedAt && (
-																	<p className="text-xs text-muted-foreground">
+																	<p className="text-muted-foreground text-xs">
 																		<span className="font-semibold">
 																			Published:
 																		</span>{" "}
@@ -295,9 +295,9 @@ export function BlogPostsTable() {
 													</HoverCardContent>
 												</HoverCard>
 											</td>
-											<td className="py-4 text-right w-[180px]">
+											<td className="w-[180px] py-4 text-right">
 												<TooltipProvider>
-													<div className="flex gap-2 justify-end">
+													<div className="flex justify-end gap-2">
 														<Tooltip>
 															<TooltipTrigger asChild>
 																<Button
@@ -306,8 +306,8 @@ export function BlogPostsTable() {
 																	onClick={() => handleStatusToggle(post.id)}
 																	className={
 																		post.published
-																			? "text-green-600 hover:text-green-700 hover:bg-green-50"
-																			: "text-yellow-600 hover:text-yellow-700 hover:bg-yellow-50"
+																			? "text-green-600 hover:bg-green-50 hover:text-green-700"
+																			: "text-yellow-600 hover:bg-yellow-50 hover:text-yellow-700"
 																	}
 																>
 																	{post.published ? (
@@ -365,7 +365,7 @@ export function BlogPostsTable() {
 
 					{totalPages > 1 && (
 						<div className="mt-6 flex items-center justify-between">
-							<p className="text-sm text-muted-foreground">
+							<p className="text-muted-foreground text-sm">
 								Showing {startIndex + 1} to{" "}
 								{Math.min(endIndex, filteredAndSortedPosts.length)} of{" "}
 								{filteredAndSortedPosts.length} posts

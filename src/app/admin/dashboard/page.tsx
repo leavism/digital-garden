@@ -4,7 +4,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/app/_components/ui/card";
-import { FileText, Eye, MessageSquare, TrendingUp } from "lucide-react";
+import { Eye, FileText, MessageSquare, TrendingUp } from "lucide-react";
 
 // Mock stats data
 const stats = [
@@ -63,7 +63,7 @@ export default function DashboardPage() {
 	return (
 		<div className="flex flex-col gap-6">
 			<div>
-				<h1 className="text-3xl font-bold">Dashboard</h1>
+				<h1 className="font-bold text-3xl">Dashboard</h1>
 				<p className="text-muted-foreground">
 					Welcome back! Here's an overview of your blog.
 				</p>
@@ -74,12 +74,12 @@ export default function DashboardPage() {
 				{stats.map((stat) => (
 					<Card key={stat.name}>
 						<CardHeader className="flex flex-row items-center justify-between pb-2">
-							<CardTitle className="text-sm font-medium">{stat.name}</CardTitle>
+							<CardTitle className="font-medium text-sm">{stat.name}</CardTitle>
 							<stat.icon className="size-4 text-muted-foreground" />
 						</CardHeader>
 						<CardContent>
-							<div className="text-2xl font-bold">{stat.value}</div>
-							<p className="text-xs text-muted-foreground">{stat.change}</p>
+							<div className="font-bold text-2xl">{stat.value}</div>
+							<p className="text-muted-foreground text-xs">{stat.change}</p>
 						</CardContent>
 					</Card>
 				))}
@@ -99,7 +99,7 @@ export default function DashboardPage() {
 							>
 								<div className="space-y-1">
 									<p className="font-medium">{post.title}</p>
-									<div className="flex items-center gap-4 text-sm text-muted-foreground">
+									<div className="flex items-center gap-4 text-muted-foreground text-sm">
 										<span className="capitalize">{post.status}</span>
 										<span>•</span>
 										<span>{post.views} views</span>

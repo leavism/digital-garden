@@ -1,9 +1,9 @@
 "use client";
+import CanvasBackground from "@/app/_components/BackgroundEffect";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import CanvasBackground from "@/app/_components/BackgroundEffect";
 
 // Plant icon components
 const FlowerIcon = ({ className = "" }) => (
@@ -37,12 +37,12 @@ function NavLink({
 			<Link
 				href={link}
 				target="_blank"
-				className="group flex items-center gap-3 rounded-lg border-2 border-dashed border-gray-200 bg-white px-4 py-2 duration-200 hover:border-[#A8B331]"
+				className="group flex items-center gap-3 rounded-lg border-2 border-gray-200 border-dashed bg-white px-4 py-2 duration-200 hover:border-[#A8B331]"
 			>
 				<div className="text-gray-400 transition-colors duration-200 group-hover:text-[#777E21]">
 					{icon}
 				</div>
-				<span className="text-base font-medium text-gray-800 group-hover:text-[#777E21]">
+				<span className="font-medium text-base text-gray-800 group-hover:text-[#777E21]">
 					{text}
 				</span>
 			</Link>
@@ -58,7 +58,7 @@ export default function Home() {
 				initial={{ opacity: 0, y: 20 }}
 				animate={{ opacity: 1, y: 0 }}
 				transition={{ duration: 1 }}
-				className="relative mx-auto max-w-[700px] rounded-xl md:border-2 md:border-dashed border-gray-200 bg-white p-4 transition-colors hover:border-gray-300 md:p-10"
+				className="relative mx-auto max-w-[700px] rounded-xl border-gray-200 bg-white p-4 transition-colors hover:border-gray-300 md:border-2 md:border-dashed md:p-10"
 			>
 				<motion.div className="space-y-6 md:space-y-8">
 					<div className="space-y-4">
@@ -134,8 +134,8 @@ export default function Home() {
 							animate={{ opacity: 1, x: 0 }}
 							transition={{ duration: 0.4, delay: 0.3 }}
 						>
-							<h2 className=" font-bold mt-0">My Garden</h2>
-							<div className="rounded-lg border border-dashed border-gray-300 bg-gray-50 p-6 text-center">
+							<h2 className=" mt-0 font-bold">My Garden</h2>
+							<div className="rounded-lg border border-gray-300 border-dashed bg-gray-50 p-6 text-center">
 								<div className="mb-4 flex justify-center">
 									<Image
 										src="/sapling.svg"
@@ -146,7 +146,7 @@ export default function Home() {
 									/>
 								</div>
 								<p className="text-gray-600">Seeds are being planted...</p>
-								<p className="mt-1 text-gray-500 text-base">
+								<p className="mt-1 text-base text-gray-500">
 									Check back to see what grows
 								</p>
 							</div>

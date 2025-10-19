@@ -206,13 +206,13 @@ function BlogPostRow({
 			className="group"
 		>
 			<Link href={`/blog/${post.slug}`}>
-				<div className="flex items-center justify-between py-1 px-1 transition-all hover:translate-x-1 group">
-					<h3 className="text-lg text-gray-600 group-hover:text-gray-800 group-hover:underline transition-all">
+				<div className="group flex items-center justify-between px-1 py-1 transition-all hover:translate-x-1">
+					<h3 className="text-gray-600 text-lg transition-all group-hover:text-gray-800 group-hover:underline">
 						{post.title}
 					</h3>
 					<time
 						dateTime={post.date}
-						className="text-lg text-gray-400 tracking-wide flex-shrink-0 ml-4 group-hover:text-gray-600 group"
+						className="group ml-4 flex-shrink-0 text-gray-400 text-lg tracking-wide group-hover:text-gray-600"
 					>
 						{new Date(post.date).toLocaleDateString("en-US", {
 							month: "long",
@@ -247,7 +247,7 @@ export default function BlogPage() {
 					<div className="mb-8">
 						<Link
 							href="/"
-							className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors group"
+							className="group inline-flex items-center gap-2 text-gray-600 transition-colors hover:text-gray-900"
 						>
 							<span className="group-hover:-translate-x-1 transition-transform">
 								←
@@ -257,8 +257,8 @@ export default function BlogPage() {
 					</div>
 
 					{/* Title section */}
-					<div className="text-center space-y-6">
-						<div className="inline-flex items-center gap-4 justify-center">
+					<div className="space-y-6 text-center">
+						<div className="inline-flex items-center justify-center gap-4">
 							<div className="flex items-center gap-1">
 								<Image
 									src="/white-daisy.svg"
@@ -285,10 +285,10 @@ export default function BlogPage() {
 						</div>
 
 						<div>
-							<h1 className="font-bold text-5xl mb-4 mt-0 text-gray-900">
+							<h1 className="mt-0 mb-4 font-bold text-5xl text-gray-900">
 								My Journal
 							</h1>
-							<p className="text-xl text-gray-600 max-w-xl mx-auto leading-relaxed">
+							<p className="mx-auto max-w-xl text-gray-600 text-xl leading-relaxed">
 								A collection of my thoughts, discoveries, and reflections. I
 								promise the garden puns end here.
 							</p>
@@ -302,7 +302,7 @@ export default function BlogPage() {
 									type="button"
 									onClick={() => setCurrentPage(currentPage - 1)}
 									disabled={currentPage === 1}
-									className="text-gray-400 hover:text-gray-600 transition-colors disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:text-gray-400"
+									className="text-gray-400 transition-colors hover:text-gray-600 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:text-gray-400"
 								>
 									←
 								</button>
@@ -317,7 +317,7 @@ export default function BlogPage() {
 									type="button"
 									onClick={() => setCurrentPage(currentPage + 1)}
 									disabled={currentPage === totalPages}
-									className="text-gray-400 hover:text-gray-600 transition-colors disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:text-gray-400"
+									className="text-gray-400 transition-colors hover:text-gray-600 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:text-gray-400"
 								>
 									→
 								</button>
@@ -332,7 +332,7 @@ export default function BlogPage() {
 					animate={{ opacity: 1 }}
 					transition={{ delay: 0.2 }}
 				>
-					<div className="border-dashed border-gray-200 rounded-xl md:px-6">
+					<div className="rounded-xl border-gray-200 border-dashed md:px-6">
 						{currentPosts.map((post, index) => (
 							<BlogPostRow key={post.id} post={post} index={index} />
 						))}
@@ -344,7 +344,7 @@ export default function BlogPage() {
 					initial={{ opacity: 0 }}
 					animate={{ opacity: 1 }}
 					transition={{ delay: 0.6 }}
-					className="mt-12 text-center space-y-3"
+					className="mt-12 space-y-3 text-center"
 				>
 					<div className="inline-flex items-center gap-3 text-gray-500">
 						<div className="h-px w-12 bg-gray-300" />
@@ -356,7 +356,7 @@ export default function BlogPage() {
 								height={20}
 								className="h-5 w-5 opacity-60"
 							/>
-							<span className="text-sm font-medium">
+							<span className="font-medium text-sm">
 								{allBlogPosts.length} entries tended with care
 							</span>
 						</div>

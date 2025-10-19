@@ -1,5 +1,5 @@
-import { Info, AlertTriangle, CheckCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { AlertTriangle, CheckCircle, Info } from "lucide-react";
 
 interface CalloutProps {
 	variant?: "info" | "warning" | "success";
@@ -41,14 +41,14 @@ export function Callout({
 	return (
 		<div
 			className={cn(
-				"my-6 p-6 rounded-lg border-2 border-dashed",
+				"my-6 rounded-lg border-2 border-dashed p-6",
 				config.bgColor,
 				config.borderColor,
 				className,
 			)}
 		>
-			<div className="flex items-center gap-3 mb-3">
-				<Icon className={cn("w-6 h-6", config.textColor)} />
+			<div className="mb-3 flex items-center gap-3">
+				<Icon className={cn("h-6 w-6", config.textColor)} />
 				<h3 className={cn("font-semibold text-lg", config.textColor)}>
 					{title}
 				</h3>

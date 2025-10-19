@@ -5,7 +5,7 @@ import {
 } from "@/server/api/trpc";
 import { user } from "@/server/db/schema/auth";
 import { posts } from "@/server/db/schema/posts";
-import { eq, and, desc } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { z } from "zod";
 
 export const postsRouter = createTRPCRouter({
@@ -116,7 +116,8 @@ export const postsRouter = createTRPCRouter({
 
 			// If post is being published for the first time, set publishedAt
 			// If it was already published before, keep the original publishedAt
-			const isFirstTimePublish = input.published && !currentPost?.published && !currentPost?.publishedAt;
+			const isFirstTimePublish =
+				input.published && !currentPost?.published && !currentPost?.publishedAt;
 
 			return ctx.db
 				.update(posts)

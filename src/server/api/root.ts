@@ -1,3 +1,4 @@
+import { postsRouter } from "@/server/api/routers/posts";
 /**
  * tRPC API Router Root
  *
@@ -10,7 +11,6 @@
  * 2. Import and add the router to the appRouter in this file
  */
 import { usersRouter } from "@/server/api/routers/users";
-import { postsRouter } from "@/server/api/routers/posts";
 import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
 
 /**

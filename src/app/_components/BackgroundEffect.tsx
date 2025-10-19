@@ -171,7 +171,7 @@ export default function CanvasBackground() {
 	return (
 		<canvas
 			ref={canvasRef}
-			className="-z-10 pointer-events-none hidden md:block fixed inset-0"
+			className="-z-10 pointer-events-none fixed inset-0 hidden md:block"
 		/>
 	);
 }

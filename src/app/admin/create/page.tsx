@@ -1,26 +1,26 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { api } from "@/trpc/react";
+import { TiptapEditor } from "@/app/_components/editor/tiptap-editor";
 import { Button } from "@/app/_components/ui/button";
-import { Input } from "@/app/_components/ui/input";
-import { Label } from "@/app/_components/ui/label";
 import {
 	Card,
 	CardContent,
 	CardHeader,
 	CardTitle,
 } from "@/app/_components/ui/card";
+import { Input } from "@/app/_components/ui/input";
+import { Label } from "@/app/_components/ui/label";
 import {
 	Tooltip,
 	TooltipContent,
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/app/_components/ui/tooltip";
-import { TiptapEditor } from "@/app/_components/editor/tiptap-editor";
-import { ArrowLeft, Save, Eye, FileEdit } from "lucide-react";
+import { api } from "@/trpc/react";
+import { ArrowLeft, Eye, FileEdit, Save } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function CreatePostPage() {
 	const router = useRouter();
@@ -84,9 +84,7 @@ export default function CreatePostPage() {
 					</Tooltip>
 				</TooltipProvider>
 				<div>
-					<h1 className="text-3xl font-bold">
-						Create New Post
-					</h1>
+					<h1 className="font-bold text-3xl">Create New Post</h1>
 					<p className="text-muted-foreground">
 						Start writing your new blog post
 					</p>
@@ -104,7 +102,7 @@ export default function CreatePostPage() {
 						<CardContent className="space-y-6">
 							{/* Title */}
 							<div className="space-y-2">
-								<Label htmlFor="title" className="text-base font-semibold">
+								<Label htmlFor="title" className="font-semibold text-base">
 									Title
 								</Label>
 								<Input
@@ -118,11 +116,11 @@ export default function CreatePostPage() {
 
 							{/* Slug */}
 							<div className="space-y-2">
-								<Label htmlFor="slug" className="text-base font-semibold">
+								<Label htmlFor="slug" className="font-semibold text-base">
 									URL Slug
 								</Label>
 								<div className="flex items-center gap-2">
-									<span className="text-sm text-muted-foreground">/blog/</span>
+									<span className="text-muted-foreground text-sm">/blog/</span>
 									<Input
 										id="slug"
 										value={slug}
@@ -131,8 +129,9 @@ export default function CreatePostPage() {
 										className="flex-1"
 									/>
 								</div>
-								<p className="text-xs text-muted-foreground">
-									The URL-friendly version of the title. Auto-generated but can be customized.
+								<p className="text-muted-foreground text-xs">
+									The URL-friendly version of the title. Auto-generated but can
+									be customized.
 								</p>
 							</div>
 						</CardContent>
@@ -163,7 +162,7 @@ export default function CreatePostPage() {
 						<CardContent className="space-y-4">
 							{/* Status Toggle */}
 							<div className="space-y-2">
-								<Label className="text-sm font-semibold">Status</Label>
+								<Label className="font-semibold text-sm">Status</Label>
 								<TooltipProvider>
 									<Tooltip>
 										<TooltipTrigger asChild>

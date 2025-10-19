@@ -98,7 +98,7 @@ export function LoginForm() {
 						</Button>
 
 						<Button
-							className="w-full bg-[#5865F2] hover:bg-[#4752c4] font-sans"
+							className="w-full bg-[#5865F2] font-sans hover:bg-[#4752c4]"
 							variant="default"
 							disabled={isPending}
 							onClick={handleDiscordLogin}
@@ -120,7 +120,7 @@ export function LoginForm() {
 					</CardContent>
 					<CardFooter>
 						<p
-							className="w-full text-center bg-white text-gray-400"
+							className="w-full bg-white text-center text-gray-400"
 							onMouseEnter={() => setIsHovering(true)}
 							onMouseLeave={() => setIsHovering(false)}
 						>

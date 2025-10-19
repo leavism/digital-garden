@@ -1,19 +1,4 @@
 "use client";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, FileText, Settings, LogOut } from "lucide-react";
-import {
-	Sidebar,
-	SidebarContent,
-	SidebarFooter,
-	SidebarHeader,
-	SidebarMenu,
-	SidebarMenuItem,
-	SidebarMenuButton,
-	SidebarGroup,
-	SidebarGroupLabel,
-	SidebarGroupContent,
-} from "@/app/_components/ui/sidebar";
 import {
 	Avatar,
 	AvatarFallback,
@@ -25,9 +10,24 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/app/_components/ui/dropdown-menu";
-import { ChevronUp } from "lucide-react";
+import {
+	Sidebar,
+	SidebarContent,
+	SidebarFooter,
+	SidebarGroup,
+	SidebarGroupContent,
+	SidebarGroupLabel,
+	SidebarHeader,
+	SidebarMenu,
+	SidebarMenuButton,
+	SidebarMenuItem,
+} from "@/app/_components/ui/sidebar";
 import { authClient } from "@/server/auth/client";
 import type { Session, User } from "better-auth";
+import { FileText, LayoutDashboard, LogOut, Settings } from "lucide-react";
+import { ChevronUp } from "lucide-react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 
 const navigation = [
 	{

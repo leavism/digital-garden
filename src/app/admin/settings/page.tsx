@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Button } from "@/app/_components/ui/button";
 import {
 	Card,
 	CardContent,
@@ -8,12 +8,12 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/app/_components/ui/card";
-import { Label } from "@/app/_components/ui/label";
 import { Input } from "@/app/_components/ui/input";
-import { Textarea } from "@/app/_components/ui/textarea";
-import { Button } from "@/app/_components/ui/button";
-import { Switch } from "@/app/_components/ui/switch";
+import { Label } from "@/app/_components/ui/label";
 import { Separator } from "@/app/_components/ui/separator";
+import { Switch } from "@/app/_components/ui/switch";
+import { Textarea } from "@/app/_components/ui/textarea";
+import { useState } from "react";
 
 export default function SettingsPage() {
 	const [settings, setSettings] = useState({
@@ -31,9 +31,9 @@ export default function SettingsPage() {
 	};
 
 	return (
-		<div className="flex flex-col gap-6 max-w-4xl">
+		<div className="flex max-w-4xl flex-col gap-6">
 			<div>
-				<h1 className="text-3xl font-bold">Settings</h1>
+				<h1 className="font-bold text-3xl">Settings</h1>
 				<p className="text-muted-foreground">
 					Manage your blog settings and preferences
 				</p>
@@ -109,7 +109,7 @@ export default function SettingsPage() {
 					<div className="flex items-center justify-between">
 						<div className="space-y-0.5">
 							<Label htmlFor="enableComments">Enable Comments</Label>
-							<p className="text-sm text-muted-foreground">
+							<p className="text-muted-foreground text-sm">
 								Allow readers to comment on your posts
 							</p>
 						</div>
@@ -125,7 +125,7 @@ export default function SettingsPage() {
 					<div className="flex items-center justify-between">
 						<div className="space-y-0.5">
 							<Label htmlFor="enableNewsletter">Enable Newsletter</Label>
-							<p className="text-sm text-muted-foreground">
+							<p className="text-muted-foreground text-sm">
 								Show newsletter signup form on your blog
 							</p>
 						</div>

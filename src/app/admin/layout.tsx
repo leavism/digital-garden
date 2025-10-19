@@ -1,15 +1,12 @@
 import "@/styles/admin.css";
-import type React from "react";
+import { AdminSidebar } from "@/app/_components/admin-sidebar";
+import { Button } from "@/app/_components/ui/button";
+import { Separator } from "@/app/_components/ui/separator";
 import {
-	SidebarProvider,
 	SidebarInset,
+	SidebarProvider,
 	SidebarTrigger,
 } from "@/app/_components/ui/sidebar";
-import { AdminSidebar } from "@/app/_components/admin-sidebar";
-import { Separator } from "@/app/_components/ui/separator";
-import { Button } from "@/app/_components/ui/button";
-import { Home, BookOpen } from "lucide-react";
-import Link from "next/link";
 import {
 	Tooltip,
 	TooltipContent,
@@ -17,7 +14,10 @@ import {
 	TooltipTrigger,
 } from "@/app/_components/ui/tooltip";
 import { getServerSession } from "@/server/auth";
+import { BookOpen, Home } from "lucide-react";
+import Link from "next/link";
 import { redirect } from "next/navigation";
+import type React from "react";
 
 export default async function AdminLayout({
 	children,
