@@ -2,7 +2,6 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { Info, AlertTriangle, CheckCircle } from "lucide-react";
 import { Callout } from "@/app/_components/Callout";
 
 // Sample blog post data
@@ -44,11 +43,10 @@ export default function BlogPostPage() {
 					initial={{ opacity: 0, y: 20 }}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.6 }}
-					className="prose prose-lg max-w-none"
 				>
 					{/* Header */}
 					<header className="mb-12">
-						<div className="mb-2 flex items-center justify-center gap-3">
+						<div className="prose prose-lg mb-2 flex items-center justify-center gap-3">
 							<h1 className="text-center">{blogPost.title}</h1>
 						</div>
 
@@ -65,7 +63,7 @@ export default function BlogPostPage() {
 					</header>
 
 					{/* Content */}
-					<div className="border-t border-gray-200 pt-12">
+					<div className="prose prose-lg max-w-none border-t border-gray-200 pt-12">
 						<p>
 							When I first started thinking about building my own corner of the
 							internet, I kept coming back to the metaphor of a garden. Unlike a
