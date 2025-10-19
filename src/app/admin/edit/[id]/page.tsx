@@ -1,26 +1,26 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
-import Link from "next/link";
-import { api } from "@/trpc/react";
+import { TiptapEditor } from "@/app/_components/editor/tiptap-editor";
 import { Button } from "@/app/_components/ui/button";
-import { Input } from "@/app/_components/ui/input";
-import { Label } from "@/app/_components/ui/label";
 import {
 	Card,
 	CardContent,
 	CardHeader,
 	CardTitle,
 } from "@/app/_components/ui/card";
+import { Input } from "@/app/_components/ui/input";
+import { Label } from "@/app/_components/ui/label";
 import {
 	Tooltip,
 	TooltipContent,
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/app/_components/ui/tooltip";
-import { TiptapEditor } from "@/app/_components/editor/tiptap-editor";
-import { ArrowLeft, Save, Eye, FileEdit } from "lucide-react";
+import { api } from "@/trpc/react";
+import { ArrowLeft, Eye, FileEdit, Save } from "lucide-react";
+import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function EditPostPage() {
 	const params = useParams();
@@ -73,19 +73,19 @@ export default function EditPostPage() {
 		const handleBeforeUnload = (e: BeforeUnloadEvent) => {
 			if (hasUnsavedChanges) {
 				e.preventDefault();
-				e.returnValue = '';
+				e.returnValue = "";
 			}
 		};
 
-		window.addEventListener('beforeunload', handleBeforeUnload);
-		return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+		window.addEventListener("beforeunload", handleBeforeUnload);
+		return () => window.removeEventListener("beforeunload", handleBeforeUnload);
 	}, [hasUnsavedChanges]);
 
 	const handleBackClick = (e: React.MouseEvent) => {
 		e.preventDefault();
 		if (hasUnsavedChanges) {
 			const confirmed = window.confirm(
-				'You have unsaved changes. Are you sure you want to leave this page?'
+				"You have unsaved changes. Are you sure you want to leave this page?",
 			);
 			if (confirmed) {
 				router.push("/admin");
@@ -149,11 +149,7 @@ export default function EditPostPage() {
 				<TooltipProvider>
 					<Tooltip>
 						<TooltipTrigger asChild>
-							<Button
-								variant="outline"
-								size="icon"
-								onClick={handleBackClick}
-							>
+							<Button variant="outline" size="icon" onClick={handleBackClick}>
 								<ArrowLeft className="h-4 w-4" />
 							</Button>
 						</TooltipTrigger>
@@ -163,7 +159,7 @@ export default function EditPostPage() {
 					</Tooltip>
 				</TooltipProvider>
 				<div>
-					<h1 className="text-3xl font-bold">Edit Post</h1>
+					<h1 className="font-bold text-3xl">Edit Post</h1>
 					<p className="text-muted-foreground">
 						Last updated:{" "}
 						{new Date(post.updatedAt).toLocaleDateString("en-US", {
@@ -186,7 +182,7 @@ export default function EditPostPage() {
 						<CardContent className="space-y-6">
 							{/* Title */}
 							<div className="space-y-2">
-								<Label htmlFor="title" className="text-base font-semibold">
+								<Label htmlFor="title" className="font-semibold text-base">
 									Title
 								</Label>
 								<Input
@@ -200,11 +196,11 @@ export default function EditPostPage() {
 
 							{/* Slug */}
 							<div className="space-y-2">
-								<Label htmlFor="slug" className="text-base font-semibold">
+								<Label htmlFor="slug" className="font-semibold text-base">
 									URL Slug
 								</Label>
 								<div className="flex items-center gap-2">
-									<span className="text-sm text-muted-foreground">/blog/</span>
+									<span className="text-muted-foreground text-sm">/blog/</span>
 									<Input
 										id="slug"
 										value={slug}
@@ -213,7 +209,7 @@ export default function EditPostPage() {
 										className="flex-1"
 									/>
 								</div>
-								<p className="text-xs text-muted-foreground">
+								<p className="text-muted-foreground text-xs">
 									The URL-friendly version of the title. Auto-generated but can
 									be customized.
 								</p>
@@ -248,7 +244,7 @@ export default function EditPostPage() {
 						<CardContent className="space-y-4">
 							{/* Status Toggle */}
 							<div className="space-y-2">
-								<Label className="text-sm font-semibold">Status</Label>
+								<Label className="font-semibold text-sm">Status</Label>
 								<TooltipProvider>
 									<Tooltip>
 										<TooltipTrigger asChild>
@@ -299,7 +295,7 @@ export default function EditPostPage() {
 						<CardContent className="space-y-3">
 							{post.publishedAt && (
 								<div className="space-y-1">
-									<p className="text-sm font-medium text-muted-foreground">
+									<p className="font-medium text-muted-foreground text-sm">
 										Published Date
 									</p>
 									<p className="text-sm">
@@ -312,7 +308,7 @@ export default function EditPostPage() {
 								</div>
 							)}
 							<div className="space-y-1">
-								<p className="text-sm font-medium text-muted-foreground">
+								<p className="font-medium text-muted-foreground text-sm">
 									Last Updated
 								</p>
 								<p className="text-sm">
