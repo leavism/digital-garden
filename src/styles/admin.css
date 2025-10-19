@@ -189,10 +189,4 @@
 	body {
 		@apply bg-background text-foreground;
 	}
-	ul {
-		all: initial;
-	}
-	li {
-		all: initial;
-	}
 }
