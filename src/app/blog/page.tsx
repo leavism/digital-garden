@@ -3,201 +3,22 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { api } from "@/trpc/react";
 
-const allBlogPosts = [
-	{
-		id: 1,
-		title: "Building My Digital Garden",
-		date: "2024-03-15",
-		slug: "building-my-digital-garden",
-	},
-	{
-		id: 2,
-		title: "The Art of Small Animations",
-		date: "2024-03-10",
-		slug: "art-of-small-animations",
-	},
-	{
-		id: 3,
-		title: "Learning TypeScript: A Journey",
-		date: "2024-03-05",
-		slug: "learning-typescript-journey",
-	},
-	{
-		id: 4,
-		title: "Why I Choose tRPC",
-		date: "2024-02-28",
-		slug: "why-i-choose-trpc",
-	},
-	{
-		id: 5,
-		title: "The Beauty of Minimalism in Code",
-		date: "2024-02-20",
-		slug: "beauty-of-minimalism-in-code",
-	},
-	{
-		id: 6,
-		title: "Embracing Async/Await",
-		date: "2024-02-15",
-		slug: "embracing-async-await",
-	},
-	{
-		id: 7,
-		title: "CSS Grid vs Flexbox",
-		date: "2024-02-10",
-		slug: "css-grid-vs-flexbox",
-	},
-	{
-		id: 8,
-		title: "The Joy of Side Projects",
-		date: "2024-02-05",
-		slug: "joy-of-side-projects",
-	},
-	{
-		id: 9,
-		title: "Split Keyboards and Productivity",
-		date: "2024-01-30",
-		slug: "split-keyboards-productivity",
-	},
-	{
-		id: 10,
-		title: "Debugging Like a Detective",
-		date: "2024-01-25",
-		slug: "debugging-like-detective",
-	},
-	{
-		id: 11,
-		title: "The Modern Blog Renaissance",
-		date: "2024-01-20",
-		slug: "modern-blog-renaissance",
-	},
-	{
-		id: 12,
-		title: "React Server Components Explained",
-		date: "2024-01-15",
-		slug: "react-server-components-explained",
-	},
-	{
-		id: 13,
-		title: "Building Accessible Interfaces",
-		date: "2024-01-10",
-		slug: "building-accessible-interfaces",
-	},
-	{
-		id: 14,
-		title: "The Evolution of JavaScript",
-		date: "2024-01-05",
-		slug: "evolution-of-javascript",
-	},
-	{
-		id: 15,
-		title: "Dark Mode: More Than Just Aesthetics",
-		date: "2023-12-30",
-		slug: "dark-mode-more-than-aesthetics",
-	},
-	{
-		id: 16,
-		title: "Git Workflows That Actually Work",
-		date: "2023-12-25",
-		slug: "git-workflows-that-work",
-	},
-	{
-		id: 17,
-		title: "Performance Optimization Strategies",
-		date: "2023-12-20",
-		slug: "performance-optimization-strategies",
-	},
-	{
-		id: 18,
-		title: "The Future of Web Development",
-		date: "2023-12-15",
-		slug: "future-of-web-development",
-	},
-	{
-		id: 19,
-		title: "Working with Design Systems",
-		date: "2023-12-10",
-		slug: "working-with-design-systems",
-	},
-	{
-		id: 20,
-		title: "API Design Principles",
-		date: "2023-12-05",
-		slug: "api-design-principles",
-	},
-	{
-		id: 21,
-		title: "Testing Strategies for Modern Apps",
-		date: "2023-11-30",
-		slug: "testing-strategies-modern-apps",
-	},
-	{
-		id: 22,
-		title: "Micro-Frontend Architecture",
-		date: "2023-11-25",
-		slug: "micro-frontend-architecture",
-	},
-	{
-		id: 23,
-		title: "The Art of Code Reviews",
-		date: "2023-11-20",
-		slug: "art-of-code-reviews",
-	},
-	{
-		id: 24,
-		title: "State Management in 2024",
-		date: "2023-11-15",
-		slug: "state-management-2024",
-	},
-	{
-		id: 25,
-		title: "Building Progressive Web Apps",
-		date: "2023-11-10",
-		slug: "building-progressive-web-apps",
-	},
-	{
-		id: 26,
-		title: "Database Design Best Practices",
-		date: "2023-11-05",
-		slug: "database-design-best-practices",
-	},
-	{
-		id: 27,
-		title: "DevOps for Frontend Developers",
-		date: "2023-10-30",
-		slug: "devops-for-frontend-developers",
-	},
-	{
-		id: 28,
-		title: "The Psychology of User Interfaces",
-		date: "2023-10-25",
-		slug: "psychology-of-user-interfaces",
-	},
-	{
-		id: 29,
-		title: "Security in Modern Web Apps",
-		date: "2023-10-20",
-		slug: "security-in-modern-web-apps",
-	},
-	{
-		id: 30,
-		title: "Building Real-time Applications",
-		date: "2023-10-15",
-		slug: "building-realtime-applications",
-	},
-	{
-		id: 31,
-		title: "The Power of Static Site Generation",
-		date: "2023-10-10",
-		slug: "power-of-static-site-generation",
-	},
-];
 const POSTS_PER_PAGE = 25;
+
+type BlogPost = {
+	id: string;
+	title: string;
+	slug: string;
+	publishedAt: Date | null;
+	author: { name: string | null; image: string | null } | null;
+};
 
 function BlogPostRow({
 	post,
 	index,
-}: { post: (typeof allBlogPosts)[0]; index: number }) {
+}: { post: BlogPost; index: number }) {
 	return (
 		<motion.div
 			initial={{ opacity: 0, y: 10 }}
@@ -211,14 +32,16 @@ function BlogPostRow({
 						{post.title}
 					</h3>
 					<time
-						dateTime={post.date}
+						dateTime={post.publishedAt?.toISOString()}
 						className="group ml-4 flex-shrink-0 text-gray-400 text-lg tracking-wide group-hover:text-gray-600"
 					>
-						{new Date(post.date).toLocaleDateString("en-US", {
-							month: "long",
-							day: "numeric",
-							year: "numeric",
-						})}
+						{post.publishedAt
+							? post.publishedAt.toLocaleDateString("en-US", {
+									month: "long",
+									day: "numeric",
+									year: "numeric",
+							  })
+							: "Not published"}
 					</time>
 				</div>
 			</Link>
@@ -229,10 +52,24 @@ function BlogPostRow({
 export default function BlogPage() {
 	const [currentPage, setCurrentPage] = useState(1);
 
+	const { data: allBlogPosts = [], isLoading } = api.posts.getAll.useQuery();
+
 	const totalPages = Math.ceil(allBlogPosts.length / POSTS_PER_PAGE);
 	const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
 	const endIndex = startIndex + POSTS_PER_PAGE;
 	const currentPosts = allBlogPosts.slice(startIndex, endIndex);
+
+	if (isLoading) {
+		return (
+			<main className="relative min-h-screen">
+				<div className="mx-auto max-w-3xl px-4 py-12">
+					<div className="flex items-center justify-center">
+						<p className="text-gray-600">Loading posts...</p>
+					</div>
+				</div>
+			</main>
+		);
+	}
 
 	return (
 		<main className="relative min-h-screen">
