@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { api } from "@/trpc/react";
 import { Button } from "@/app/_components/ui/button";
 import { Input } from "@/app/_components/ui/input";
 import { Label } from "@/app/_components/ui/label";
@@ -24,10 +25,16 @@ import { ArrowLeft, Save, Eye, FileEdit } from "lucide-react";
 export default function CreatePostPage() {
 	const router = useRouter();
 
+	const createMutation = api.posts.create.useMutation({
+		onSuccess: () => {
+			router.push("/admin");
+		},
+	});
+
 	const [title, setTitle] = useState("");
 	const [slug, setSlug] = useState("");
 	const [content, setContent] = useState("");
-	const [status, setStatus] = useState<"published" | "draft">("draft");
+	const [published, setPublished] = useState(false);
 	const [isSlugManuallyEdited, setIsSlugManuallyEdited] = useState(false);
 
 	const generateSlug = (text: string) => {
@@ -50,9 +57,12 @@ export default function CreatePostPage() {
 	};
 
 	const handleSavePost = () => {
-		console.log("Saving post:", { title, slug, content, status });
-		// In a real app, save to API
-		router.push("/admin");
+		createMutation.mutate({
+			title,
+			slug,
+			content,
+			published,
+		});
 	};
 
 	return (
@@ -159,11 +169,11 @@ export default function CreatePostPage() {
 										<TooltipTrigger asChild>
 											<Button
 												type="button"
-												variant={status === "published" ? "default" : "outline"}
+												variant={published ? "default" : "outline"}
 												className="w-full"
-												onClick={() => setStatus(status === "published" ? "draft" : "published")}
+												onClick={() => setPublished(!published)}
 											>
-												{status === "published" ? (
+												{published ? (
 													<>
 														<Eye className="mr-2 h-4 w-4" />
 														Published
@@ -184,9 +194,14 @@ export default function CreatePostPage() {
 							</div>
 
 							{/* Save Button */}
-							<Button onClick={handleSavePost} className="w-full" size="lg">
+							<Button
+								onClick={handleSavePost}
+								className="w-full"
+								size="lg"
+								disabled={createMutation.isPending}
+							>
 								<Save className="mr-2 h-4 w-4" />
-								{status === "published" ? "Publish Post" : "Save Draft"}
+								{published ? "Publish Post" : "Save Draft"}
 							</Button>
 						</CardContent>
 					</Card>

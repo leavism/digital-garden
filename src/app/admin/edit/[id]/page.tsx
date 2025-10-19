@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import { api } from "@/trpc/react";
 import { Button } from "@/app/_components/ui/button";
 import { Input } from "@/app/_components/ui/input";
 import { Label } from "@/app/_components/ui/label";
@@ -21,60 +22,78 @@ import {
 import { TiptapEditor } from "@/app/_components/editor/tiptap-editor";
 import { ArrowLeft, Save, Eye, FileEdit } from "lucide-react";
 
-type BlogPost = {
-	id: string;
-	title: string;
-	slug: string;
-	status: "published" | "draft";
-	lastUpdated: string;
-	publishedDate?: string;
-	content: string;
-};
-
-// Mock data - in a real app, this would come from an API
-const mockPosts: BlogPost[] = [
-	{
-		id: "1",
-		title: "Getting Started with Next.js 15",
-		slug: "getting-started-with-nextjs-15",
-		status: "published",
-		lastUpdated: "2024-03-15",
-		publishedDate: "2024-03-10",
-		content: "Next.js 15 introduces groundbreaking features...",
-	},
-	{
-		id: "2",
-		title: "The Future of Web Development",
-		slug: "the-future-of-web-development",
-		status: "draft",
-		lastUpdated: "2024-03-14",
-		content: "As we look ahead, web development continues to evolve...",
-	},
-];
-
 export default function EditPostPage() {
 	const params = useParams();
 	const router = useRouter();
 	const postId = params.id as string;
 
-	const [post, setPost] = useState<BlogPost | null>(null);
+	const { data: post, isLoading } = api.posts.getById.useQuery({ id: postId });
+	const utils = api.useUtils();
+	const updateMutation = api.posts.update.useMutation({
+		onSuccess: () => {
+			setHasUnsavedChanges(false);
+			utils.posts.getAllAdmin.invalidate();
+			router.push("/admin");
+		},
+	});
+
 	const [title, setTitle] = useState("");
 	const [slug, setSlug] = useState("");
 	const [content, setContent] = useState("");
-	const [status, setStatus] = useState<"published" | "draft">("draft");
+	const [published, setPublished] = useState(false);
 	const [isSlugManuallyEdited, setIsSlugManuallyEdited] = useState(false);
+	const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
+	// Initialize form when post data loads
 	useEffect(() => {
-		// In a real app, fetch the post from an API
-		const foundPost = mockPosts.find((p) => p.id === postId);
-		if (foundPost) {
-			setPost(foundPost);
-			setTitle(foundPost.title);
-			setSlug(foundPost.slug);
-			setContent(foundPost.content);
-			setStatus(foundPost.status);
+		if (post) {
+			setTitle(post.title);
+			setSlug(post.slug);
+			setContent(post.content);
+			setPublished(post.published);
+			setHasUnsavedChanges(false);
 		}
-	}, [postId]);
+	}, [post]);
+
+	// Track changes to all form fields
+	useEffect(() => {
+		if (post) {
+			const hasChanges =
+				title !== post.title ||
+				slug !== post.slug ||
+				content !== post.content ||
+				published !== post.published;
+
+			setHasUnsavedChanges(hasChanges);
+		}
+	}, [title, slug, content, published, post]);
+
+	// Warn before leaving page with unsaved changes
+	useEffect(() => {
+		const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+			if (hasUnsavedChanges) {
+				e.preventDefault();
+				e.returnValue = '';
+			}
+		};
+
+		window.addEventListener('beforeunload', handleBeforeUnload);
+		return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+	}, [hasUnsavedChanges]);
+
+	const handleBackClick = (e: React.MouseEvent) => {
+		e.preventDefault();
+		if (hasUnsavedChanges) {
+			const confirmed = window.confirm(
+				'You have unsaved changes. Are you sure you want to leave this page?'
+			);
+			if (confirmed) {
+				router.push("/admin");
+			}
+		} else {
+			router.push("/admin");
+		}
+	};
 
 	const generateSlug = (text: string) => {
 		return text
@@ -95,16 +114,30 @@ export default function EditPostPage() {
 		setIsSlugManuallyEdited(true);
 	};
 
-	const handleSaveDraft = () => {
-		console.log("Saving changes:", { title, slug, content, status });
-		// In a real app, save to API
-		router.push("/admin");
+	const handleSave = () => {
+		if (!post) return;
+
+		updateMutation.mutate({
+			id: post.id,
+			title,
+			slug,
+			content,
+			published,
+		});
 	};
+
+	if (isLoading) {
+		return (
+			<div className="flex flex-col gap-6">
+				<p className="text-muted-foreground">Loading...</p>
+			</div>
+		);
+	}
 
 	if (!post) {
 		return (
 			<div className="flex flex-col gap-6">
-				<p className="text-muted-foreground">Loading...</p>
+				<p className="text-muted-foreground">Post not found</p>
 			</div>
 		);
 	}
@@ -116,11 +149,13 @@ export default function EditPostPage() {
 				<TooltipProvider>
 					<Tooltip>
 						<TooltipTrigger asChild>
-							<Link href="/admin">
-								<Button variant="outline" size="icon">
-									<ArrowLeft className="h-4 w-4" />
-								</Button>
-							</Link>
+							<Button
+								variant="outline"
+								size="icon"
+								onClick={handleBackClick}
+							>
+								<ArrowLeft className="h-4 w-4" />
+							</Button>
 						</TooltipTrigger>
 						<TooltipContent>
 							<p>Back to blog dashboard</p>
@@ -128,12 +163,10 @@ export default function EditPostPage() {
 					</Tooltip>
 				</TooltipProvider>
 				<div>
-					<h1 className="text-3xl font-bold">
-						Edit Post
-					</h1>
+					<h1 className="text-3xl font-bold">Edit Post</h1>
 					<p className="text-muted-foreground">
 						Last updated:{" "}
-						{new Date(post.lastUpdated).toLocaleDateString("en-US", {
+						{new Date(post.updatedAt).toLocaleDateString("en-US", {
 							month: "long",
 							day: "numeric",
 							year: "numeric",
@@ -181,7 +214,8 @@ export default function EditPostPage() {
 									/>
 								</div>
 								<p className="text-xs text-muted-foreground">
-									The URL-friendly version of the title. Auto-generated but can be customized.
+									The URL-friendly version of the title. Auto-generated but can
+									be customized.
 								</p>
 							</div>
 						</CardContent>
@@ -193,11 +227,13 @@ export default function EditPostPage() {
 							<CardTitle>Content</CardTitle>
 						</CardHeader>
 						<CardContent>
-							<TiptapEditor
-								content={content}
-								onChange={setContent}
-								placeholder="Start editing your post content..."
-							/>
+							{post && (
+								<TiptapEditor
+									content={post.content}
+									onChange={setContent}
+									placeholder="Start editing your post content..."
+								/>
+							)}
 						</CardContent>
 					</Card>
 				</div>
@@ -218,11 +254,11 @@ export default function EditPostPage() {
 										<TooltipTrigger asChild>
 											<Button
 												type="button"
-												variant={status === "published" ? "default" : "outline"}
+												variant={published ? "default" : "outline"}
 												className="w-full"
-												onClick={() => setStatus(status === "published" ? "draft" : "published")}
+												onClick={() => setPublished(!published)}
 											>
-												{status === "published" ? (
+												{published ? (
 													<>
 														<Eye className="mr-2 h-4 w-4" />
 														Published
@@ -243,7 +279,12 @@ export default function EditPostPage() {
 							</div>
 
 							{/* Save Button */}
-							<Button onClick={handleSaveDraft} className="w-full" size="lg">
+							<Button
+								onClick={handleSave}
+								className="w-full"
+								size="lg"
+								disabled={updateMutation.isPending || !hasUnsavedChanges}
+							>
 								<Save className="mr-2 h-4 w-4" />
 								Save Changes
 							</Button>
@@ -256,11 +297,13 @@ export default function EditPostPage() {
 							<CardTitle>Metadata</CardTitle>
 						</CardHeader>
 						<CardContent className="space-y-3">
-							{post.publishedDate && (
+							{post.publishedAt && (
 								<div className="space-y-1">
-									<p className="text-sm font-medium text-muted-foreground">Published Date</p>
+									<p className="text-sm font-medium text-muted-foreground">
+										Published Date
+									</p>
 									<p className="text-sm">
-										{new Date(post.publishedDate).toLocaleDateString("en-US", {
+										{new Date(post.publishedAt).toLocaleDateString("en-US", {
 											month: "long",
 											day: "numeric",
 											year: "numeric",
@@ -269,9 +312,11 @@ export default function EditPostPage() {
 								</div>
 							)}
 							<div className="space-y-1">
-								<p className="text-sm font-medium text-muted-foreground">Last Updated</p>
+								<p className="text-sm font-medium text-muted-foreground">
+									Last Updated
+								</p>
 								<p className="text-sm">
-									{new Date(post.lastUpdated).toLocaleDateString("en-US", {
+									{new Date(post.updatedAt).toLocaleDateString("en-US", {
 										month: "long",
 										day: "numeric",
 										year: "numeric",
