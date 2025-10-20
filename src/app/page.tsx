@@ -3,7 +3,6 @@ import CanvasBackground from "@/app/_components/BackgroundEffect";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
 // Plant icon components
 const FlowerIcon = ({ className = "" }) => (
@@ -63,7 +62,9 @@ export default function Home() {
 				<motion.div className="space-y-6 md:space-y-8">
 					<div className="space-y-4">
 						<div className="flex items-center gap-3">
-							<h1 className="mt-0 text-3xl">Huy&apos;s Digital Garden</h1>
+							<h1 className="mt-0 text-3xl font-bold">
+								Huy&apos;s Digital Garden
+							</h1>
 							<Image
 								src="/white-daisy.svg"
 								alt="white daisy"
@@ -73,7 +74,7 @@ export default function Home() {
 							/>
 						</div>
 						<div>
-							<p>
+							<p className="text-xl">
 								Welcome to my little garden on the Internet, where I grow my
 								passion for software. As a new graduate, I&apos;m drawn to
 								creating tools that allow us to bloom rather than limit how we
@@ -84,12 +85,12 @@ export default function Home() {
 
 					<div className="flex flex-col gap-6 md:flex-row md:gap-10">
 						<motion.div
-							className="flex-1 space-y-4"
+							className="flex-1"
 							initial={{ opacity: 0, x: -20 }}
 							animate={{ opacity: 1, x: 0 }}
 							transition={{ duration: 0.4, delay: 0.3 }}
 						>
-							<h2>Me</h2>
+							<h2 className="text-2xl font-bold">Me</h2>
 							<nav className="space-y-3">
 								<NavLink
 									link="https://drive.google.com/file/d/14qQBXFCt9eyaV1efOz1oKi_WFg_Bx6UE/view?usp=drive_link"
@@ -134,7 +135,7 @@ export default function Home() {
 							animate={{ opacity: 1, x: 0 }}
 							transition={{ duration: 0.4, delay: 0.3 }}
 						>
-							<h2 className=" mt-0 font-bold">My Garden</h2>
+							<h2 className="text-2xl font-bold">My Garden</h2>
 							<div className="rounded-lg border border-gray-300 border-dashed bg-gray-50 p-6 text-center">
 								<div className="mb-4 flex justify-center">
 									<Image
@@ -145,7 +146,9 @@ export default function Home() {
 										className="h-8 w-8 opacity-70"
 									/>
 								</div>
-								<p className="text-gray-600">Seeds are being planted...</p>
+								<p className="text-gray-600 text-xl">
+									Seeds are being planted...
+								</p>
 								<p className="mt-1 text-base text-gray-500">
 									Check back to see what grows
 								</p>
