@@ -72,7 +72,7 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
 					initial={{ opacity: 0, y: 20 }}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.6 }}
-					className="prose prose-stone lg:prose-xl"
+					className="prose prose-stone lg:prose-xl mx-auto"
 				>
 					{/* Header */}
 					<div className="mb-2 flex items-center justify-center gap-3">
