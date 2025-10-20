@@ -29,10 +29,10 @@ export default {
 						},
 						code: {
 							"&::before": {
-								content: '""',
+								content: '""!important',
 							},
 							"&::after": {
-								content: '""',
+								content: '""!important',
 							},
 						},
 						"ul > li": {
@@ -75,10 +75,10 @@ export default {
 						},
 						code: {
 							"&::before": {
-								content: '""',
+								content: '""!important',
 							},
 							"&::after": {
-								content: '""',
+								content: '""!important',
 							},
 						},
 						ul: { marginTop: "0.9em", marginBottom: "0.9em" },
@@ -122,10 +122,10 @@ export default {
 						},
 						code: {
 							"&::before": {
-								content: '""',
+								content: '""!important',
 							},
 							"&::after": {
-								content: '""',
+								content: '""!important',
 							},
 						},
 						"ul > li": {
@@ -167,10 +167,10 @@ export default {
 						},
 						code: {
 							"&::before": {
-								content: '""',
+								content: '""!important',
 							},
 							"&::after": {
-								content: '""',
+								content: '""!important',
 							},
 						},
 						"ul > li": {
@@ -213,10 +213,10 @@ export default {
 						},
 						code: {
 							"&::before": {
-								content: '""',
+								content: '""!important',
 							},
 							"&::after": {
-								content: '""',
+								content: '""!important',
 							},
 						},
 						ul: { marginTop: "0.9em", marginBottom: "0.8em" },
