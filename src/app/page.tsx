@@ -3,6 +3,7 @@ import CanvasBackground from "@/app/_components/BackgroundEffect";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 
 // Plant icon components
 const FlowerIcon = ({ className = "" }) => (
@@ -29,21 +30,41 @@ function NavLink({
 }: navLinkProp & { delay?: number }) {
 	return (
 		<motion.div
-			whileHover={{ scale: 1.02 }}
-			whileTap={{ scale: 0.98 }}
-			transition={{ type: "spring", stiffness: 300, delay: delay }}
+			initial={{ opacity: 0, y: 10 }}
+			animate={{ opacity: 1, y: 0 }}
+			transition={{ duration: 0.4, delay: delay }}
+			className="group"
 		>
 			<Link
 				href={link}
 				target="_blank"
-				className="group flex items-center gap-3 rounded-lg border-2 border-gray-200 border-dashed bg-white px-4 py-2 duration-200 hover:border-[#A8B331]"
+				className="block relative rounded-lg bg-white p-3 transition-all duration-300 border-2 border-gray-200 border-dashed hover:bg-[#A8B331]/5 hover:shadow-[0px_0px_8px_2px_#f8f9ea] group-hover:border-[#A8B331]"
 			>
-				<div className="text-gray-400 transition-colors duration-200 group-hover:text-[#777E21]">
-					{icon}
+				<div className="relative flex items-start gap-4">
+					<motion.div
+						className="text-gray-400 transition-colors duration-300 group-hover:text-[#777E21]"
+						whileHover={{ scale: 1.1, rotate: 5 }}
+						transition={{ type: "spring", stiffness: 300 }}
+					>
+						{icon}
+					</motion.div>
+
+					{/* Text content */}
+					<div className="flex-1 min-w-0">
+						<h3 className="font-semibold text-gray-800 group-hover:text-[#777E21] transition-colors duration-300">
+							{text}
+						</h3>
+					</div>
+
+					<motion.div
+						className="text-gray-300 group-hover:text-[#A8B331] transition-colors duration-300"
+						initial={{ x: 0 }}
+						whileHover={{ x: 3 }}
+						transition={{ type: "spring", stiffness: 300 }}
+					>
+						<ArrowUpRight />
+					</motion.div>
 				</div>
-				<span className="font-medium text-base text-gray-800 group-hover:text-[#777E21]">
-					{text}
-				</span>
 			</Link>
 		</motion.div>
 	);
@@ -57,7 +78,7 @@ export default function Home() {
 				initial={{ opacity: 0, y: 20 }}
 				animate={{ opacity: 1, y: 0 }}
 				transition={{ duration: 1 }}
-				className="relative mx-auto max-w-[700px] rounded-xl border-gray-200 bg-white p-4 transition-colors hover:border-gray-300 md:border-2 md:border-dashed md:p-10"
+				className="relative mx-auto max-w-[700px] rounded-xl border-gray-200 bg-white p-4 transition-colors hover:shadow-[0px_0px_10px_1px] shadow-gray-100 hover:border-gray-300 md:border-2 md:border-dashed md:p-10"
 			>
 				<motion.div className="space-y-6 md:space-y-8">
 					<div className="space-y-4">
@@ -95,19 +116,19 @@ export default function Home() {
 								<NavLink
 									link="https://drive.google.com/file/d/14qQBXFCt9eyaV1efOz1oKi_WFg_Bx6UE/view?usp=drive_link"
 									text="Resume"
-									delay={1}
+									delay={0.5}
 									icon={<FlowerIcon />}
 								/>
 								<NavLink
 									link="https://github.com/leavism"
 									text="GitHub"
-									delay={1.5}
+									delay={0.7}
 									icon={<FlowerIcon />}
 								/>
 								<NavLink
 									link="https://www.linkedin.com/in/leavism/"
 									text="LinkedIn"
-									delay={2.0}
+									delay={0.9}
 									icon={<FlowerIcon />}
 								/>
 							</nav>
@@ -136,7 +157,7 @@ export default function Home() {
 							transition={{ duration: 0.4, delay: 0.3 }}
 						>
 							<h2 className="text-2xl font-bold">My Garden</h2>
-							<div className="rounded-lg border border-gray-300 border-dashed bg-gray-50 p-6 text-center">
+							<div className="rounded-lg border border-gray-300 border-dashed bg-gray-50 py-9 text-center">
 								<div className="mb-4 flex justify-center">
 									<Image
 										src="/sapling.svg"
