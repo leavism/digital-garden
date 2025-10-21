@@ -168,95 +168,101 @@ export default function EditPostPage() {
 		<div className="flex flex-col gap-6">
 			{/* Header - Hidden in fullscreen */}
 			{!isEditorFullscreen && (
-			<div className="flex items-center gap-4">
-				<TooltipProvider>
-					<Tooltip>
-						<TooltipTrigger asChild>
-							<Button variant="outline" size="icon" onClick={handleBackClick}>
-								<ArrowLeft className="h-4 w-4" />
-							</Button>
-						</TooltipTrigger>
-						<TooltipContent>
-							<p>Back to blog dashboard</p>
-						</TooltipContent>
-					</Tooltip>
-				</TooltipProvider>
-				<div>
-					<h1 className="font-bold text-3xl">Edit Post</h1>
-					<p className="text-muted-foreground">
-						Last updated:{" "}
-						{new Date(post.updatedAt).toLocaleDateString("en-US", {
-							month: "long",
-							day: "numeric",
-							year: "numeric",
-						})}
-					</p>
+				<div className="flex items-center gap-4">
+					<TooltipProvider>
+						<Tooltip>
+							<TooltipTrigger asChild>
+								<Button variant="outline" size="icon" onClick={handleBackClick}>
+									<ArrowLeft className="h-4 w-4" />
+								</Button>
+							</TooltipTrigger>
+							<TooltipContent>
+								<p>Back to blog dashboard</p>
+							</TooltipContent>
+						</Tooltip>
+					</TooltipProvider>
+					<div>
+						<h1 className="font-bold text-3xl">Edit Post</h1>
+						<p className="text-muted-foreground">
+							Last updated:{" "}
+							{new Date(post.updatedAt).toLocaleDateString("en-US", {
+								month: "long",
+								day: "numeric",
+								year: "numeric",
+							})}
+						</p>
+					</div>
 				</div>
-			</div>
 			)}
 
-			<div className={`grid gap-6 ${
-				isEditorExpanded || isEditorFullscreen
-					? "lg:grid-cols-1"
-					: "lg:grid-cols-3"
-			}`}>
-				{/* Main Content - Responsive width */}
-				<div className={`space-y-6 ${
+			<div
+				className={`grid gap-6 ${
 					isEditorExpanded || isEditorFullscreen
-						? "lg:col-span-1"
-						: "lg:col-span-2"
-				}`}>
+						? "lg:grid-cols-1"
+						: "lg:grid-cols-3"
+				}`}
+			>
+				{/* Main Content - Responsive width */}
+				<div
+					className={`space-y-6 ${
+						isEditorExpanded || isEditorFullscreen
+							? "lg:col-span-1"
+							: "lg:col-span-2"
+					}`}
+				>
 					{/* Post Details - Hidden in fullscreen */}
 					{!isEditorFullscreen && (
-					<Card>
-						<CardHeader>
-							<CardTitle>Post Details</CardTitle>
-						</CardHeader>
-						<CardContent className="space-y-6">
-							{/* Title */}
-							<div className="space-y-2">
-								<Label htmlFor="title" className="font-semibold text-base">
-									Title
-								</Label>
-								<Input
-									id="title"
-									value={title}
-									onChange={(e) => handleTitleChange(e.target.value)}
-									placeholder="Enter post title..."
-									className="text-lg"
-								/>
-							</div>
-
-							{/* Slug */}
-							<div className="space-y-2">
-								<Label htmlFor="slug" className="font-semibold text-base">
-									URL Slug
-								</Label>
-								<div className="flex items-center gap-2">
-									<span className="text-muted-foreground text-sm">/blog/</span>
+						<Card>
+							<CardHeader>
+								<CardTitle>Post Details</CardTitle>
+							</CardHeader>
+							<CardContent className="space-y-6">
+								{/* Title */}
+								<div className="space-y-2">
+									<Label htmlFor="title" className="font-semibold text-base">
+										Title
+									</Label>
 									<Input
-										id="slug"
-										value={slug}
-										onChange={(e) => handleSlugChange(e.target.value)}
-										placeholder="url-friendly-slug"
-										className="flex-1"
+										id="title"
+										value={title}
+										onChange={(e) => handleTitleChange(e.target.value)}
+										placeholder="Enter post title..."
+										className="text-lg"
 									/>
 								</div>
-								<p className="text-muted-foreground text-xs">
-									The URL-friendly version of the title. Auto-generated but can
-									be customized.
-								</p>
-							</div>
-						</CardContent>
-					</Card>
+
+								{/* Slug */}
+								<div className="space-y-2">
+									<Label htmlFor="slug" className="font-semibold text-base">
+										URL Slug
+									</Label>
+									<div className="flex items-center gap-2">
+										<span className="text-muted-foreground text-sm">
+											/blog/
+										</span>
+										<Input
+											id="slug"
+											value={slug}
+											onChange={(e) => handleSlugChange(e.target.value)}
+											placeholder="url-friendly-slug"
+											className="flex-1"
+										/>
+									</div>
+									<p className="text-muted-foreground text-xs">
+										The URL-friendly version of the title. Auto-generated but
+										can be customized.
+									</p>
+								</div>
+							</CardContent>
+						</Card>
 					)}
 
 					{/* Editor */}
 					<Card className={isEditorFullscreen ? "border-none shadow-none" : ""}>
 						{!isEditorFullscreen && (
-						<CardHeader>
-							<CardTitle>Content</CardTitle>
-						</CardHeader>
+							<CardHeader>
+								<CardTitle>Content</CardTitle>
+							</CardHeader>
 						)}
 						<CardContent className={isEditorFullscreen ? "p-0" : ""}>
 							{post && (
@@ -275,104 +281,106 @@ export default function EditPostPage() {
 
 				{/* Sidebar - Hidden when expanded/fullscreen */}
 				{!isEditorExpanded && !isEditorFullscreen && (
-				<div className="space-y-6">
-					{/* Actions */}
-					<Card>
-						<CardHeader>
-							<CardTitle>Actions</CardTitle>
-						</CardHeader>
-						<CardContent className="space-y-4">
-							{/* Status Toggle */}
-							<div className="space-y-2">
-								<Label className="font-semibold text-sm">Status</Label>
-								<TooltipProvider>
-									<Tooltip>
-										<TooltipTrigger asChild>
-											<Button
-												type="button"
-												variant={published ? "default" : "outline"}
-												className="w-full"
-												onClick={() => {
-													const newStatus = !published;
-													setPublished(newStatus);
-													toast.info(
-														newStatus ? "Post marked as published" : "Post marked as draft",
-														{
-															description: newStatus
-																? "Don't forget to save your changes to make it live"
-																: "Post will be hidden from public view when saved"
-														}
-													);
-												}}
-											>
-												{published ? (
-													<>
-														<Eye className="mr-2 h-4 w-4" />
-														Published
-													</>
-												) : (
-													<>
-														<FileEdit className="mr-2 h-4 w-4" />
-														Draft
-													</>
-												)}
-											</Button>
-										</TooltipTrigger>
-										<TooltipContent>
-											<p>Click to toggle status</p>
-										</TooltipContent>
-									</Tooltip>
-								</TooltipProvider>
-							</div>
+					<div className="space-y-6">
+						{/* Actions */}
+						<Card>
+							<CardHeader>
+								<CardTitle>Actions</CardTitle>
+							</CardHeader>
+							<CardContent className="space-y-4">
+								{/* Status Toggle */}
+								<div className="space-y-2">
+									<Label className="font-semibold text-sm">Status</Label>
+									<TooltipProvider>
+										<Tooltip>
+											<TooltipTrigger asChild>
+												<Button
+													type="button"
+													variant={published ? "default" : "outline"}
+													className="w-full"
+													onClick={() => {
+														const newStatus = !published;
+														setPublished(newStatus);
+														toast.info(
+															newStatus
+																? "Post marked as published"
+																: "Post marked as draft",
+															{
+																description: newStatus
+																	? "Don't forget to save your changes to make it live"
+																	: "Post will be hidden from public view when saved",
+															},
+														);
+													}}
+												>
+													{published ? (
+														<>
+															<Eye className="mr-2 h-4 w-4" />
+															Published
+														</>
+													) : (
+														<>
+															<FileEdit className="mr-2 h-4 w-4" />
+															Draft
+														</>
+													)}
+												</Button>
+											</TooltipTrigger>
+											<TooltipContent>
+												<p>Click to toggle status</p>
+											</TooltipContent>
+										</Tooltip>
+									</TooltipProvider>
+								</div>
 
-							{/* Save Button */}
-							<Button
-								onClick={handleSave}
-								className="w-full"
-								size="lg"
-								disabled={updateMutation.isPending || !hasUnsavedChanges}
-							>
-								<Save className="mr-2 h-4 w-4" />
-								Save Changes
-							</Button>
-						</CardContent>
-					</Card>
+								{/* Save Button */}
+								<Button
+									onClick={handleSave}
+									className="w-full"
+									size="lg"
+									disabled={updateMutation.isPending || !hasUnsavedChanges}
+								>
+									<Save className="mr-2 h-4 w-4" />
+									Save Changes
+								</Button>
+							</CardContent>
+						</Card>
 
-					{/* Metadata */}
-					<Card>
-						<CardHeader>
-							<CardTitle>Metadata</CardTitle>
-						</CardHeader>
-						<CardContent className="space-y-3">
-							{post.publishedAt && (
+						{/* Metadata */}
+						<Card>
+							<CardHeader>
+								<CardTitle>Metadata</CardTitle>
+							</CardHeader>
+							<CardContent className="space-y-3">
+								{post.publishedAt && (
+									<div className="space-y-1">
+										<p className="font-medium text-muted-foreground text-sm">
+											Published Date
+										</p>
+										<p className="text-sm">
+											{new Date(post.publishedAt).toLocaleDateString("en-US", {
+												month: "long",
+												day: "numeric",
+												year: "numeric",
+											})}
+										</p>
+									</div>
+								)}
 								<div className="space-y-1">
 									<p className="font-medium text-muted-foreground text-sm">
-										Published Date
+										Last Updated
 									</p>
 									<p className="text-sm">
-										{new Date(post.publishedAt).toLocaleDateString("en-US", {
+										{new Date(post.updatedAt).toLocaleDateString("en-US", {
 											month: "long",
 											day: "numeric",
 											year: "numeric",
 										})}
 									</p>
 								</div>
-							)}
-							<div className="space-y-1">
-								<p className="font-medium text-muted-foreground text-sm">
-									Last Updated
-								</p>
-								<p className="text-sm">
-									{new Date(post.updatedAt).toLocaleDateString("en-US", {
-										month: "long",
-										day: "numeric",
-										year: "numeric",
-									})}
-								</p>
-							</div>
-						</CardContent>
-					</Card>
-				</div>
+							</CardContent>
+						</Card>
+					</div>
 				)}
 			</div>
 		</div>

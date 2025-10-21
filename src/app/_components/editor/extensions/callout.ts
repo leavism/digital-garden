@@ -97,88 +97,69 @@ export const Callout = Node.create<CalloutOptions>({
 		// Correct Lucide icon paths
 		const getIconElement = (variant: string) => {
 			switch (variant) {
-				case 'info':
+				case "info":
 					return [
-						'svg',
+						"svg",
 						{
-							xmlns: 'http://www.w3.org/2000/svg',
-							width: '24',
-							height: '24',
-							viewBox: '0 0 24 24',
-							fill: 'none',
-							stroke: 'currentColor',
-							'stroke-width': '2',
-							'stroke-linecap': 'round',
-							'stroke-linejoin': 'round',
-							class: 'lucide lucide-info h-6 w-6'
+							xmlns: "http://www.w3.org/2000/svg",
+							width: "24",
+							height: "24",
+							viewBox: "0 0 24 24",
+							fill: "none",
+							stroke: "currentColor",
+							"stroke-width": "2",
+							"stroke-linecap": "round",
+							"stroke-linejoin": "round",
+							class: "lucide lucide-info h-6 w-6",
 						},
-						[
-							'circle',
-							{ cx: '12', cy: '12', r: '10' }
-						],
-						[
-							'path',
-							{ d: 'M12 16v-4' }
-						],
-						[
-							'path',
-							{ d: 'M12 8h.01' }
-						]
+						["circle", { cx: "12", cy: "12", r: "10" }],
+						["path", { d: "M12 16v-4" }],
+						["path", { d: "M12 8h.01" }],
 					];
-				case 'warning':
+				case "warning":
 					return [
-						'svg',
+						"svg",
 						{
-							xmlns: 'http://www.w3.org/2000/svg',
-							width: '24',
-							height: '24',
-							viewBox: '0 0 24 24',
-							fill: 'none',
-							stroke: 'currentColor',
-							'stroke-width': '2',
-							'stroke-linecap': 'round',
-							'stroke-linejoin': 'round',
-							class: 'lucide lucide-triangle-alert h-6 w-6'
+							xmlns: "http://www.w3.org/2000/svg",
+							width: "24",
+							height: "24",
+							viewBox: "0 0 24 24",
+							fill: "none",
+							stroke: "currentColor",
+							"stroke-width": "2",
+							"stroke-linecap": "round",
+							"stroke-linejoin": "round",
+							class: "lucide lucide-triangle-alert h-6 w-6",
 						},
 						[
-							'path',
-							{ d: 'm21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3' }
+							"path",
+							{
+								d: "m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3",
+							},
 						],
-						[
-							'path',
-							{ d: 'M12 9v4' }
-						],
-						[
-							'path',
-							{ d: 'M12 17h.01' }
-						]
+						["path", { d: "M12 9v4" }],
+						["path", { d: "M12 17h.01" }],
 					];
-				case 'success':
+				case "success":
 					return [
-						'svg',
+						"svg",
 						{
-							xmlns: 'http://www.w3.org/2000/svg',
-							width: '24',
-							height: '24',
-							viewBox: '0 0 24 24',
-							fill: 'none',
-							stroke: 'currentColor',
-							'stroke-width': '2',
-							'stroke-linecap': 'round',
-							'stroke-linejoin': 'round',
-							class: 'lucide lucide-circle-check-big h-6 w-6'
+							xmlns: "http://www.w3.org/2000/svg",
+							width: "24",
+							height: "24",
+							viewBox: "0 0 24 24",
+							fill: "none",
+							stroke: "currentColor",
+							"stroke-width": "2",
+							"stroke-linecap": "round",
+							"stroke-linejoin": "round",
+							class: "lucide lucide-circle-check-big h-6 w-6",
 						},
-						[
-							'path',
-							{ d: 'M21.801 10A10 10 0 1 1 17 3.335' }
-						],
-						[
-							'path',
-							{ d: 'm9 11 3 3L22 4' }
-						]
+						["path", { d: "M21.801 10A10 10 0 1 1 17 3.335" }],
+						["path", { d: "m9 11 3 3L22 4" }],
 					];
 				default:
-					return getIconElement('info');
+					return getIconElement("info");
 			}
 		};
 
@@ -197,11 +178,7 @@ export const Callout = Node.create<CalloutOptions>({
 			[
 				"div",
 				{ class: "mb-3 flex items-center gap-3" },
-				[
-					"div",
-					{ class: "flex-shrink-0" },
-					getIconElement(variant)
-				],
+				["div", { class: "flex-shrink-0" }, getIconElement(variant)],
 				["h3", { class: "font-semibold text-lg" }, title],
 			],
 			[
@@ -238,4 +215,3 @@ export const Callout = Node.create<CalloutOptions>({
 		};
 	},
 });
-

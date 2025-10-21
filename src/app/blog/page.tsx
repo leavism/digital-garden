@@ -1,9 +1,9 @@
 "use client";
+import { api } from "@/trpc/react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { api } from "@/trpc/react";
 
 const POSTS_PER_PAGE = 25;
 
@@ -15,10 +15,7 @@ type BlogPost = {
 	author: { name: string | null; image: string | null } | null;
 };
 
-function BlogPostRow({
-	post,
-	index,
-}: { post: BlogPost; index: number }) {
+function BlogPostRow({ post, index }: { post: BlogPost; index: number }) {
 	return (
 		<motion.div
 			initial={{ opacity: 0, y: 10 }}
@@ -40,7 +37,7 @@ function BlogPostRow({
 									month: "long",
 									day: "numeric",
 									year: "numeric",
-							  })
+								})
 							: "Not published"}
 					</time>
 				</div>

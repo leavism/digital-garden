@@ -10,12 +10,12 @@ import { TaskList } from "@tiptap/extension-task-list";
 import { TextAlign } from "@tiptap/extension-text-align";
 import { TextStyle } from "@tiptap/extension-text-style";
 import { Underline } from "@tiptap/extension-underline";
-import { Callout } from "./extensions/callout";
 import type { Editor } from "@tiptap/react";
 import { EditorContent, useEditor, useEditorState } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { Maximize, Minimize, Monitor, Save, X } from "lucide-react";
 import React, { useCallback, useState } from "react";
+import { Callout } from "./extensions/callout";
 
 const extensions = [
 	StarterKit.configure({
@@ -23,7 +23,8 @@ const extensions = [
 	}),
 	Code.configure({
 		HTMLAttributes: {
-			class: "bg-gray-100 text-gray-800 px-1 py-0.5 rounded text-base font-mono",
+			class:
+				"bg-gray-100 text-gray-800 px-1 py-0.5 rounded text-base font-mono",
 		},
 	}),
 	TextStyle,
@@ -60,7 +61,7 @@ function MenuBar({
 	onToggleExpand,
 	onToggleFullscreen,
 	onSave,
-	isSaving
+	isSaving,
 }: {
 	editor: Editor;
 	isExpanded: boolean;
@@ -105,9 +106,12 @@ function MenuBar({
 				isAlignRight: ctx.editor.isActive({ textAlign: "right" }) ?? false,
 				isAlignJustify: ctx.editor.isActive({ textAlign: "justify" }) ?? false,
 				isCallout: ctx.editor.isActive("callout") ?? false,
-				isCalloutInfo: ctx.editor.isActive("callout", { variant: "info" }) ?? false,
-				isCalloutWarning: ctx.editor.isActive("callout", { variant: "warning" }) ?? false,
-				isCalloutSuccess: ctx.editor.isActive("callout", { variant: "success" }) ?? false,
+				isCalloutInfo:
+					ctx.editor.isActive("callout", { variant: "info" }) ?? false,
+				isCalloutWarning:
+					ctx.editor.isActive("callout", { variant: "warning" }) ?? false,
+				isCalloutSuccess:
+					ctx.editor.isActive("callout", { variant: "success" }) ?? false,
 				canUndo: ctx.editor.can().chain().undo().run() ?? false,
 				canRedo: ctx.editor.can().chain().redo().run() ?? false,
 			};
@@ -141,349 +145,356 @@ function MenuBar({
 		}
 	}, [editor]);
 
-	const toggleCallout = useCallback((variant: 'info' | 'warning' | 'success') => {
-		const title = window.prompt(`${variant.charAt(0).toUpperCase() + variant.slice(1)} callout title:`,
-			variant === 'info' ? 'Note' :
-			variant === 'warning' ? 'Warning' :
-			'Success');
+	const toggleCallout = useCallback(
+		(variant: "info" | "warning" | "success") => {
+			const title = window.prompt(
+				`${variant.charAt(0).toUpperCase() + variant.slice(1)} callout title:`,
+				variant === "info"
+					? "Note"
+					: variant === "warning"
+						? "Warning"
+						: "Success",
+			);
 
-		if (title !== null) {
-			editor.chain().focus().toggleCallout({ variant, title }).run();
-		}
-	}, [editor]);
+			if (title !== null) {
+				editor.chain().focus().toggleCallout({ variant, title }).run();
+			}
+		},
+		[editor],
+	);
 
 	return (
-		<div className="flex flex-wrap gap-2 border-b p-3 justify-between">
+		<div className="flex flex-wrap justify-between gap-2 border-b p-3">
 			<div className="flex flex-wrap gap-2">
-			{/* Text Formatting */}
-			<div className="flex gap-1">
-				<button
-					type="button"
-					onClick={() => editor.chain().focus().toggleBold().run()}
-					disabled={!editorState.canBold}
-					className={`rounded border px-3 py-1 text-sm hover:bg-accent disabled:opacity-50 ${
-						editorState.isBold
-							? "bg-primary text-primary-foreground hover:bg-primary font-bold"
-							: ""
-					}`}
-				>
-					Bold
-				</button>
-				<button
-					type="button"
-					onClick={() => editor.chain().focus().toggleItalic().run()}
-					disabled={!editorState.canItalic}
-					className={`rounded border px-3 py-1 text-sm hover:bg-accent disabled:opacity-50 ${
-						editorState.isItalic
-							? "bg-primary text-primary-foreground hover:bg-primary italic"
-							: ""
-					}`}
-				>
-					Italic
-				</button>
-				<button
-					type="button"
-					onClick={() => editor.chain().focus().toggleUnderline().run()}
-					disabled={!editorState.canUnderline}
-					className={`rounded border px-3 py-1 text-sm hover:bg-accent disabled:opacity-50 ${
-						editorState.isUnderline
-							? "bg-primary text-primary-foreground hover:bg-primary underline"
-							: ""
-					}`}
-				>
-					Underline
-				</button>
-				<button
-					type="button"
-					onClick={() => editor.chain().focus().toggleStrike().run()}
-					disabled={!editorState.canStrike}
-					className={`rounded border px-3 py-1 text-sm hover:bg-accent disabled:opacity-50 ${
-						editorState.isStrike
-							? "bg-primary text-primary-foreground hover:bg-primary line-through"
-							: ""
-					}`}
-				>
-					Strike
-				</button>
-				<button
-					type="button"
-					onClick={() => editor.chain().focus().toggleCode().run()}
-					disabled={!editorState.canCode}
-					className={`rounded border px-3 py-1 font-mono text-sm hover:bg-accent disabled:opacity-50 ${
-						editorState.isCode
-							? "bg-primary text-primary-foreground hover:bg-primary"
-							: ""
-					}`}
-				>
-					Code
-				</button>
-				<button
-					type="button"
-					onClick={() => editor.chain().focus().toggleHighlight().run()}
-					disabled={!editorState.canHighlight}
-					className={`rounded border px-3 py-1 text-sm hover:bg-accent disabled:opacity-50 ${
-						editorState.isHighlight
-							? "bg-primary text-primary-foreground hover:bg-primary bg-yellow-200"
-							: ""
-					}`}
-				>
-					Highlight
-				</button>
-			</div>
+				{/* Text Formatting */}
+				<div className="flex gap-1">
+					<button
+						type="button"
+						onClick={() => editor.chain().focus().toggleBold().run()}
+						disabled={!editorState.canBold}
+						className={`rounded border px-3 py-1 text-sm hover:bg-accent disabled:opacity-50 ${
+							editorState.isBold
+								? "bg-primary font-bold text-primary-foreground hover:bg-primary"
+								: ""
+						}`}
+					>
+						Bold
+					</button>
+					<button
+						type="button"
+						onClick={() => editor.chain().focus().toggleItalic().run()}
+						disabled={!editorState.canItalic}
+						className={`rounded border px-3 py-1 text-sm hover:bg-accent disabled:opacity-50 ${
+							editorState.isItalic
+								? "bg-primary text-primary-foreground italic hover:bg-primary"
+								: ""
+						}`}
+					>
+						Italic
+					</button>
+					<button
+						type="button"
+						onClick={() => editor.chain().focus().toggleUnderline().run()}
+						disabled={!editorState.canUnderline}
+						className={`rounded border px-3 py-1 text-sm hover:bg-accent disabled:opacity-50 ${
+							editorState.isUnderline
+								? "bg-primary text-primary-foreground underline hover:bg-primary"
+								: ""
+						}`}
+					>
+						Underline
+					</button>
+					<button
+						type="button"
+						onClick={() => editor.chain().focus().toggleStrike().run()}
+						disabled={!editorState.canStrike}
+						className={`rounded border px-3 py-1 text-sm hover:bg-accent disabled:opacity-50 ${
+							editorState.isStrike
+								? "bg-primary text-primary-foreground line-through hover:bg-primary"
+								: ""
+						}`}
+					>
+						Strike
+					</button>
+					<button
+						type="button"
+						onClick={() => editor.chain().focus().toggleCode().run()}
+						disabled={!editorState.canCode}
+						className={`rounded border px-3 py-1 font-mono text-sm hover:bg-accent disabled:opacity-50 ${
+							editorState.isCode
+								? "bg-primary text-primary-foreground hover:bg-primary"
+								: ""
+						}`}
+					>
+						Code
+					</button>
+					<button
+						type="button"
+						onClick={() => editor.chain().focus().toggleHighlight().run()}
+						disabled={!editorState.canHighlight}
+						className={`rounded border px-3 py-1 text-sm hover:bg-accent disabled:opacity-50 ${
+							editorState.isHighlight
+								? "bg-primary bg-yellow-200 text-primary-foreground hover:bg-primary"
+								: ""
+						}`}
+					>
+						Highlight
+					</button>
+				</div>
 
-			<div className="w-px bg-border" />
+				<div className="w-px bg-border" />
 
-			{/* Headings */}
-			<div className="flex gap-1">
-				<button
-					type="button"
-					onClick={() => editor.chain().focus().setParagraph().run()}
-					className={`rounded border px-3 py-1 text-sm hover:bg-accent ${
-						editorState.isParagraph
-							? "bg-primary text-primary-foreground hover:bg-primary"
-							: ""
-					}`}
-				>
-					P
-				</button>
-				<button
-					type="button"
-					onClick={() =>
-						editor.chain().focus().toggleHeading({ level: 1 }).run()
-					}
-					className={`rounded border px-3 py-1 font-bold text-sm hover:bg-accent ${
-						editorState.isHeading1
-							? "bg-primary text-primary-foreground hover:bg-primary"
-							: ""
-					}`}
-				>
-					H1
-				</button>
-				<button
-					type="button"
-					onClick={() =>
-						editor.chain().focus().toggleHeading({ level: 2 }).run()
-					}
-					className={`rounded border px-3 py-1 font-bold text-sm hover:bg-accent ${
-						editorState.isHeading2
-							? "bg-primary text-primary-foreground hover:bg-primary"
-							: ""
-					}`}
-				>
-					H2
-				</button>
-				<button
-					type="button"
-					onClick={() =>
-						editor.chain().focus().toggleHeading({ level: 3 }).run()
-					}
-					className={`rounded border px-3 py-1 font-semibold text-sm hover:bg-accent ${
-						editorState.isHeading3
-							? "bg-primary text-primary-foreground hover:bg-primary"
-							: ""
-					}`}
-				>
-					H3
-				</button>
-			</div>
+				{/* Headings */}
+				<div className="flex gap-1">
+					<button
+						type="button"
+						onClick={() => editor.chain().focus().setParagraph().run()}
+						className={`rounded border px-3 py-1 text-sm hover:bg-accent ${
+							editorState.isParagraph
+								? "bg-primary text-primary-foreground hover:bg-primary"
+								: ""
+						}`}
+					>
+						P
+					</button>
+					<button
+						type="button"
+						onClick={() =>
+							editor.chain().focus().toggleHeading({ level: 1 }).run()
+						}
+						className={`rounded border px-3 py-1 font-bold text-sm hover:bg-accent ${
+							editorState.isHeading1
+								? "bg-primary text-primary-foreground hover:bg-primary"
+								: ""
+						}`}
+					>
+						H1
+					</button>
+					<button
+						type="button"
+						onClick={() =>
+							editor.chain().focus().toggleHeading({ level: 2 }).run()
+						}
+						className={`rounded border px-3 py-1 font-bold text-sm hover:bg-accent ${
+							editorState.isHeading2
+								? "bg-primary text-primary-foreground hover:bg-primary"
+								: ""
+						}`}
+					>
+						H2
+					</button>
+					<button
+						type="button"
+						onClick={() =>
+							editor.chain().focus().toggleHeading({ level: 3 }).run()
+						}
+						className={`rounded border px-3 py-1 font-semibold text-sm hover:bg-accent ${
+							editorState.isHeading3
+								? "bg-primary text-primary-foreground hover:bg-primary"
+								: ""
+						}`}
+					>
+						H3
+					</button>
+				</div>
 
-			<div className="w-px bg-border" />
+				<div className="w-px bg-border" />
 
-			{/* Text Alignment */}
-			<div className="flex gap-1">
-				<button
-					type="button"
-					onClick={() => editor.chain().focus().setTextAlign("left").run()}
-					className={`rounded border px-3 py-1 text-sm hover:bg-accent ${
-						editorState.isAlignLeft
-							? "bg-primary text-primary-foreground hover:bg-primary"
-							: ""
-					}`}
-				>
-					Left
-				</button>
-				<button
-					type="button"
-					onClick={() => editor.chain().focus().setTextAlign("center").run()}
-					className={`rounded border px-3 py-1 text-sm hover:bg-accent ${
-						editorState.isAlignCenter
-							? "bg-primary text-primary-foreground hover:bg-primary"
-							: ""
-					}`}
-				>
-					Center
-				</button>
-				<button
-					type="button"
-					onClick={() => editor.chain().focus().setTextAlign("right").run()}
-					className={`rounded border px-3 py-1 text-sm hover:bg-accent ${
-						editorState.isAlignRight
-							? "bg-primary text-primary-foreground hover:bg-primary"
-							: ""
-					}`}
-				>
-					Right
-				</button>
-			</div>
+				{/* Text Alignment */}
+				<div className="flex gap-1">
+					<button
+						type="button"
+						onClick={() => editor.chain().focus().setTextAlign("left").run()}
+						className={`rounded border px-3 py-1 text-sm hover:bg-accent ${
+							editorState.isAlignLeft
+								? "bg-primary text-primary-foreground hover:bg-primary"
+								: ""
+						}`}
+					>
+						Left
+					</button>
+					<button
+						type="button"
+						onClick={() => editor.chain().focus().setTextAlign("center").run()}
+						className={`rounded border px-3 py-1 text-sm hover:bg-accent ${
+							editorState.isAlignCenter
+								? "bg-primary text-primary-foreground hover:bg-primary"
+								: ""
+						}`}
+					>
+						Center
+					</button>
+					<button
+						type="button"
+						onClick={() => editor.chain().focus().setTextAlign("right").run()}
+						className={`rounded border px-3 py-1 text-sm hover:bg-accent ${
+							editorState.isAlignRight
+								? "bg-primary text-primary-foreground hover:bg-primary"
+								: ""
+						}`}
+					>
+						Right
+					</button>
+				</div>
 
-			<div className="w-px bg-border" />
+				<div className="w-px bg-border" />
 
-			{/* Lists */}
-			<div className="flex gap-1">
-				<button
-					type="button"
-					onClick={() => editor.chain().focus().toggleBulletList().run()}
-					className={`rounded border px-3 py-1 text-sm hover:bg-accent ${
-						editorState.isBulletList
-							? "bg-primary text-primary-foreground hover:bg-primary"
-							: ""
-					}`}
-				>
-					• List
-				</button>
-				<button
-					type="button"
-					onClick={() => editor.chain().focus().toggleOrderedList().run()}
-					className={`rounded border px-3 py-1 text-sm hover:bg-accent ${
-						editorState.isOrderedList
-							? "bg-primary text-primary-foreground hover:bg-primary"
-							: ""
-					}`}
-				>
-					1. List
-				</button>
-				<button
-					type="button"
-					onClick={() => editor.chain().focus().toggleTaskList().run()}
-					className={`rounded border px-3 py-1 text-sm hover:bg-accent ${
-						editorState.isTaskList
-							? "bg-primary text-primary-foreground hover:bg-primary"
-							: ""
-					}`}
-				>
-					☑ Tasks
-				</button>
-			</div>
+				{/* Lists */}
+				<div className="flex gap-1">
+					<button
+						type="button"
+						onClick={() => editor.chain().focus().toggleBulletList().run()}
+						className={`rounded border px-3 py-1 text-sm hover:bg-accent ${
+							editorState.isBulletList
+								? "bg-primary text-primary-foreground hover:bg-primary"
+								: ""
+						}`}
+					>
+						• List
+					</button>
+					<button
+						type="button"
+						onClick={() => editor.chain().focus().toggleOrderedList().run()}
+						className={`rounded border px-3 py-1 text-sm hover:bg-accent ${
+							editorState.isOrderedList
+								? "bg-primary text-primary-foreground hover:bg-primary"
+								: ""
+						}`}
+					>
+						1. List
+					</button>
+					<button
+						type="button"
+						onClick={() => editor.chain().focus().toggleTaskList().run()}
+						className={`rounded border px-3 py-1 text-sm hover:bg-accent ${
+							editorState.isTaskList
+								? "bg-primary text-primary-foreground hover:bg-primary"
+								: ""
+						}`}
+					>
+						☑ Tasks
+					</button>
+				</div>
 
-			<div className="w-px bg-border" />
+				<div className="w-px bg-border" />
 
-			{/* Media & Links */}
-			<div className="flex gap-1">
-				<button
-					type="button"
-					onClick={setLink}
-					className={`rounded border px-3 py-1 text-sm hover:bg-accent ${
-						editorState.isLink
-							? "bg-primary text-primary-foreground hover:bg-primary"
-							: ""
-					}`}
-				>
-					Link
-				</button>
-				<button
-					type="button"
-					onClick={addImage}
-					className="rounded border px-3 py-1 text-sm hover:bg-accent"
-				>
-					Image
-				</button>
-			</div>
+				{/* Media & Links */}
+				<div className="flex gap-1">
+					<button
+						type="button"
+						onClick={setLink}
+						className={`rounded border px-3 py-1 text-sm hover:bg-accent ${
+							editorState.isLink
+								? "bg-primary text-primary-foreground hover:bg-primary"
+								: ""
+						}`}
+					>
+						Link
+					</button>
+					<button
+						type="button"
+						onClick={addImage}
+						className="rounded border px-3 py-1 text-sm hover:bg-accent"
+					>
+						Image
+					</button>
+				</div>
 
-			<div className="w-px bg-border" />
+				<div className="w-px bg-border" />
 
-			{/* Blocks */}
-			<div className="flex gap-1">
-				<button
-					type="button"
-					onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-					className={`rounded border px-3 py-1 font-mono text-sm hover:bg-accent ${
-						editorState.isCodeBlock
-							? "bg-primary text-primary-foreground hover:bg-primary"
-							: ""
-					}`}
-				>
-					Code
-				</button>
-				<button
-					type="button"
-					onClick={() => editor.chain().focus().toggleBlockquote().run()}
-					className={`rounded border px-3 py-1 text-sm hover:bg-accent ${
-						editorState.isBlockquote
-							? "bg-primary text-primary-foreground hover:bg-primary"
-							: ""
-					}`}
-				>
-					Quote
-				</button>
-				<button
-					type="button"
-					onClick={() => editor.chain().focus().setHorizontalRule().run()}
-					className="rounded border px-3 py-1 text-sm hover:bg-accent"
-				>
-					HR
-				</button>
-			</div>
+				{/* Blocks */}
+				<div className="flex gap-1">
+					<button
+						type="button"
+						onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+						className={`rounded border px-3 py-1 font-mono text-sm hover:bg-accent ${
+							editorState.isCodeBlock
+								? "bg-primary text-primary-foreground hover:bg-primary"
+								: ""
+						}`}
+					>
+						Code
+					</button>
+					<button
+						type="button"
+						onClick={() => editor.chain().focus().toggleBlockquote().run()}
+						className={`rounded border px-3 py-1 text-sm hover:bg-accent ${
+							editorState.isBlockquote
+								? "bg-primary text-primary-foreground hover:bg-primary"
+								: ""
+						}`}
+					>
+						Quote
+					</button>
+					<button
+						type="button"
+						onClick={() => editor.chain().focus().setHorizontalRule().run()}
+						className="rounded border px-3 py-1 text-sm hover:bg-accent"
+					>
+						HR
+					</button>
+				</div>
 
-			<div className="w-px bg-border" />
+				<div className="w-px bg-border" />
 
-			{/* Callouts */}
-			<div className="flex gap-1">
-				<button
-					type="button"
-					onClick={() => toggleCallout('info')}
-					className={`rounded border px-3 py-1 text-sm hover:bg-accent ${
-						editorState.isCalloutInfo
-							? "bg-primary text-primary-foreground hover:bg-primary"
-							: ""
-					}`}
-				>
-					ℹ️ Info
-				</button>
-				<button
-					type="button"
-					onClick={() => toggleCallout('warning')}
-					className={`rounded border px-3 py-1 text-sm hover:bg-accent ${
-						editorState.isCalloutWarning
-							? "bg-primary text-primary-foreground hover:bg-primary"
-							: ""
-					}`}
-				>
-					⚠️ Warning
-				</button>
-				<button
-					type="button"
-					onClick={() => toggleCallout('success')}
-					className={`rounded border px-3 py-1 text-sm hover:bg-accent ${
-						editorState.isCalloutSuccess
-							? "bg-primary text-primary-foreground hover:bg-primary"
-							: ""
-					}`}
-				>
-					✅ Success
-				</button>
-			</div>
+				{/* Callouts */}
+				<div className="flex gap-1">
+					<button
+						type="button"
+						onClick={() => toggleCallout("info")}
+						className={`rounded border px-3 py-1 text-sm hover:bg-accent ${
+							editorState.isCalloutInfo
+								? "bg-primary text-primary-foreground hover:bg-primary"
+								: ""
+						}`}
+					>
+						ℹ️ Info
+					</button>
+					<button
+						type="button"
+						onClick={() => toggleCallout("warning")}
+						className={`rounded border px-3 py-1 text-sm hover:bg-accent ${
+							editorState.isCalloutWarning
+								? "bg-primary text-primary-foreground hover:bg-primary"
+								: ""
+						}`}
+					>
+						⚠️ Warning
+					</button>
+					<button
+						type="button"
+						onClick={() => toggleCallout("success")}
+						className={`rounded border px-3 py-1 text-sm hover:bg-accent ${
+							editorState.isCalloutSuccess
+								? "bg-primary text-primary-foreground hover:bg-primary"
+								: ""
+						}`}
+					>
+						✅ Success
+					</button>
+				</div>
 
-			<div className="w-px bg-border" />
+				<div className="w-px bg-border" />
 
-			{/* Actions */}
-			<div className="flex gap-1">
-				<button
-					type="button"
-					onClick={() => editor.chain().focus().undo().run()}
-					disabled={!editorState.canUndo}
-					className="rounded border px-3 py-1 text-sm hover:bg-accent disabled:opacity-50"
-				>
-					Undo
-				</button>
-				<button
-					type="button"
-					onClick={() => editor.chain().focus().redo().run()}
-					disabled={!editorState.canRedo}
-					className="rounded border px-3 py-1 text-sm hover:bg-accent disabled:opacity-50"
-				>
-					Redo
-				</button>
-			</div>
+				{/* Actions */}
+				<div className="flex gap-1">
+					<button
+						type="button"
+						onClick={() => editor.chain().focus().undo().run()}
+						disabled={!editorState.canUndo}
+						className="rounded border px-3 py-1 text-sm hover:bg-accent disabled:opacity-50"
+					>
+						Undo
+					</button>
+					<button
+						type="button"
+						onClick={() => editor.chain().focus().redo().run()}
+						disabled={!editorState.canRedo}
+						className="rounded border px-3 py-1 text-sm hover:bg-accent disabled:opacity-50"
+					>
+						Redo
+					</button>
+				</div>
 			</div>
 
 			{/* Controls */}
@@ -494,7 +505,7 @@ function MenuBar({
 						type="button"
 						onClick={onSave}
 						disabled={isSaving}
-						className="rounded border px-3 py-1 text-sm hover:bg-accent transition-colors bg-primary text-primary-foreground hover:bg-primary disabled:opacity-50"
+						className="rounded border bg-primary px-3 py-1 text-primary-foreground text-sm transition-colors hover:bg-accent hover:bg-primary disabled:opacity-50"
 						title={isSaving ? "Saving..." : "Save post"}
 					>
 						<Save className="h-4 w-4" />
@@ -506,7 +517,7 @@ function MenuBar({
 					type="button"
 					onClick={onToggleExpand}
 					disabled={isFullscreen}
-					className={`rounded border px-3 py-1 text-sm hover:bg-accent transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+					className={`rounded border px-3 py-1 text-sm transition-colors hover:bg-accent disabled:cursor-not-allowed disabled:opacity-50 ${
 						isExpanded
 							? "bg-primary text-primary-foreground hover:bg-primary"
 							: ""
@@ -519,21 +530,29 @@ function MenuBar({
 								: "Focus mode (hide sidebar)"
 					}
 				>
-					{isExpanded ? <Minimize className="h-4 w-4" /> : <Monitor className="h-4 w-4" />}
+					{isExpanded ? (
+						<Minimize className="h-4 w-4" />
+					) : (
+						<Monitor className="h-4 w-4" />
+					)}
 				</button>
 
 				{/* Fullscreen button */}
 				<button
 					type="button"
 					onClick={onToggleFullscreen}
-					className={`rounded border px-3 py-1 text-sm hover:bg-accent transition-colors ${
+					className={`rounded border px-3 py-1 text-sm transition-colors hover:bg-accent ${
 						isFullscreen
 							? "bg-primary text-primary-foreground hover:bg-primary"
 							: ""
 					}`}
 					title={isFullscreen ? "Exit fullscreen" : "Fullscreen mode"}
 				>
-					{isFullscreen ? <X className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
+					{isFullscreen ? (
+						<X className="h-4 w-4" />
+					) : (
+						<Maximize className="h-4 w-4" />
+					)}
 				</button>
 			</div>
 		</div>
@@ -580,10 +599,9 @@ export function TiptapEditor({
 		},
 		editorProps: {
 			attributes: {
-				class:
-					`prose prose-stone prose-sm sm:prose-base lg:prose-lg xl:prose-xl m-5 focus:outline-none ${
-						(isExpanded || isFullscreen) ? "mx-auto" : ""
-					}`,
+				class: `prose prose-stone prose-sm sm:prose-base lg:prose-lg xl:prose-xl m-5 focus:outline-none ${
+					isExpanded || isFullscreen ? "mx-auto" : ""
+				}`,
 			},
 		},
 	});
@@ -593,11 +611,11 @@ export function TiptapEditor({
 	}
 
 	return (
-		<div className={`overflow-hidden rounded-lg border ${
-			isFullscreen
-				? "fixed inset-0 z-50 bg-background rounded-none"
-				: ""
-		}`}>
+		<div
+			className={`overflow-hidden rounded-lg border ${
+				isFullscreen ? "fixed inset-0 z-50 rounded-none bg-background" : ""
+			}`}
+		>
 			<MenuBar
 				editor={editor}
 				isExpanded={isExpanded}
