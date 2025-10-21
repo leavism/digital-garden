@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /demo/
+Sitemap: https://leavism.dev/sitemap.xml

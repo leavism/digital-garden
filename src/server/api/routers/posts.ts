@@ -17,6 +17,7 @@ export const postsRouter = createTRPCRouter({
 				title: posts.title,
 				slug: posts.slug,
 				publishedAt: posts.publishedAt,
+				updateAt: posts.updatedAt,
 				author: { name: user.name, image: user.image },
 			})
 			.from(posts)
