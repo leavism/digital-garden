@@ -54,6 +54,8 @@ export default function EditPostPage() {
 	const [published, setPublished] = useState(false);
 	const [isSlugManuallyEdited, setIsSlugManuallyEdited] = useState(false);
 	const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+	const [isEditorExpanded, setIsEditorExpanded] = useState(false);
+	const [isEditorFullscreen, setIsEditorFullscreen] = useState(false);
 
 	// Initialize form when post data loads
 	useEffect(() => {
@@ -141,6 +143,11 @@ export default function EditPostPage() {
 		});
 	};
 
+	const handleExpandChange = (isExpanded: boolean, isFullscreen: boolean) => {
+		setIsEditorExpanded(isExpanded);
+		setIsEditorFullscreen(isFullscreen);
+	};
+
 	if (isLoading) {
 		return (
 			<div className="flex flex-col gap-6">
@@ -159,7 +166,8 @@ export default function EditPostPage() {
 
 	return (
 		<div className="flex flex-col gap-6">
-			{/* Header */}
+			{/* Header - Hidden in fullscreen */}
+			{!isEditorFullscreen && (
 			<div className="flex items-center gap-4">
 				<TooltipProvider>
 					<Tooltip>
@@ -185,11 +193,21 @@ export default function EditPostPage() {
 					</p>
 				</div>
 			</div>
+			)}
 
-			<div className="grid gap-6 lg:grid-cols-3">
-				{/* Main Content - Left Column (2/3 width) */}
-				<div className="space-y-6 lg:col-span-2">
-					{/* Post Details */}
+			<div className={`grid gap-6 ${
+				isEditorExpanded || isEditorFullscreen
+					? "lg:grid-cols-1"
+					: "lg:grid-cols-3"
+			}`}>
+				{/* Main Content - Responsive width */}
+				<div className={`space-y-6 ${
+					isEditorExpanded || isEditorFullscreen
+						? "lg:col-span-1"
+						: "lg:col-span-2"
+				}`}>
+					{/* Post Details - Hidden in fullscreen */}
+					{!isEditorFullscreen && (
 					<Card>
 						<CardHeader>
 							<CardTitle>Post Details</CardTitle>
@@ -231,25 +249,32 @@ export default function EditPostPage() {
 							</div>
 						</CardContent>
 					</Card>
+					)}
 
 					{/* Editor */}
-					<Card>
+					<Card className={isEditorFullscreen ? "border-none shadow-none" : ""}>
+						{!isEditorFullscreen && (
 						<CardHeader>
 							<CardTitle>Content</CardTitle>
 						</CardHeader>
-						<CardContent>
+						)}
+						<CardContent className={isEditorFullscreen ? "p-0" : ""}>
 							{post && (
 								<TiptapEditor
 									content={post.content}
 									onChange={setContent}
 									placeholder="Start editing your post content..."
+									onExpandChange={handleExpandChange}
+									onSave={handleSave}
+									isSaving={updateMutation.isPending}
 								/>
 							)}
 						</CardContent>
 					</Card>
 				</div>
 
-				{/* Sidebar - Right Column (1/3 width) */}
+				{/* Sidebar - Hidden when expanded/fullscreen */}
+				{!isEditorExpanded && !isEditorFullscreen && (
 				<div className="space-y-6">
 					{/* Actions */}
 					<Card>
@@ -348,6 +373,7 @@ export default function EditPostPage() {
 						</CardContent>
 					</Card>
 				</div>
+				)}
 			</div>
 		</div>
 	);

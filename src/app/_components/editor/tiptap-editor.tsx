@@ -14,7 +14,8 @@ import { Callout } from "./extensions/callout";
 import type { Editor } from "@tiptap/react";
 import { EditorContent, useEditor, useEditorState } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import React, { useCallback } from "react";
+import { Maximize, Minimize, Monitor, Save, X } from "lucide-react";
+import React, { useCallback, useState } from "react";
 
 const extensions = [
 	StarterKit.configure({
@@ -52,7 +53,23 @@ const extensions = [
 	Callout,
 ];
 
-function MenuBar({ editor }: { editor: Editor }) {
+function MenuBar({
+	editor,
+	isExpanded,
+	isFullscreen,
+	onToggleExpand,
+	onToggleFullscreen,
+	onSave,
+	isSaving
+}: {
+	editor: Editor;
+	isExpanded: boolean;
+	isFullscreen: boolean;
+	onToggleExpand: () => void;
+	onToggleFullscreen: () => void;
+	onSave?: () => void;
+	isSaving?: boolean;
+}) {
 	const editorState = useEditorState({
 		editor,
 		selector: (ctx) => {
@@ -136,7 +153,8 @@ function MenuBar({ editor }: { editor: Editor }) {
 	}, [editor]);
 
 	return (
-		<div className="flex flex-wrap gap-2 border-b p-3">
+		<div className="flex flex-wrap gap-2 border-b p-3 justify-between">
+			<div className="flex flex-wrap gap-2">
 			{/* Text Formatting */}
 			<div className="flex gap-1">
 				<button
@@ -466,6 +484,58 @@ function MenuBar({ editor }: { editor: Editor }) {
 					Redo
 				</button>
 			</div>
+			</div>
+
+			{/* Controls */}
+			<div className="flex gap-1">
+				{/* Save button - visible in focus/fullscreen modes */}
+				{(isExpanded || isFullscreen) && onSave && (
+					<button
+						type="button"
+						onClick={onSave}
+						disabled={isSaving}
+						className="rounded border px-3 py-1 text-sm hover:bg-accent transition-colors bg-primary text-primary-foreground hover:bg-primary disabled:opacity-50"
+						title={isSaving ? "Saving..." : "Save post"}
+					>
+						<Save className="h-4 w-4" />
+					</button>
+				)}
+
+				{/* Focus mode button - disabled in fullscreen */}
+				<button
+					type="button"
+					onClick={onToggleExpand}
+					disabled={isFullscreen}
+					className={`rounded border px-3 py-1 text-sm hover:bg-accent transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+						isExpanded
+							? "bg-primary text-primary-foreground hover:bg-primary"
+							: ""
+					}`}
+					title={
+						isFullscreen
+							? "Exit fullscreen to use focus mode"
+							: isExpanded
+								? "Exit focus mode"
+								: "Focus mode (hide sidebar)"
+					}
+				>
+					{isExpanded ? <Minimize className="h-4 w-4" /> : <Monitor className="h-4 w-4" />}
+				</button>
+
+				{/* Fullscreen button */}
+				<button
+					type="button"
+					onClick={onToggleFullscreen}
+					className={`rounded border px-3 py-1 text-sm hover:bg-accent transition-colors ${
+						isFullscreen
+							? "bg-primary text-primary-foreground hover:bg-primary"
+							: ""
+					}`}
+					title={isFullscreen ? "Exit fullscreen" : "Fullscreen mode"}
+				>
+					{isFullscreen ? <X className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
+				</button>
+			</div>
 		</div>
 	);
 }
@@ -474,13 +544,33 @@ interface TiptapEditorProps {
 	content: string;
 	onChange: (content: string) => void;
 	placeholder?: string;
+	onExpandChange?: (isExpanded: boolean, isFullscreen: boolean) => void;
+	onSave?: () => void;
+	isSaving?: boolean;
 }
 
 export function TiptapEditor({
 	content,
 	onChange,
 	placeholder,
+	onExpandChange,
+	onSave,
+	isSaving,
 }: TiptapEditorProps) {
+	const [isExpanded, setIsExpanded] = useState(false);
+	const [isFullscreen, setIsFullscreen] = useState(false);
+
+	const handleToggleExpand = () => {
+		const newExpanded = !isExpanded;
+		setIsExpanded(newExpanded);
+		onExpandChange?.(newExpanded, isFullscreen);
+	};
+
+	const handleToggleFullscreen = () => {
+		const newFullscreen = !isFullscreen;
+		setIsFullscreen(newFullscreen);
+		onExpandChange?.(isExpanded, newFullscreen);
+	};
 	const editor = useEditor({
 		extensions,
 		content: content,
@@ -501,12 +591,28 @@ export function TiptapEditor({
 	}
 
 	return (
-		<div className="overflow-hidden rounded-lg border">
-			<MenuBar editor={editor} />
+		<div className={`overflow-hidden rounded-lg border ${
+			isFullscreen
+				? "fixed inset-0 z-50 bg-background rounded-none"
+				: ""
+		}`}>
+			<MenuBar
+				editor={editor}
+				isExpanded={isExpanded}
+				isFullscreen={isFullscreen}
+				onToggleExpand={handleToggleExpand}
+				onToggleFullscreen={handleToggleFullscreen}
+				onSave={onSave}
+				isSaving={isSaving}
+			/>
 			<div className="relative">
 				<EditorContent
 					editor={editor}
-					className="max-h-[600px] min-h-[1000px] overflow-y-auto"
+					className={`overflow-y-auto ${
+						isFullscreen
+							? "h-[calc(100vh-60px)] min-h-0"
+							: "max-h-[600px] min-h-[1000px]"
+					}`}
 				/>
 				{!content && placeholder && (
 					<div className="pointer-events-none absolute top-4 left-4 text-muted-foreground">
