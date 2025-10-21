@@ -97,9 +97,8 @@ export default function Home() {
 						<div>
 							<p className="text-xl">
 								Welcome to my little garden on the Internet, where I grow my
-								passion for software. As a new graduate, I&apos;m drawn to
-								creating tools that allow us to bloom rather than limit how we
-								express ourselves.
+								passion for software. I'm a new grad building things, learning
+								in public, and figuring it out as I go.
 							</p>
 						</div>
 					</div>
@@ -114,8 +113,8 @@ export default function Home() {
 							<h2 className="text-2xl font-bold">Me</h2>
 							<nav className="space-y-3">
 								<NavLink
-									link="https://drive.google.com/file/d/14qQBXFCt9eyaV1efOz1oKi_WFg_Bx6UE/view?usp=drive_link"
-									text="Resume"
+									link="/blog"
+									text="Blog"
 									delay={0.5}
 									icon={<FlowerIcon />}
 								/>
