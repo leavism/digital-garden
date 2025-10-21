@@ -6,8 +6,9 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-	--font-serif: "Playfair Display", serif;
-	--font-sans: "Geist", ui-sans-serif, system-ui, sans-serif,
+	--font-serif: var(--font-serif), serif;
+	--font-display: var(--font-display), serif;
+	--font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif,
 		"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 	--color-link-primary: #18619d;
 	--color-callout-warning-bg: oklch(0.9689 0.0108 17.34);

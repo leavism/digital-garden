@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 
 import { Toaster } from "@/app/_components/ui/sonner";
 import { TRPCReactProvider } from "@/trpc/react";
-import { geist, playfairDisplay } from "@/app/fonts";
+import { geist, lora, playfairDisplay } from "@/app/fonts";
 
 export const metadata: Metadata = {
 	title: "Huy's Digital Garden",
@@ -43,7 +43,7 @@ export default async function RootLayout({
 	children,
 }: Readonly<{ children: React.ReactNode }>) {
 	return (
-		<html lang="en" className={`${geist.variable} ${playfairDisplay.variable}`}>
+		<html lang="en" className={`${geist.variable} ${lora.variable} ${playfairDisplay.variable}`}>
 			<body className="font-serif">
 				<TRPCReactProvider>{children}</TRPCReactProvider>
 				<Toaster />

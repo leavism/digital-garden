@@ -599,7 +599,7 @@ export function TiptapEditor({
 		},
 		editorProps: {
 			attributes: {
-				class: `prose prose-stone prose-sm sm:prose-base lg:prose-lg xl:prose-xl m-5 focus:outline-none ${
+				class: `prose prose-stone prose-sm sm:prose-base lg:prose-lg xl:prose-xl m-5 focus:outline-none font-serif ${
 					isExpanded || isFullscreen ? "mx-auto" : ""
 				}`,
 			},

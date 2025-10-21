@@ -1,5 +1,4 @@
 "use client";
-import { Callout } from "@/app/_components/Callout";
 import { api } from "@/trpc/react";
 import { motion } from "framer-motion";
 import Image from "next/image";
@@ -57,7 +56,7 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
 					<div className="flex items-center justify-between">
 						<Link
 							href="/blog"
-							className="group inline-flex items-center gap-2 text-gray-600 transition-colors hover:text-gray-900"
+							className="group inline-flex items-center gap-2 text-gray-600 font-display text-lg transition-colors hover:text-gray-900"
 						>
 							<span className="group-hover:-translate-x-1 transition-transform">
 								←
@@ -75,8 +74,10 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
 					className="prose prose-stone prose-xl mx-auto"
 				>
 					{/* Header */}
-					<div className="mb-2 flex items-center justify-center gap-3">
-						<h1 className="text-center">{post.title}</h1>
+					<div className="flex items-center justify-center">
+						<h1 className="text-center font-display tracking-wide">
+							{post.title}
+						</h1>
 					</div>
 
 					{/* Meta information */}

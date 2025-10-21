@@ -31,7 +31,7 @@ export default async function AdminLayout({
 	return (
 		<SidebarProvider defaultOpen={true}>
 			<AdminSidebar user={session!.user} />
-			<SidebarInset>
+			<SidebarInset className="font-sans">
 				<header className="flex h-12 shrink-0 items-center gap-2 border-b px-4">
 					<TooltipProvider>
 						<Tooltip>

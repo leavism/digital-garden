@@ -4,7 +4,7 @@ import Playfair_Display from "next/font/local";
 import { useEffect, useRef } from "react";
 
 const playfair = Playfair_Display({
-	src: "./../../../public/fonts/PlayfairDisplay-VariableFont_wght.ttf",
+	src: "../../assets/fonts/PlayfairDisplay-VariableFont_wght.ttf",
 });
 
 const CONFIG = {

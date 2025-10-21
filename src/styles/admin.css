@@ -3,6 +3,12 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@theme {
+	--font-serif: var(--font-serif), serif;
+	--font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif,
+		"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
 :root {
 	--background: #f5f1e6;
 	--foreground: #4a3f35;

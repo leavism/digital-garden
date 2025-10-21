@@ -83,7 +83,7 @@ export default function Home() {
 				<motion.div className="space-y-6 md:space-y-8">
 					<div className="space-y-4">
 						<div className="flex items-center gap-3">
-							<h1 className="mt-0 text-3xl font-bold">
+							<h1 className="mt-0 text-3xl font-bold font-display tracking-wide">
 								Huy&apos;s Digital Garden
 							</h1>
 							<Image
@@ -110,7 +110,9 @@ export default function Home() {
 							animate={{ opacity: 1, x: 0 }}
 							transition={{ duration: 0.4, delay: 0.3 }}
 						>
-							<h2 className="text-2xl font-bold">Me</h2>
+							<h2 className="text-2xl font-bold font-display tracking-wide mb-1">
+								Me
+							</h2>
 							<nav className="space-y-3">
 								<NavLink
 									link="/blog"
@@ -155,7 +157,9 @@ export default function Home() {
 							animate={{ opacity: 1, x: 0 }}
 							transition={{ duration: 0.4, delay: 0.3 }}
 						>
-							<h2 className="text-2xl font-bold">My Garden</h2>
+							<h2 className="text-2xl font-bold font-display tracking-wide mb-1">
+								My Garden
+							</h2>
 							<div className="rounded-lg border border-gray-300 border-dashed bg-gray-50 py-9 text-center">
 								<div className="mb-4 flex justify-center">
 									<Image
