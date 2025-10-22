@@ -1,6 +1,6 @@
-import { type MetadataRoute } from "next";
-import { api } from "@/trpc/server";
 import { env } from "@/env";
+import { api } from "@/trpc/server";
+import type { MetadataRoute } from "next";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 	const baseUrl = env.BETTER_AUTH_URL;
@@ -34,4 +34,3 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
 	return [...staticPages, ...blogPosts];
 }
-

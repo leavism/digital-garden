@@ -81,9 +81,9 @@ export default function BlogPage() {
 					<div className="mb-8">
 						<Link
 							href="/"
-							className="group inline-flex items-center gap-2 text-gray-600 transition-colors hover:text-gray-900"
+							className="group inline-flex items-center gap-2 font-display text-gray-600 text-lg transition-colors hover:text-gray-900"
 						>
-							<span className="group-hover:-translate-x-1 transition-transform font-display">
+							<span className="group-hover:-translate-x-1 transition-transform ">
 								←
 							</span>
 							<span>Back home</span>
@@ -119,7 +119,7 @@ export default function BlogPage() {
 						</div>
 
 						<div>
-							<h1 className="mt-0 mb-4 font-bold text-5xl font-display tracking-wide">
+							<h1 className="mt-0 mb-4 font-bold font-display text-5xl tracking-wide">
 								My Journal
 							</h1>
 							<p className="mx-auto max-w-xl text-gray-600 text-xl leading-relaxed">

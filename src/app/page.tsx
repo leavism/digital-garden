@@ -1,9 +1,9 @@
 "use client";
 import CanvasBackground from "@/app/_components/BackgroundEffect";
 import { motion } from "framer-motion";
+import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
 
 // Plant icon components
 const FlowerIcon = ({ className = "" }) => (
@@ -38,7 +38,7 @@ function NavLink({
 			<Link
 				href={link}
 				target="_blank"
-				className="block relative rounded-lg bg-white p-3 transition-all duration-300 border-2 border-gray-200 border-dashed hover:bg-[#A8B331]/5 hover:shadow-[0px_0px_8px_2px_#f8f9ea] group-hover:border-[#A8B331]"
+				className="relative block rounded-lg border-2 border-gray-200 border-dashed bg-white p-3 transition-all duration-300 hover:bg-[#A8B331]/5 hover:shadow-[0px_0px_8px_2px_#f8f9ea] group-hover:border-[#A8B331]"
 			>
 				<div className="relative flex items-start gap-4">
 					<motion.div
@@ -50,14 +50,14 @@ function NavLink({
 					</motion.div>
 
 					{/* Text content */}
-					<div className="flex-1 min-w-0">
-						<h3 className="font-semibold text-gray-800 group-hover:text-[#777E21] transition-colors duration-300">
+					<div className="min-w-0 flex-1">
+						<h3 className="font-semibold text-gray-800 transition-colors duration-300 group-hover:text-[#777E21]">
 							{text}
 						</h3>
 					</div>
 
 					<motion.div
-						className="text-gray-300 group-hover:text-[#A8B331] transition-colors duration-300"
+						className="text-gray-300 transition-colors duration-300 group-hover:text-[#A8B331]"
 						initial={{ x: 0 }}
 						whileHover={{ x: 3 }}
 						transition={{ type: "spring", stiffness: 300 }}
@@ -78,12 +78,12 @@ export default function Home() {
 				initial={{ opacity: 0, y: 20 }}
 				animate={{ opacity: 1, y: 0 }}
 				transition={{ duration: 1 }}
-				className="relative mx-auto max-w-[700px] rounded-xl border-gray-200 bg-white p-4 transition-colors hover:shadow-[0px_0px_10px_1px] shadow-gray-100 hover:border-gray-300 md:border-2 md:border-dashed md:p-10"
+				className="relative mx-auto max-w-[700px] rounded-xl border-gray-200 bg-white p-4 shadow-gray-100 transition-colors hover:border-gray-300 hover:shadow-[0px_0px_10px_1px] md:border-2 md:border-dashed md:p-10"
 			>
 				<motion.div className="space-y-6 md:space-y-8">
 					<div className="space-y-4">
 						<div className="flex items-center gap-3">
-							<h1 className="mt-0 text-3xl font-bold font-display tracking-wide">
+							<h1 className="mt-0 font-bold font-display text-3xl tracking-wide">
 								Huy&apos;s Digital Garden
 							</h1>
 							<Image
@@ -110,7 +110,7 @@ export default function Home() {
 							animate={{ opacity: 1, x: 0 }}
 							transition={{ duration: 0.4, delay: 0.3 }}
 						>
-							<h2 className="text-2xl font-bold font-display tracking-wide mb-1">
+							<h2 className="mb-1 font-bold font-display text-2xl tracking-wide">
 								Me
 							</h2>
 							<nav className="space-y-3">
@@ -157,7 +157,7 @@ export default function Home() {
 							animate={{ opacity: 1, x: 0 }}
 							transition={{ duration: 0.4, delay: 0.3 }}
 						>
-							<h2 className="text-2xl font-bold font-display tracking-wide mb-1">
+							<h2 className="mb-1 font-bold font-display text-2xl tracking-wide">
 								My Garden
 							</h2>
 							<div className="rounded-lg border border-gray-300 border-dashed bg-gray-50 py-9 text-center">
