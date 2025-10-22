@@ -1,9 +1,20 @@
-"use client";
-import { api } from "@/trpc/react";
-import { motion } from "framer-motion";
-import Image from "next/image";
-import Link from "next/link";
-import { use } from "react";
+import { api } from "@/trpc/server";
+import type { Metadata } from "next";
+import BlogPostClient from "./BlogPostClient";
+import { generateBlogPostJsonLd } from "@/app/_components/JsonLd";
+import { generateHTML } from "@tiptap/html";
+import StarterKit from "@tiptap/starter-kit";
+import { Code } from "@tiptap/extension-code";
+import { Color } from "@tiptap/extension-color";
+import { Highlight } from "@tiptap/extension-highlight";
+import { Image } from "@tiptap/extension-image";
+import { Link } from "@tiptap/extension-link";
+import { TaskItem } from "@tiptap/extension-task-item";
+import { TaskList } from "@tiptap/extension-task-list";
+import { TextAlign } from "@tiptap/extension-text-align";
+import { TextStyle } from "@tiptap/extension-text-style";
+import { Underline } from "@tiptap/extension-underline";
+import { Callout } from "@/app/_components/editor/extensions/callout";
 
 interface BlogPostPageProps {
 	params: Promise<{
@@ -11,132 +22,178 @@ interface BlogPostPageProps {
 	}>;
 }
 
-export default function BlogPostPage({ params }: BlogPostPageProps) {
-	const { slug } = use(params);
-	const { data: post, isLoading } = api.posts.getBySlug.useQuery({
-		slug,
-	});
-	const scrollToTop = () => {
-		window.scrollTo({ top: 0, behavior: "smooth" });
-	};
+// Tiptap extensions - must match your editor configuration
+const extensions = [
+	StarterKit.configure({
+		code: false,
+	}),
+	Code.configure({
+		HTMLAttributes: {
+			class: "bg-gray-100 text-gray-800 px-1 py-0.5 rounded text-base font-mono",
+		},
+	}),
+	TextStyle,
+	Color,
+	Highlight.configure({
+		multicolor: true,
+	}),
+	Underline,
+	Link.configure({
+		openOnClick: false,
+		HTMLAttributes: {
+			class: "text-blue-600 underline cursor-pointer",
+		},
+	}),
+	Image.configure({
+		HTMLAttributes: {
+			class: "max-w-full h-auto rounded-lg",
+		},
+	}),
+	TextAlign.configure({
+		types: ["heading", "paragraph"],
+	}),
+	TaskList,
+	TaskItem.configure({
+		nested: true,
+	}),
+	Callout,
+];
 
-	if (isLoading) {
+function extractTextFromHtml(html: string): string {
+	return html
+		.replace(/<[^>]*>/g, "")
+		.replace(/\s+/g, " ")
+		.trim();
+}
+
+function generateDescription(content: string): string {
+	const plainText = extractTextFromHtml(content);
+	return plainText.length > 160
+		? `${plainText.substring(0, 157)}...`
+		: plainText;
+}
+
+export async function generateMetadata({
+	params,
+}: BlogPostPageProps): Promise<Metadata> {
+	const { slug } = await params;
+
+	try {
+		const post = await api.posts.getBySlug({ slug });
+
+		if (!post) {
+			return {
+				title: "Post Not Found | Huy's Digital Garden",
+				description: "The requested blog post could not be found.",
+			};
+		}
+
+		const description = generateDescription(post.content);
+		const title = `${post.title} | Huy's Digital Garden`;
+
+		// Generate JSON-LD structured data
+		const jsonLd = generateBlogPostJsonLd({
+			title: post.title,
+			description,
+			slug: post.slug,
+			content: post.content,
+			publishedAt: post.publishedAt,
+			updatedAt: post.updatedAt,
+			author: post.author,
+		});
+
+		return {
+			title,
+			description,
+			openGraph: {
+				title: post.title,
+				description,
+				type: "article",
+				url: `https://leavism.dev/blog/${post.slug}`,
+				siteName: "Huy's Digital Garden",
+				locale: "en_US",
+				images: [
+					{
+						url: "https://leavism.dev/flower-white.png",
+						width: 1200,
+						height: 630,
+						alt: `${post.title} - Huy's Digital Garden`,
+					},
+				],
+				...(post.publishedAt && {
+					publishedTime: post.publishedAt.toISOString(),
+				}),
+				...(post.updatedAt && { modifiedTime: post.updatedAt.toISOString() }),
+				...(post.author?.name && {
+					authors: [post.author.name],
+				}),
+			},
+			twitter: {
+				card: "summary_large_image",
+				title: post.title,
+				description,
+				images: ["https://leavism.dev/flower-white.png"],
+			},
+			alternates: {
+				canonical: `https://leavism.dev/blog/${post.slug}`,
+			},
+			robots: {
+				index: true,
+				follow: true,
+			},
+			other: {
+				"application/ld+json": JSON.stringify(jsonLd),
+			},
+		};
+	} catch (error) {
+		console.error("Error generating metadata:", error);
+		return {
+			title: "Error | Huy's Digital Garden",
+			description: "An error occurred while loading this post.",
+		};
+	}
+}
+
+export default async function BlogPostPage({ params }: BlogPostPageProps) {
+	const { slug } = await params;
+
+	try {
+		const post = await api.posts.getBySlug({ slug });
+
+		if (!post) {
+			return (
+				<main className="relative min-h-screen">
+					<div className="mx-auto max-w-3xl px-4 py-12">
+						<div className="flex h-64 items-center justify-center">
+							<p className="text-muted-foreground">Post not found</p>
+						</div>
+					</div>
+				</main>
+			);
+		}
+
+		// Generate HTML from Tiptap content server-side
+		let renderedContent: string;
+		try {
+			// Try parsing as JSON first (if content is stored as JSON)
+			const contentJson = JSON.parse(post.content);
+			renderedContent = generateHTML(contentJson, extensions);
+		} catch {
+			// If parsing fails, assume content is already HTML
+			renderedContent = post.content;
+		}
+
+		return <BlogPostClient post={post} renderedContent={renderedContent} />;
+	} catch (error) {
+		console.error("Error loading post:", error);
 		return (
 			<main className="relative min-h-screen">
 				<div className="mx-auto max-w-3xl px-4 py-12">
 					<div className="flex h-64 items-center justify-center">
-						<p className="text-muted-foreground">Loading...</p>
+						<p className="text-muted-foreground">Error loading post</p>
 					</div>
 				</div>
 			</main>
 		);
 	}
-
-	if (!post) {
-		return (
-			<main className="relative min-h-screen">
-				<div className="mx-auto max-w-3xl px-4 py-12">
-					<div className="flex h-64 items-center justify-center">
-						<p className="text-muted-foreground">Post not found</p>
-					</div>
-				</div>
-			</main>
-		);
-	}
-
-	return (
-		<main className="relative min-h-screen">
-			<div className="mx-auto max-w-3xl px-4 py-12">
-				{/* Navigation */}
-				<motion.nav
-					initial={{ opacity: 0 }}
-					animate={{ opacity: 1 }}
-					className="mb-8"
-				>
-					<div className="flex items-center justify-between">
-						<Link
-							href="/blog"
-							className="group inline-flex items-center gap-2 text-gray-600 font-display text-lg transition-colors hover:text-gray-900"
-						>
-							<span className="group-hover:-translate-x-1 transition-transform">
-								←
-							</span>
-							<span>All Entries</span>
-						</Link>
-					</div>
-				</motion.nav>
-
-				{/* Article */}
-				<motion.article
-					initial={{ opacity: 0, y: 20 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{ duration: 0.6 }}
-					className="prose prose-stone prose-xl mx-auto"
-				>
-					{/* Header */}
-					<div className="flex items-center justify-center">
-						<h1 className="text-center font-display tracking-wide">
-							{post.title}
-						</h1>
-					</div>
-
-					{/* Meta information */}
-					<div className="flex flex-wrap items-center justify-center gap-4 text-gray-600">
-						{post.publishedAt && (
-							<time dateTime={post.publishedAt.toISOString()}>
-								Published{" "}
-								{new Date(post.publishedAt).toLocaleDateString("en-US", {
-									year: "numeric",
-									month: "long",
-									day: "numeric",
-								})}
-							</time>
-						)}
-						{post.updatedAt && (
-							<time dateTime={post.updatedAt.toISOString()}>
-								Updated{" "}
-								{new Date(post.updatedAt).toLocaleDateString("en-US", {
-									year: "numeric",
-									month: "long",
-									day: "numeric",
-								})}
-							</time>
-						)}
-					</div>
-
-					{/* Content */}
-					<div className="max-w-none border-gray-200 border-t pt-12">
-						<div dangerouslySetInnerHTML={{ __html: post.content }} />
-
-						{/* Footer */}
-						<motion.footer
-							initial={{ opacity: 0 }}
-							animate={{ opacity: 1 }}
-							transition={{ delay: 0.8 }}
-							className="mt-12 border-gray-200 border-t pt-8"
-						>
-							<div className="flex items-center justify-center">
-								<button
-									onClick={scrollToTop}
-									className="group flex cursor-pointer items-center gap-2 text-gray-500 transition-colors hover:text-gray-700"
-									aria-label="Back to top"
-								>
-									<Image
-										src="/white-daisy.svg"
-										alt="white daisy"
-										width={20}
-										height={20}
-										className="h-5 w-5 opacity-50 transition-opacity group-hover:opacity-70"
-									/>
-									<span className="text-base group-hover:underline">
-										Thanks for reading, I can take you back to the top
-									</span>
-								</button>
-							</div>
-						</motion.footer>
-					</div>
-				</motion.article>
-			</div>
-		</main>
-	);
 }
