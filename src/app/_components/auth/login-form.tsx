@@ -25,7 +25,7 @@ export function LoginForm() {
 			await authClient.signIn.passkey({
 				fetchOptions: {
 					onSuccess: () => {
-						router.push("/");
+						router.push("/admin");
 						router.refresh();
 					},
 				},
@@ -40,8 +40,10 @@ export function LoginForm() {
 	const handleDiscordLogin = async () => {
 		setIsPending(true);
 		try {
-			await authClient.signIn.social({ provider: "discord" });
-			// redirect is done by BetterAuth
+			await authClient.signIn.social({
+				provider: "discord",
+				callbackURL: "/admin", //url to redirect to on success
+			});
 		} catch (error) {
 			console.error("Discord login error", error);
 		} finally {
@@ -96,7 +98,7 @@ export function LoginForm() {
 						</Button>
 
 						<Button
-							className="w-full bg-[#5865F2] hover:bg-[#4752c4] font-sans"
+							className="w-full bg-[#5865F2] font-sans hover:bg-[#4752c4]"
 							variant="default"
 							disabled={isPending}
 							onClick={handleDiscordLogin}
@@ -118,7 +120,7 @@ export function LoginForm() {
 					</CardContent>
 					<CardFooter>
 						<p
-							className="w-full text-center bg-white text-gray-400"
+							className="w-full bg-white text-center text-gray-400"
 							onMouseEnter={() => setIsHovering(true)}
 							onMouseLeave={() => setIsHovering(false)}
 						>

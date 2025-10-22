@@ -2,34 +2,75 @@ import "@/styles/globals.css";
 
 import type { Metadata } from "next";
 
-import { UserNav } from "@/app/_components/user-nav";
-import { getServerSession } from "@/server/auth";
+import { Toaster } from "@/app/_components/ui/sonner";
+import { geist, lora, playfairDisplay } from "@/app/fonts";
 import { TRPCReactProvider } from "@/trpc/react";
+import { generateOrganizationJsonLd, generatePersonJsonLd } from "@/app/_components/JsonLd";
 
 export const metadata: Metadata = {
 	title: "Huy's Digital Garden",
 	description:
 		"Welcome to my digital garden - a personal website that grows alongside my journey as a developer.",
 	icons: [{ rel: "icon", url: "/favicon.ico" }],
+	openGraph: {
+		title: "Huy's Digital Garden",
+		description:
+			"Welcome to my digital garden - a personal website that grows alongside my journey as a developer.",
+		url: "https://leavism.dev",
+		siteName: "Huy's Digital Garden",
+		type: "website",
+		locale: "en_US",
+		images: [
+			{
+				url: "https://leavism.dev/flower-white.png",
+				width: 1200,
+				height: 630,
+				alt: "Huy's Digital Garden - A personal website about software development",
+			},
+		],
+	},
+	twitter: {
+		card: "summary_large_image",
+		title: "Huy's Digital Garden",
+		description:
+			"Welcome to my digital garden - a personal website that grows alongside my journey as a developer.",
+		images: ["https://leavism.dev/flower-white.png"],
+	},
+	robots: {
+		index: true,
+		follow: true,
+		googleBot: {
+			index: true,
+			follow: true,
+		},
+	},
+	alternates: {
+		canonical: "https://leavism.dev",
+	},
+	other: {
+		"application/ld+json": JSON.stringify([
+			generateOrganizationJsonLd({
+				name: "Huy's Digital Garden",
+				url: "https://leavism.dev",
+				description: "Welcome to my digital garden - a personal website that grows alongside my journey as a developer.",
+				logo: "https://leavism.dev/flower-white.png",
+			}),
+			generatePersonJsonLd(),
+		]),
+	},
 };
 
 export default async function RootLayout({
 	children,
 }: Readonly<{ children: React.ReactNode }>) {
-	const session = await getServerSession();
-
 	return (
-		<html lang="en" className="font-serif">
-			<body>
-				{/* <header className="fixed top-0 right-0 left-0 z-50 bg-white/80 backdrop-blur-sm"> */}
-				{/* 	<div className="container mx-auto flex items-center justify-between p-4"> */}
-				{/* 		<a href="/" className="font-bold text-xl"> */}
-				{/* 			Digital Garden */}
-				{/* 		</a> */}
-				{/* 		<UserNav session={session} /> */}
-				{/* 	</div> */}
-				{/* </header> */}
+		<html
+			lang="en"
+			className={`${geist.variable} ${lora.variable} ${playfairDisplay.variable}`}
+		>
+			<body className="font-serif">
 				<TRPCReactProvider>{children}</TRPCReactProvider>
+				<Toaster />
 			</body>
 		</html>
 	);

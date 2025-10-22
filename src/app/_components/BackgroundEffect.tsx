@@ -4,7 +4,7 @@ import Playfair_Display from "next/font/local";
 import { useEffect, useRef } from "react";
 
 const playfair = Playfair_Display({
-	src: "./../../../public/fonts/PlayfairDisplay-VariableFont_wght.ttf",
+	src: "../../assets/fonts/PlayfairDisplay-VariableFont_wght.ttf",
 });
 
 const CONFIG = {
@@ -171,7 +171,7 @@ export default function CanvasBackground() {
 	return (
 		<canvas
 			ref={canvasRef}
-			className="-z-10 pointer-events-none hidden md:block fixed inset-0"
+			className="-z-10 pointer-events-none fixed inset-0 hidden md:block"
 		/>
 	);
 }

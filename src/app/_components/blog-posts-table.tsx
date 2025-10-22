@@ -1,0 +1,439 @@
+"use client";
+
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+} from "@/app/_components/ui/alert-dialog";
+import { Button } from "@/app/_components/ui/button";
+import {
+	Card,
+	CardContent,
+	CardHeader,
+	CardTitle,
+} from "@/app/_components/ui/card";
+import {
+	HoverCard,
+	HoverCardContent,
+	HoverCardTrigger,
+} from "@/app/_components/ui/hover-card";
+import { Input } from "@/app/_components/ui/input";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/app/_components/ui/select";
+import { Separator } from "@/app/_components/ui/separator";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from "@/app/_components/ui/tooltip";
+import { api } from "@/trpc/react";
+import {
+	CheckCircle,
+	ChevronLeft,
+	ChevronRight,
+	Circle,
+	Pencil,
+	Search,
+	Trash2,
+} from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+
+const POSTS_PER_PAGE = 5;
+
+// TODO: Not the best way to clean up the hover card preview, but
+// good enough for now
+const stripHtml = (html: string) => {
+	return html.replace(/<[^>]*>/g, "");
+};
+
+export function BlogPostsTable() {
+	const router = useRouter();
+	const [searchQuery, setSearchQuery] = useState("");
+	const [filter, setFilter] = useState<"all" | "published" | "draft">("all");
+	const [sortBy, setSortBy] = useState<
+		"date-desc" | "date-asc" | "title-asc" | "title-desc" | "status"
+	>("date-desc");
+	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+	const [postToDelete, setPostToDelete] = useState<string | null>(null);
+	const deleteMutation = api.posts.delete.useMutation({
+		onSuccess: () => refetch(),
+	});
+	const updateMutation = api.posts.update.useMutation({
+		onSuccess: () => refetch(),
+	});
+	const [currentPage, setCurrentPage] = useState(1);
+	const {
+		data: posts = [],
+		isLoading,
+		refetch,
+	} = api.posts.getAllAdmin.useQuery();
+
+	if (isLoading) {
+		return (
+			<Card>
+				<CardHeader>
+					<CardTitle>Blog Posts</CardTitle>
+				</CardHeader>
+				<CardContent className="flex h-64 items-center justify-center">
+					<div>Loading posts...</div>
+				</CardContent>
+			</Card>
+		);
+	}
+
+	const handleEdit = (postId: string) => {
+		router.push(`/admin/edit/${postId}`);
+	};
+
+	const handleDelete = (postId: string) => {
+		setPostToDelete(postId);
+		setDeleteDialogOpen(true);
+	};
+
+	const confirmDelete = () => {
+		if (postToDelete) {
+			deleteMutation.mutate({ id: postToDelete });
+			setPostToDelete(null);
+			setDeleteDialogOpen(false);
+		}
+	};
+
+	const handleStatusToggle = (postId: string) => {
+		const post = posts.find((p) => p.id === postId);
+		if (post) {
+			updateMutation.mutate({
+				id: postId,
+				title: post.title,
+				slug: post.slug,
+				content: post.content,
+				published: !post.published,
+			});
+		}
+	};
+
+	const filteredAndSortedPosts = posts
+		.filter((post) => {
+			if (filter === "published" && !post.published) return false;
+			if (filter === "draft" && post.published) return false;
+			if (
+				searchQuery &&
+				!post.title.toLowerCase().includes(searchQuery.toLowerCase())
+			)
+				return false;
+			return true;
+		})
+		.sort((a, b) => {
+			switch (sortBy) {
+				case "date-desc":
+					return (
+						new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+					);
+				case "date-asc":
+					return (
+						new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime()
+					);
+				case "title-asc":
+					return a.title.localeCompare(b.title);
+				case "title-desc":
+					return b.title.localeCompare(a.title);
+				case "status":
+					return a.published === b.published ? 0 : a.published ? -1 : 1;
+				default:
+					return 0;
+			}
+		});
+
+	const totalPages = Math.ceil(filteredAndSortedPosts.length / POSTS_PER_PAGE);
+	const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
+	const endIndex = startIndex + POSTS_PER_PAGE;
+	const paginatedPosts = filteredAndSortedPosts.slice(startIndex, endIndex);
+
+	const handleFilterChange = (newFilter: "all" | "published" | "draft") => {
+		setFilter(newFilter);
+		setCurrentPage(1);
+	};
+
+	const handleSearchChange = (value: string) => {
+		setSearchQuery(value);
+		setCurrentPage(1);
+	};
+
+	return (
+		<>
+			<Card>
+				<CardHeader>
+					<CardTitle>Blog Posts</CardTitle>
+				</CardHeader>
+				<CardContent>
+					<div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+						<div className="relative max-w-sm flex-1">
+							<Search className="-translate-y-1/2 absolute top-1/2 left-3 h-4 w-4 text-muted-foreground" />
+							<Input
+								placeholder="Search posts..."
+								value={searchQuery}
+								onChange={(e) => handleSearchChange(e.target.value)}
+								className="pl-9"
+							/>
+						</div>
+					</div>
+
+					<div className="mb-6 flex flex-wrap items-center gap-2">
+						<Button
+							variant={filter === "all" ? "default" : "outline"}
+							onClick={() => handleFilterChange("all")}
+							size="sm"
+						>
+							All ({posts.length})
+						</Button>
+						<Button
+							variant={filter === "published" ? "default" : "outline"}
+							onClick={() => handleFilterChange("published")}
+							size="sm"
+						>
+							Published ({posts.filter((p) => p.published).length})
+						</Button>
+						<Button
+							variant={filter === "draft" ? "default" : "outline"}
+							onClick={() => handleFilterChange("draft")}
+							size="sm"
+						>
+							Draft ({posts.filter((p) => !p.published).length})
+						</Button>
+
+						<Separator orientation="vertical" />
+
+						<Select
+							value={sortBy}
+							onValueChange={(value: typeof sortBy) => setSortBy(value)}
+						>
+							<SelectTrigger className="w-[180px]">
+								<SelectValue placeholder="Sort by" />
+							</SelectTrigger>
+							<SelectContent>
+								<SelectItem value="date-desc">Newest First</SelectItem>
+								<SelectItem value="date-asc">Oldest First</SelectItem>
+								<SelectItem value="title-asc">Title (A-Z)</SelectItem>
+								<SelectItem value="title-desc">Title (Z-A)</SelectItem>
+								<SelectItem value="status">Status</SelectItem>
+							</SelectContent>
+						</Select>
+					</div>
+
+					<div className="flex min-h-[400px] flex-col">
+						<div className="flex-1 overflow-x-auto">
+							<table className="w-full min-w-[600px] table-fixed">
+								<thead>
+									<tr className="border-b">
+										<th className="w-[450px] pb-3 text-left font-semibold">
+											Title
+										</th>
+										<th className="w-[180px] pb-3 text-right font-semibold">
+											Actions
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									{paginatedPosts.map((post) => (
+										<tr key={post.id} className="border-b last:border-0">
+											<td className="w-[450px] py-4 pr-4">
+												<HoverCard>
+													<HoverCardTrigger asChild>
+														<span className="block cursor-pointer truncate font-medium transition-colors hover:text-primary">
+															{post.title}
+														</span>
+													</HoverCardTrigger>
+													<HoverCardContent className="w-96" side="right">
+														<div className="space-y-3">
+															<h4 className="font-semibold text-base leading-tight">
+																{post.title}
+															</h4>
+															<p className="line-clamp-4 text-muted-foreground text-sm leading-relaxed">
+																{stripHtml(post.content)}
+															</p>
+															<div className="space-y-1 border-t pt-2">
+																<p className="text-muted-foreground text-xs">
+																	<span className="font-semibold">
+																		Last Updated:
+																	</span>{" "}
+																	{new Date(post.updatedAt).toLocaleDateString(
+																		"en-US",
+																		{
+																			month: "long",
+																			day: "numeric",
+																			year: "numeric",
+																		},
+																	)}
+																</p>
+																{post.publishedAt && (
+																	<p className="text-muted-foreground text-xs">
+																		<span className="font-semibold">
+																			Published:
+																		</span>{" "}
+																		{new Date(
+																			post.publishedAt,
+																		).toLocaleDateString("en-US", {
+																			month: "long",
+																			day: "numeric",
+																			year: "numeric",
+																		})}
+																	</p>
+																)}
+															</div>
+														</div>
+													</HoverCardContent>
+												</HoverCard>
+											</td>
+											<td className="w-[180px] py-4 text-right">
+												<TooltipProvider>
+													<div className="flex justify-end gap-2">
+														<Tooltip>
+															<TooltipTrigger asChild>
+																<Button
+																	variant="outline"
+																	size="icon"
+																	onClick={() => handleStatusToggle(post.id)}
+																	className={
+																		post.published
+																			? "text-green-600 hover:bg-green-50 hover:text-green-700"
+																			: "text-yellow-600 hover:bg-yellow-50 hover:text-yellow-700"
+																	}
+																>
+																	{post.published ? (
+																		<CheckCircle className="h-4 w-4" />
+																	) : (
+																		<Circle className="h-4 w-4" />
+																	)}
+																</Button>
+															</TooltipTrigger>
+															<TooltipContent>
+																<p>
+																	{post.published ? "Published" : "Draft"} -
+																	Click to toggle
+																</p>
+															</TooltipContent>
+														</Tooltip>
+														<Tooltip>
+															<TooltipTrigger asChild>
+																<Button
+																	variant="outline"
+																	size="icon"
+																	onClick={() => handleEdit(post.id)}
+																>
+																	<Pencil className="h-4 w-4" />
+																</Button>
+															</TooltipTrigger>
+															<TooltipContent>
+																<p>Edit</p>
+															</TooltipContent>
+														</Tooltip>
+														<Tooltip>
+															<TooltipTrigger asChild>
+																<Button
+																	variant="outline"
+																	size="icon"
+																	onClick={() => handleDelete(post.id)}
+																	className="hover:bg-destructive hover:text-destructive-foreground"
+																>
+																	<Trash2 className="h-4 w-4" />
+																</Button>
+															</TooltipTrigger>
+															<TooltipContent>
+																<p>Delete</p>
+															</TooltipContent>
+														</Tooltip>
+													</div>
+												</TooltipProvider>
+											</td>
+										</tr>
+									))}
+								</tbody>
+							</table>
+						</div>
+					</div>
+
+					{totalPages > 1 && (
+						<div className="mt-6 flex items-center justify-between">
+							<p className="text-muted-foreground text-sm">
+								Showing {startIndex + 1} to{" "}
+								{Math.min(endIndex, filteredAndSortedPosts.length)} of{" "}
+								{filteredAndSortedPosts.length} posts
+							</p>
+							<div className="flex items-center gap-2">
+								<Button
+									variant="outline"
+									size="sm"
+									onClick={() =>
+										setCurrentPage((prev) => Math.max(1, prev - 1))
+									}
+									disabled={currentPage === 1}
+								>
+									<ChevronLeft className="h-4 w-4" />
+									Previous
+								</Button>
+								<div className="flex gap-1">
+									{Array.from({ length: totalPages }, (_, i) => i + 1).map(
+										(page) => (
+											<Button
+												key={page}
+												variant={currentPage === page ? "default" : "outline"}
+												size="sm"
+												onClick={() => setCurrentPage(page)}
+												className="w-9"
+											>
+												{page}
+											</Button>
+										),
+									)}
+								</div>
+								<Button
+									variant="outline"
+									size="sm"
+									onClick={() =>
+										setCurrentPage((prev) => Math.min(totalPages, prev + 1))
+									}
+									disabled={currentPage === totalPages}
+								>
+									Next
+									<ChevronRight className="h-4 w-4" />
+								</Button>
+							</div>
+						</div>
+					)}
+				</CardContent>
+			</Card>
+
+			<AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+				<AlertDialogContent>
+					<AlertDialogHeader>
+						<AlertDialogTitle>Are you sure?</AlertDialogTitle>
+						<AlertDialogDescription>
+							This action cannot be undone. This will permanently delete the
+							blog post.
+						</AlertDialogDescription>
+					</AlertDialogHeader>
+					<AlertDialogFooter>
+						<AlertDialogCancel>Cancel</AlertDialogCancel>
+						<AlertDialogAction
+							onClick={confirmDelete}
+							className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+						>
+							Delete
+						</AlertDialogAction>
+					</AlertDialogFooter>
+				</AlertDialogContent>
+			</AlertDialog>
+		</>
+	);
+}

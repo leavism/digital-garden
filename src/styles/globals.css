@@ -1,13 +1,24 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@plugin "@tailwindcss/typography";
+@config "../../tailwind.config.js";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-	--font-serif: "Playfair Display", serif;
-	--font-sans: "Geist", ui-sans-serif, system-ui, sans-serif,
+	--font-serif: var(--font-serif), serif;
+	--font-display: var(--font-display), serif;
+	--font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif,
 		"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 	--color-link-primary: #18619d;
+	--color-callout-warning-bg: oklch(0.9689 0.0108 17.34);
+	--color-callout-warning-main: oklch(0.6077 0.0599 35.48);
+
+	--color-callout-info-bg: oklch(0.9442 0.0101 228.89);
+	--color-callout-info-main: oklch(0.473 0.0481 243.61);
+
+	--color-callout-success-bg: oklch(0.9583 0.0279 142.5);
+	--color-callout-success-main: oklch(0.6196 0.0778 149.57);
 }
 
 @theme inline {
@@ -46,53 +57,6 @@
 	--color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
 	--color-sidebar-border: var(--sidebar-border);
 	--color-sidebar-ring: var(--sidebar-ring);
-}
-
-/* https://tailwindcss.com/docs/adding-custom-styles#adding-base-styles */
-@layer base {
-	p {
-		@apply text-xl;
-	}
-
-	a {
-		@apply text-link-primary no-underline hover:underline transition-colors;
-	}
-
-	h1 {
-		@apply font-bold text-4xl leading-tight mt-5;
-	}
-
-	h2 {
-		@apply text-2xl mt-8 mb-3 font-bold;
-	}
-
-	ul {
-		@apply space-y-1 list-inside list-disc pt-2 pl-6 pb-3;
-	}
-
-	li {
-		@apply text-xl;
-	}
-
-	sup a {
-		@apply pl-0.5 font-semibold tracking-wide hover:underline;
-	}
-
-	#footnotes a {
-		@apply text-base text-black;
-	}
-
-	blockquote {
-		@apply border-l-4 border-gray-300 pl-6 italic text-gray-700 my-8 text-lg;
-	}
-
-	blockquote footer {
-		@apply mt-2 text-lg text-gray-600;
-	}
-
-	strong {
-		@apply font-semibold;
-	}
 }
 
 :root {
@@ -164,10 +128,12 @@
 	--sidebar-ring: oklch(0.556 0 0);
 }
 
+/* https://tailwindcss.com/docs/adding-custom-styles#adding-base-styles */
 @layer base {
 	* {
 		@apply border-border outline-ring/50;
 	}
+
 	body {
 		@apply bg-background text-foreground;
 	}

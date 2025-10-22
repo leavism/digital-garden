@@ -21,7 +21,7 @@ import { eq } from "drizzle-orm";
  * Defines the tRPC procedures related to user operations. Endpoints to query
  * or mutate anything related to users should be defined here.
  */
-export const userRouter = createTRPCRouter({
+export const usersRouter = createTRPCRouter({
 	/**
 	 * Retrieves the current user's session data.
 	 *
