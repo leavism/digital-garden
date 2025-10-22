@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 		locale: "en_US",
 		images: [
 			{
-				url: "https://leavism.dev/flower-white.png",
+				url: "https://leavism.dev/OGimage.png",
 				width: 1200,
 				height: 630,
 				alt: "Huy's Digital Garden - A personal website about software development",
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
 		title: "Huy's Digital Garden",
 		description:
 			"Welcome to my digital garden - a personal website that grows alongside my journey as a developer.",
-		images: ["https://leavism.dev/flower-white.png"],
+		images: ["https://leavism.dev/OGimage.png"],
 	},
 	robots: {
 		index: true,
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
 				name: "Huy's Digital Garden",
 				url: "https://leavism.dev",
 				description: "Welcome to my digital garden - a personal website that grows alongside my journey as a developer.",
-				logo: "https://leavism.dev/flower-white.png",
+				logo: "https://leavism.dev/OGimage.png",
 			}),
 			generatePersonJsonLd(),
 		]),

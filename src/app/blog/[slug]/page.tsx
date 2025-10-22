@@ -115,7 +115,7 @@ export async function generateMetadata({
 				locale: "en_US",
 				images: [
 					{
-						url: "https://leavism.dev/flower-white.png",
+						url: "https://leavism.dev/OGimage.png",
 						width: 1200,
 						height: 630,
 						alt: `${post.title} - Huy's Digital Garden`,
@@ -133,7 +133,7 @@ export async function generateMetadata({
 				card: "summary_large_image",
 				title: post.title,
 				description,
-				images: ["https://leavism.dev/flower-white.png"],
+				images: ["https://leavism.dev/OGimage.png"],
 			},
 			alternates: {
 				canonical: `https://leavism.dev/blog/${post.slug}`,

@@ -51,7 +51,7 @@ export function generateBlogPostJsonLd({
 			url: "https://leavism.dev",
 			logo: {
 				"@type": "ImageObject",
-				url: "https://leavism.dev/flower-white.png",
+				url: "https://leavism.dev/OGimage.png",
 				width: 1200,
 				height: 630,
 			},
@@ -62,7 +62,7 @@ export function generateBlogPostJsonLd({
 		},
 		image: {
 			"@type": "ImageObject",
-			url: "https://leavism.dev/flower-white.png",
+			url: "https://leavism.dev/OGimage.png",
 			width: 1200,
 			height: 630,
 		},
