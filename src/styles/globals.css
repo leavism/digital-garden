@@ -19,6 +19,10 @@
 
 	--color-callout-success-bg: oklch(0.9583 0.0279 142.5);
 	--color-callout-success-main: oklch(0.6196 0.0778 149.57);
+
+	--color-garden-primary: #a8b331;
+	--color-garden-dark: #777e21;
+	--color-garden-glow: #f8f9ea;
 }
 
 @theme inline {
@@ -57,6 +61,9 @@
 	--color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
 	--color-sidebar-border: var(--sidebar-border);
 	--color-sidebar-ring: var(--sidebar-ring);
+	--color-garden-primary: var(--garden-primary);
+	--color-garden-dark: var(--garden-dark);
+	--color-garden-glow: var(--garden-glow);
 }
 
 :root {
@@ -92,6 +99,9 @@
 	--sidebar-accent-foreground: oklch(0.205 0 0);
 	--sidebar-border: oklch(0.922 0 0);
 	--sidebar-ring: oklch(0.708 0 0);
+	--garden-primary: #a8b331;
+	--garden-dark: #777e21;
+	--garden-glow: #f8f9ea;
 }
 
 .dark {
