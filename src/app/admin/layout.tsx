@@ -13,6 +13,7 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/app/_components/ui/tooltip";
+import { env } from "@/env";
 import { getServerSession } from "@/server/auth";
 import { BookOpen, Home } from "lucide-react";
 import Link from "next/link";
@@ -27,6 +28,11 @@ export default async function AdminLayout({
 	const session = await getServerSession();
 	if (!session) {
 		redirect("/login");
+	}
+
+	// Only allow specific user to access admin dashboard
+	if (session.user.id !== env.ADMIN_USER_ID) {
+		redirect("/");
 	}
 	return (
 		<SidebarProvider defaultOpen={true}>
