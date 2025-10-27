@@ -1,5 +1,5 @@
 "use client";
-import { random } from "@/utils/FastRandom";
+import { random } from "@/lib/FastRandom";
 import Playfair_Display from "next/font/local";
 import { useEffect, useRef } from "react";
 
