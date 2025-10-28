@@ -1,79 +1,53 @@
+/**
+ * Individual Blog Post Page
+ *
+ * Server component that handles:
+ * - Dynamic metadata generation for SEO
+ * - Server-side Tiptap content rendering
+ * - JSON-LD structured data for blog posts
+ * - Error handling for missing posts
+ *
+ * Architecture:
+ * - Server component fetches post data and generates metadata
+ * - Converts Tiptap JSON content to HTML server-side
+ * - Passes rendered HTML to client component for display
+ */
+
+import { generateBlogPostJsonLd } from "@/app/_components/JsonLd";
+import { generateDescription } from "@/lib/utils";
 import { api } from "@/trpc/server";
 import type { Metadata } from "next";
 import BlogPostClient from "./BlogPostClient";
-import { generateBlogPostJsonLd } from "@/app/_components/JsonLd";
-import { generateHTML } from "@tiptap/html";
-import StarterKit from "@tiptap/starter-kit";
-import { Code } from "@tiptap/extension-code";
-import { Color } from "@tiptap/extension-color";
-import { Highlight } from "@tiptap/extension-highlight";
-import { Image } from "@tiptap/extension-image";
-import { Link } from "@tiptap/extension-link";
-import { TaskItem } from "@tiptap/extension-task-item";
-import { TaskList } from "@tiptap/extension-task-list";
-import { TextAlign } from "@tiptap/extension-text-align";
-import { TextStyle } from "@tiptap/extension-text-style";
-import { Underline } from "@tiptap/extension-underline";
-import { Callout } from "@/app/_components/editor/extensions/callout";
 
+/**
+ * Page props with dynamic route parameter
+ */
 interface BlogPostPageProps {
 	params: Promise<{
 		slug: string;
 	}>;
 }
 
-// Tiptap extensions - must match your editor configuration
-const extensions = [
-	StarterKit.configure({
-		code: false,
-	}),
-	Code.configure({
-		HTMLAttributes: {
-			class:
-				"bg-gray-100 text-gray-800 px-1 py-0.5 rounded text-base font-mono",
-		},
-	}),
-	TextStyle,
-	Color,
-	Highlight.configure({
-		multicolor: true,
-	}),
-	Underline,
-	Link.configure({
-		openOnClick: false,
-		HTMLAttributes: {
-			class: "text-blue-600 underline cursor-pointer",
-		},
-	}),
-	Image.configure({
-		HTMLAttributes: {
-			class: "max-w-full h-auto rounded-lg",
-		},
-	}),
-	TextAlign.configure({
-		types: ["heading", "paragraph"],
-	}),
-	TaskList,
-	TaskItem.configure({
-		nested: true,
-	}),
-	Callout,
-];
-
-function extractTextFromHtml(html: string): string {
-	return html
-		.replace(/<[^>]*>/g, "")
-		.replace(/\s+/g, " ")
-		.trim();
-}
-
-function generateDescription(content: string): string {
-	const plainText = extractTextFromHtml(content);
-	return plainText.length > 160
-		? `${plainText.substring(0, 157)}...`
-		: plainText;
-}
-
+/**
+ * Generate dynamic metadata for blog posts
+ *
+ * Creates SEO-optimized metadata for each blog post including:
+ * - Page title with site branding
+ * - Auto-generated description from content (160 char limit)
+ * - Open Graph tags for social media (type: article)
+ * - Twitter Card configuration
+ * - JSON-LD structured data (BlogPosting schema)
+ * - Article dates (published/modified)
+ * - Author attribution
+ * - Canonical URL
+ *
+ * Fallbacks:
+ * - Returns 404-style metadata if post not found
+ * - Returns error metadata if fetch fails
+ *
+ * @param params - Route parameters containing the post slug
+ * @returns Metadata object for Next.js
+ */
 export async function generateMetadata({
 	params,
 }: BlogPostPageProps): Promise<Metadata> {
@@ -92,7 +66,7 @@ export async function generateMetadata({
 		const description = generateDescription(post.content);
 		const title = `${post.title} | Huy's Digital Garden`;
 
-		// Generate JSON-LD structured data
+		// Generate JSON-LD structured data for search engines
 		const jsonLd = generateBlogPostJsonLd({
 			title: post.title,
 			description,
@@ -155,6 +129,30 @@ export async function generateMetadata({
 	}
 }
 
+/**
+ * Blog Post Page Component
+ *
+ * Server component that fetches and prepares blog post data.
+ *
+ * Responsibilities:
+ * - Fetches post data from database via tRPC
+ * - Converts Tiptap JSON content to HTML on the server
+ * - Handles missing posts (404 state)
+ * - Handles errors gracefully
+ * - Passes rendered content to client component
+ *
+ * Content Rendering:
+ * - Tries to parse content as Tiptap JSON format
+ * - Falls back to treating content as raw HTML if JSON parse fails
+ * - Server-side rendering improves initial page load and SEO
+ *
+ * Error States:
+ * - Post not found: Shows "Post not found" message
+ * - Fetch error: Shows "Error loading post" message
+ *
+ * @param params - Route parameters containing the post slug
+ * @returns Rendered blog post or error state
+ */
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
 	const { slug } = await params;
 
@@ -173,16 +171,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 			);
 		}
 
-		// Generate HTML from Tiptap content server-side
-		let renderedContent: string;
-		try {
-			// Try parsing as JSON first (if content is stored as JSON)
-			const contentJson = JSON.parse(post.content);
-			renderedContent = generateHTML(contentJson, extensions);
-		} catch {
-			// If parsing fails, assume content is already HTML
-			renderedContent = post.content;
-		}
+		// Content is already rendered as HTML by the editor
+		const renderedContent = post.content;
 
 		return <BlogPostClient post={post} renderedContent={renderedContent} />;
 	} catch (error) {

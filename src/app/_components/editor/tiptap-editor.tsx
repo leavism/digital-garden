@@ -1,58 +1,10 @@
 "use client";
 
-import { Code } from "@tiptap/extension-code";
-import { Color } from "@tiptap/extension-color";
-import { Highlight } from "@tiptap/extension-highlight";
-import { Image } from "@tiptap/extension-image";
-import { Link } from "@tiptap/extension-link";
-import { TaskItem } from "@tiptap/extension-task-item";
-import { TaskList } from "@tiptap/extension-task-list";
-import { TextAlign } from "@tiptap/extension-text-align";
-import { TextStyle } from "@tiptap/extension-text-style";
-import { Underline } from "@tiptap/extension-underline";
+import { tiptapExtensions } from "@/lib/tiptap-extensions";
 import type { Editor } from "@tiptap/react";
 import { EditorContent, useEditor, useEditorState } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
 import { Maximize, Minimize, Monitor, Save, X } from "lucide-react";
 import React, { useCallback, useState } from "react";
-import { Callout } from "./extensions/callout";
-
-const extensions = [
-	StarterKit.configure({
-		code: false, // Disable the default code extension
-	}),
-	Code.configure({
-		HTMLAttributes: {
-			class:
-				"bg-gray-100 text-gray-800 px-1 py-0.5 rounded text-base font-mono",
-		},
-	}),
-	TextStyle,
-	Color,
-	Highlight.configure({
-		multicolor: true,
-	}),
-	Underline,
-	Link.configure({
-		openOnClick: false,
-		HTMLAttributes: {
-			class: "text-blue-600 underline cursor-pointer",
-		},
-	}),
-	Image.configure({
-		HTMLAttributes: {
-			class: "max-w-full h-auto rounded-lg",
-		},
-	}),
-	TextAlign.configure({
-		types: ["heading", "paragraph"],
-	}),
-	TaskList,
-	TaskItem.configure({
-		nested: true,
-	}),
-	Callout,
-];
 
 function MenuBar({
 	editor,
@@ -591,7 +543,7 @@ export function TiptapEditor({
 		onExpandChange?.(isExpanded, newFullscreen);
 	};
 	const editor = useEditor({
-		extensions,
+		extensions: tiptapExtensions,
 		content: content,
 		immediatelyRender: false,
 		onUpdate: ({ editor }) => {
